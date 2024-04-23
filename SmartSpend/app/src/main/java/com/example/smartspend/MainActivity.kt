@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.smartspend.Screens.LoginScreen
 import com.example.smartspend.Screens.Onboarding1
 import com.example.smartspend.Screens.Onboarding2
 import com.example.smartspend.ui.theme.SmartSpendTheme
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Onboarding2()
+                    LoginScreen()
                 }
             }
         }
