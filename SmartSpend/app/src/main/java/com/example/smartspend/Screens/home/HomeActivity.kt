@@ -32,8 +32,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
 import com.example.smartspend.data.BottomNavItem
@@ -99,12 +101,12 @@ fun MyBottomBar(navControllerOne: NavHostController){
 
         BottomNavItem(
             title = "Home",
-            Routes.Home.routes,
+            Routes.Dashbord.routes,
             Icons.Rounded.Home
         ),
 
-        BottomNavItem(title = "Help",
-            Routes.Help.routes,
+        BottomNavItem(title = "Profile",
+            Routes.Profile.routes,
             Icons.Rounded.Help
         ),
 
