@@ -39,6 +39,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
 import com.example.smartspend.data.BottomNavItem
+import com.example.smartspend.navigation.NavGraph
 import com.example.smartspend.navigation.Routes
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -54,7 +55,8 @@ class HomeActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    BottomNav(this)
+                    val navController = rememberNavController()
+                    NavGraph(navController = navController)
                 }
             }
         }
@@ -70,86 +72,8 @@ class HomeActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun BottomNav(navController: NavController){
-    val navControllerOne = rememberNavController()
 
-    Scaffold (bottomBar = { MyBottomBar(navControllerOne)}){
-            innerPadding ->
-        NavHost(navController = navControllerOne, startDestination = Routes.Dashbord.routes,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable(route = Routes.Dashbord.routes){
-                DashBordActivity()
-            }
-            composable(Routes.Profile.routes){
-                ProfileScreen()
-            }
-            composable(Routes.Setting.routes){
-                SettingScreen()
-            }
-        }
-    }
-}
 
-@Composable
-fun MyBottomBar(navControllerOne: NavHostController){
-
-    val backStackEntry = navControllerOne.currentBackStackEntryAsState()
-
-    val list = listOf(
-
-        BottomNavItem(
-            title = "Home",
-            Routes.Dashbord.routes,
-            Icons.Rounded.Home
-        ),
-
-        BottomNavItem(title = "Profile",
-            Routes.Profile.routes,
-            Icons.Rounded.Help
-        ),
-
-        BottomNavItem(
-            title = "Notifications",
-            Routes.Notifications.routes,
-            Icons.Rounded.Notifications
-        ),
-
-        BottomNavItem(
-            title = "Profile",
-            Routes.Profile.routes,
-            Icons.Rounded.AccountCircle
-        )
-    )
-
-    BottomAppBar {
-        list.forEach{
-            val selected: Boolean = it.route == backStackEntry?.value?.destination?.route
-
-            NavigationBarItem(
-                selected = selected,
-                onClick = {
-                    navControllerOne.navigate(it.route) {
-                        popUpTo(navControllerOne.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                    }
-
-                },
-                icon = {
-                    Column (
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ){
-                        Icon(imageVector = it.icon, contentDescription = it.title)
-                    }
-                }
-            )
-        }
-    }
-}
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
