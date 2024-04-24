@@ -10,4 +10,5 @@ sealed class Routes (val routes:String){
     data object BottomNav : Routes("bottomNav")
     data object Login : Routes("login")
     data object Register : Routes("register")
+    data object Transactions : Routes("transactions")
 }

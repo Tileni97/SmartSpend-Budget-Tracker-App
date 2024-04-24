@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.MonetizationOn
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.BottomAppBar
@@ -38,6 +39,11 @@ fun HomeScreen(navController: NavController){
             composable(route = Routes.Dashbord.routes){
                 DashBordActivity()
             }
+
+            composable(Routes.Transactions.routes){
+                TransactionScreen()
+            }
+
             composable(Routes.Profile.routes){
                 ProfileScreen()
             }
@@ -59,6 +65,12 @@ fun MyBottomBar(navControllerOne: NavHostController){
             title = "Home",
             Routes.Dashbord.routes,
             Icons.Rounded.Home
+        ),
+
+        BottomNavItem(
+            title = "Transactions",
+            Routes.Transactions.routes,
+            Icons.Rounded.MonetizationOn
         ),
 
         BottomNavItem(title = "Profile",
