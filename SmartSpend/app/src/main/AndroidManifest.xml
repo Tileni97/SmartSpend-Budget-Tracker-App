@@ -13,6 +13,31 @@
         android:theme="@style/Theme.SmartSpend"
         tools:targetApi="31">
         <activity
+            android:name=".Screens.home.DashbordActivity"
+            android:exported="false"
+            android:label="@string/title_activity_dashbord"
+            android:theme="@style/Theme.SmartSpend" />
+        <activity
+            android:name=".Screens.home.ProfileActivity"
+            android:exported="false"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/Theme.SmartSpend" />
+        <activity
+            android:name=".Screens.home.SetingActivity"
+            android:exported="false"
+            android:label="@string/title_activity_seting"
+            android:theme="@style/Theme.SmartSpend" />
+        <activity
+            android:name=".Screens.home.HomeActivity"
+            android:exported="false"
+            android:label="@string/title_activity_home"
+            android:theme="@style/Theme.SmartSpend" />
+        <activity
+            android:name=".LandingActivity"
+            android:exported="false"
+            android:label="@string/title_activity_landing"
+            android:theme="@style/Theme.SmartSpend" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"

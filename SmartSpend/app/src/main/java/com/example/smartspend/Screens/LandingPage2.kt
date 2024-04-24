@@ -50,7 +50,6 @@ fun Onboarding2(modifier: Modifier = Modifier) {
             Image(
                 painter = painterResource(id = R.drawable.phonecard),
                 contentDescription = "Card 18",
-
                 )
         }
         Text(

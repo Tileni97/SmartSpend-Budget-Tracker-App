@@ -2,6 +2,7 @@ package com.example.smartspend.Screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,11 +17,10 @@ import androidx.compose.ui.draw.rotate
 
 @Composable
 fun Onboarding1(modifier: Modifier = Modifier) {
-    Box(
+    Surface(
         modifier = modifier
-            .fillMaxSize()
-            .background(color = Color(0xff009177)),
-        contentAlignment = Alignment.Center
+            .fillMaxSize(),
+        color = Color(0xff009177)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
