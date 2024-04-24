@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.twotone.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -39,6 +41,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun LoginScreen() {
     val passwordVisibility = remember { mutableStateOf(false) }
+    var passwordVisible by remember { mutableStateOf(false) }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -95,17 +98,29 @@ fun LoginScreen() {
                 onValueChange = { password = it },
                 label = { Text("Password") },
                 singleLine = true,
+                placeholder = {Text("Password")},
                 visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Password
                 ),
                 trailingIcon = {
+                    val image = if (passwordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    // Localized description for accessibility services
+                    val description = if (passwordVisible) "Hide password" else "Show password"
+
+                    // Toggle button to hide or display password
                     IconButton(
-                        onClick = { passwordVisibility.value = !passwordVisibility.value }
+                        onClick = {
+                            passwordVisible = !passwordVisible
+                            passwordVisibility.value = !passwordVisibility.value
+                        }
                     ) {
                         Icon(
-                            imageVector = Icons.TwoTone.CheckCircle,
-                            contentDescription = if (passwordVisibility.value) "Hide password" else "Show password"
+                            imageVector = image,description
+
                         )
                     }
                 },

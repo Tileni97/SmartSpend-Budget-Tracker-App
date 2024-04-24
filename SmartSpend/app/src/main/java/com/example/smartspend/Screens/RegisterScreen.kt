@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.twotone.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -39,7 +41,9 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun RegisterScreen() {
     val passwordVisibility = remember { mutableStateOf(false) }
+    var passwordVisible by remember { mutableStateOf(false) }
     val confirmPasswordVisibility = remember { mutableStateOf(false) }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
@@ -145,12 +149,23 @@ fun RegisterScreen() {
                     keyboardType = KeyboardType.Password
                 ),
                 trailingIcon = {
+                    val image = if (passwordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    // Localized description for accessibility services
+                    val description = if (passwordVisible) "Hide password" else "Show password"
+
+                    // Toggle button to hide or display password
                     IconButton(
-                        onClick = { passwordVisibility.value = !passwordVisibility.value }
+                        onClick = {
+                            passwordVisible = !passwordVisible
+                            passwordVisibility.value = !passwordVisibility.value
+                        }
                     ) {
                         Icon(
-                            imageVector = Icons.TwoTone.CheckCircle,
-                            contentDescription = if (passwordVisibility.value) "Hide password" else "Show password"
+                            imageVector = image,description
+
                         )
                     }
                 },
@@ -184,12 +199,23 @@ fun RegisterScreen() {
                     keyboardType = KeyboardType.Password
                 ),
                 trailingIcon = {
+                    val image = if (confirmPasswordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    // Localized description for accessibility services
+                    val description = if (confirmPasswordVisible) "Hide password" else "Show password"
+
+                    // Toggle button to hide or display password
                     IconButton(
-                        onClick = { confirmPasswordVisibility.value = !confirmPasswordVisibility.value }
+                        onClick = {
+                            confirmPasswordVisible = !confirmPasswordVisible
+                            confirmPasswordVisibility.value = !confirmPasswordVisibility.value
+                        }
                     ) {
                         Icon(
-                            imageVector = Icons.TwoTone.CheckCircle,
-                            contentDescription = if (confirmPasswordVisibility.value) "Hide password" else "Show password"
+                            imageVector = image,description
+
                         )
                     }
                 },
