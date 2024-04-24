@@ -1,11 +1,25 @@
 package com.example.smartspend.Screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.twotone.CheckCircle
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,12 +36,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.Visibility
 
 
 @Composable
 fun LoginScreen() {
     val passwordVisibility = remember { mutableStateOf(false) }
+    var passwordVisible by remember { mutableStateOf(false) }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -84,14 +98,30 @@ fun LoginScreen() {
                 onValueChange = { password = it },
                 label = { Text("Password") },
                 singleLine = true,
+                placeholder = {Text("Password")},
                 visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Password
                 ),
                 trailingIcon = {
+                    val image = if (passwordVisible)
+                        Icons.Filled.Visibility
+                    else Icons.Filled.VisibilityOff
+
+                    // Localized description for accessibility services
+                    val description = if (passwordVisible) "Hide password" else "Show password"
+
+                    // Toggle button to hide or display password
                     IconButton(
-                        onClick = { passwordVisibility.value = !passwordVisibility.value }
+                        onClick = {
+                            passwordVisible = !passwordVisible
+                            passwordVisibility.value = !passwordVisibility.value
+                        }
                     ) {
+                        Icon(
+                            imageVector = image,description
+
+                        )
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
