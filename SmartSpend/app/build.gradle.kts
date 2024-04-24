@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.smartspend"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -62,6 +62,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation("androidx.compose.foundation:foundation-android:1.6.6")
     implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.annotation:annotation:1.7.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -75,6 +76,24 @@ dependencies {
         implementation ("androidx.compose.material3:material3:1.2.1")
         implementation ("androidx.compose.runtime:runtime-livedata:1.6.6")
         implementation ("androidx.activity:activity-compose:1.9.0")
+
+    // Hilt-dagger
+    implementation ("com.google.dagger:hilt-android:2.44")
+    //kapt ("com.google.dagger:hilt-compiler:2.44")
+
+    // Room
+
+    implementation ("androidx.room:room-runtime:2.6.1")
+    annotationProcessor ("androidx.room:room-compiler:2.6.1")
+
+    // To use Kotlin annotation processing tool (kapt) MUST HAVE!
+    //kapt("androidx.room:room-compiler:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1")
+
+    // Coroutines
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.5.2")
 
     implementation ("androidx.compose.ui:ui:1.6.6")
     // system UI Controller
