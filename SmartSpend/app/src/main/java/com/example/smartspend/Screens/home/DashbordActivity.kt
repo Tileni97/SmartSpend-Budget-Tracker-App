@@ -211,11 +211,9 @@ fun DashTopBar(){
     ){
         Box (
             modifier = Modifier
-                .clip(
-                    RoundedCornerShape(size = 10.dp)
-                )
+                .clip(RoundedCornerShape(size = 10.dp))
 
-                .padding(10.dp)
+                .padding(30.dp)
         ){
             Box(
                 modifier = Modifier
@@ -254,20 +252,23 @@ fun DashTopBar(){
                         color =Color(255, 191, 0)
                     )
                     Spacer(modifier = Modifier.size(10.dp))
-                    Column (
+                    Row (
                         modifier = Modifier
                             .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
                     ){
                         Box (
                             modifier = Modifier
-                                .width(150.dp)
+                                .clip(RoundedCornerShape(size = 10.dp))
+                                .width(100.dp)
                                 .background(
                                     color = Color(11, 158, 55)
                                 )
-                                .padding(1.dp)
+                                .padding(5.dp, 0.dp),
+
 
                         ){
-                            Row {
+                            Column {
                                 Text(text = "BUDGET",
                                     fontWeight = FontWeight.W400,
                                     color = Color.White
@@ -282,14 +283,15 @@ fun DashTopBar(){
                         Spacer(modifier = Modifier.size(2.dp))
                         Box (
                             modifier = Modifier
-                                .width(180.dp)
+                                .clip(RoundedCornerShape(size = 10.dp))
+                                .width(100.dp)
                                 .background(
                                     color = Color(122, 24, 5)
                                 )
-                                .padding(1.dp)
+                                .padding(5.dp, 0.dp)
 
                         ){
-                            Row {
+                            Column {
                                 Text(text = "SPEND",
                                     fontWeight = FontWeight.W400,
                                     color = Color.White
@@ -304,15 +306,16 @@ fun DashTopBar(){
                         Spacer(modifier = Modifier.size(2.dp))
                         Box (
                             modifier = Modifier
-                                .width(210.dp)
+                                .clip(RoundedCornerShape(size = 10.dp))
+                                .width(100.dp)
                                 .background(
                                     color = Color(102, 98, 15)
                                 )
-                                .padding(1.dp)
+                                .padding(5.dp, 0.dp)
 
                         ){
-                            Row {
-                                Text(text = "REMAINING",
+                            Column {
+                                Text(text = "REMAIN",
                                     fontWeight = FontWeight.W400,
                                     color = Color.White
                                 )
@@ -334,22 +337,24 @@ fun DashTopBar(){
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         Text(text = "03/27",color =Color.White)
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_visa),
-                            contentDescription = "Card 18",
-                            modifier = Modifier
-                                .requiredWidth(60.dp)
-                        )
                     }
                     Row (
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(20.dp, 0.dp)
+                            .padding(20.dp, 0.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ){
                         Text(text = "Giideon s v",
                             fontSize = 15.sp,
                             fontWeight = FontWeight.W400,
                             color = Color.White
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_visa),
+                            contentDescription = "Card 18",
+                            modifier = Modifier
+                                .requiredWidth(60.dp)
                         )
                     }
                 }
