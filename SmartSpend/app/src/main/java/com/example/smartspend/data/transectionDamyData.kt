@@ -8,20 +8,7 @@ class NotesDataSource {
         return listOf(
 
             // dummy content to act as notes initially
-            TransectionItem(Description = "transport", ammount = 200),
-            TransectionItem(Description = "transport", ammount = 200),
-            TransectionItem(Description = "transport", ammount = 200),
-            TransectionItem(Description = "transport", ammount = 200),
-            TransectionItem(Description = "transport", ammount = 200),
-            TransectionItem(Description = "transport", ammount = 200),
-            TransectionItem(Description = "transport", ammount = 200),
-            TransectionItem(Description = "transport", ammount = 200),
-            TransectionItem(Description = "transport", ammount = 200),
-            TransectionItem(Description = "transport", ammount = 200),
-            TransectionItem(Description = "transport", ammount = 200),
-            TransectionItem(Description = "transport", ammount = 200),
-            TransectionItem(Description = "transport", ammount = 200),
-            TransectionItem(Description = "transport", ammount = 200)
+
         )
     }
 }

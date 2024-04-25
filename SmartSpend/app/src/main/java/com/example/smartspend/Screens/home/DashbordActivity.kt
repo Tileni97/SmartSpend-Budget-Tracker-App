@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
@@ -27,10 +28,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material.icons.outlined.AirportShuttle
+import androidx.compose.material.icons.outlined.ArrowDownward
+import androidx.compose.material.icons.outlined.ArrowOutward
 import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.SyncAlt
+import androidx.compose.material.icons.outlined.TransitEnterexit
 import androidx.compose.material.icons.rounded.DeleteSweep
 import androidx.compose.material.icons.rounded.Logout
 import androidx.compose.material.icons.rounded.Person
@@ -65,20 +69,12 @@ import java.util.Date
 @Composable
 fun DashBordActivity() {
     var translist = listOf<TransectionItem>(
-        TransectionItem(Description = "transport", ammount = 200),
-        TransectionItem(Description = "transport", ammount = 200),
-        TransectionItem(Description = "transport", ammount = 200),
-        TransectionItem(Description = "transport", ammount = 200),
-        TransectionItem(Description = "transport", ammount = 200),
-        TransectionItem(Description = "transport", ammount = 200),
-        TransectionItem(Description = "transport", ammount = 200),
-        TransectionItem(Description = "transport", ammount = 200),
-        TransectionItem(Description = "transport", ammount = 200),
-        TransectionItem(Description = "transport", ammount = 200),
-        TransectionItem(Description = "transport", ammount = 200),
-        TransectionItem(Description = "transport", ammount = 200),
-        TransectionItem(Description = "transport", ammount = 200),
-        TransectionItem(Description = "transport", ammount = 200)
+        TransectionItem(Description = "Wage", ammount = 200, type = "Income"),
+        TransectionItem(Description = "transport", ammount = 200, type = "Expenses"),
+        TransectionItem(Description = "Salary", ammount = 200, type = "Income"),
+        TransectionItem(Description = "transport", ammount = 200, type = "Expenses"),
+        TransectionItem(Description = "Deposit", ammount = 200, type = "Income"),
+        TransectionItem(Description = "transport", ammount = 200, type = "Expenses")
     )
     Box(modifier = Modifier
         .clip(RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 100.dp))
@@ -106,7 +102,7 @@ fun DashBordActivity() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Icon(imageVector = Icons.Rounded.Person, contentDescription = "")
+                Icon(imageVector = Icons.Rounded.Person, contentDescription = "", tint = Color.White)
                 Text(
                     text = "Bank Balance",
                     fontWeight = FontWeight.ExtraBold,
@@ -119,7 +115,7 @@ fun DashBordActivity() {
                         .padding(10.dp)
                         .clickable { }
                 ){
-                    Icon(imageVector = Icons.Rounded.Logout, contentDescription = "")
+                    Icon(imageVector = Icons.Rounded.Logout, contentDescription = "", tint = Color.White)
                 }
             }
 
@@ -127,7 +123,8 @@ fun DashBordActivity() {
                 text = "N$15 000",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
-                fontFamily = FontFamily.SansSerif
+                fontFamily = FontFamily.SansSerif,
+                color = Color.White
             )
         }
         Spacer(modifier = Modifier.size(15.dp))
@@ -208,7 +205,9 @@ fun DashBordActivity() {
             modifier = Modifier
                 .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                 .background(color = MaterialTheme.colorScheme.inverseOnSurface)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .heightIn(380.dp, 500.dp)
+            ,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             items(translist) { transItem ->
@@ -239,10 +238,10 @@ fun DashTopBar(){
 
                 .padding(30.dp)
                 .shadow(
-                    elevation = 10.dp,
-                    spotColor = Color.Gray,
-                    shape = RoundedCornerShape(8.dp),
-                    ambientColor = Color.Red
+                    elevation = 15.dp,
+                    spotColor = MaterialTheme.colorScheme.onBackground,
+                    shape = RoundedCornerShape(1.dp),
+                    ambientColor = MaterialTheme.colorScheme.onBackground
                 )
         ){
             Box(
@@ -418,45 +417,106 @@ fun TransectionRow(
                 ,
 
             ) {
-            Row (
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Icon(imageVector = Icons.Outlined.AirportShuttle, contentDescription = "")
-                Spacer(modifier = Modifier.size(10.dp))
-                Text(text = trans.Description,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.W400,
-                    fontSize = 15.sp
-                )
-                Spacer(modifier = Modifier.width(100.dp))
-                Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
-                Spacer(modifier = Modifier.size(5.dp))
-                Text(text = trans.ammount.toString(),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.Red,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.size(5.dp))
-                Icon(imageVector = Icons.Outlined.ArrowUpward, contentDescription ="", tint = Color.Red )
+
+            if(trans.type =="Income"){
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Row{
+                        Icon(imageVector = Icons.Outlined.TransitEnterexit, contentDescription = "")
+                        Spacer(modifier = Modifier.size(10.dp))
+                        Text(text = trans.Description,
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontWeight = FontWeight.W400,
+                            fontSize = 15.sp
+                        )
+                    }
+                    Row {
+                        Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
+                        Spacer(modifier = Modifier.size(5.dp))
+                        Text(text = trans.ammount.toString(),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = Color.Green,
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.size(5.dp))
+                        Icon(imageVector = Icons.Outlined.ArrowDownward, contentDescription ="", tint = Color.Green )
+                    }
+
+
+
+                }
+
+                Row (modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp, 0.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ){
+                    Icon(imageVector = Icons.Outlined.AccessTime, contentDescription ="" )
+                    Spacer(modifier = Modifier.size(10.dp))
+                    Text(text = formatDate(trans.entryDate.time),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontWeight = FontWeight.W400,
+                        fontSize = 13.sp)
+
+                }
+            }
+            else{
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Row {
+                        Icon(imageVector = Icons.Outlined.ArrowOutward, contentDescription = "")
+                        Spacer(modifier = Modifier.size(10.dp))
+                        Text(text = trans.Description,
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontWeight = FontWeight.W400,
+                            fontSize = 15.sp
+                        )
+                    }
+
+                    Row {
+                        Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
+                        Spacer(modifier = Modifier.size(5.dp))
+                        Text(text = trans.ammount.toString(),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = Color.Red,
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.size(5.dp))
+                        Icon(imageVector = Icons.Outlined.ArrowUpward, contentDescription ="", tint = Color.Red )
+                    }
+
+                }
+
+                Row (modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp, 0.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ){
+                    Icon(imageVector = Icons.Outlined.AccessTime, contentDescription ="" )
+                    Spacer(modifier = Modifier.size(10.dp))
+                    Text(text = formatDate(trans.entryDate.time),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontWeight = FontWeight.W400,
+                        fontSize = 13.sp)
+
+                }
             }
 
-            Row (modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp, 0.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
-            ){
-                Icon(imageVector = Icons.Outlined.AccessTime, contentDescription ="" )
-                Spacer(modifier = Modifier.size(10.dp))
-                Text(text = formatDate(trans.entryDate.time),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.W400,
-                    fontSize = 13.sp)
 
-            }
 
 
             // and set it to this one

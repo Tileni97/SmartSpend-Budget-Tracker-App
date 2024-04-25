@@ -8,5 +8,6 @@ data class TransectionItem(
     var id: UUID = UUID.randomUUID(),
     val Description:String,
     val ammount:Int,
+    val type:String,
     var entryDate: Date = Date.from(Instant.now())
 )
