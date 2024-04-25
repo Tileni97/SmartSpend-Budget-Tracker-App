@@ -1,11 +1,13 @@
 package com.example.smartspend.Screens.home
 
+import android.graphics.drawable.shapes.Shape
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,6 +25,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccessTime
+import androidx.compose.material.icons.outlined.AirportShuttle
+import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.SyncAlt
@@ -40,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -53,6 +59,8 @@ import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
 import com.example.smartspend.data.NotesDataSource
 import com.example.smartspend.data.TransectionItem
 import com.example.smartspend.navigation.Routes
+import java.time.Instant
+import java.util.Date
 
 @Composable
 fun DashBordActivity() {
@@ -182,11 +190,27 @@ fun DashBordActivity() {
             }
         }
         Spacer(modifier = Modifier.size(25.dp))
-        Row {
-            Text(text = "latest Transactions", fontFamily = FontFamily.SansSerif)
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        ){
+            Text(text = "latest Transactions",
+                fontFamily = FontFamily.SansSerif,
+                color = MaterialTheme.colorScheme.onBackground,
+                fontWeight = FontWeight.Bold
+            )
+
+
         }
 
-        LazyColumn {
+        LazyColumn (
+            modifier = Modifier
+                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                .background(color = MaterialTheme.colorScheme.inverseOnSurface)
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
             items(translist) { transItem ->
                 TransectionRow(trans = transItem)
             }
@@ -214,6 +238,12 @@ fun DashTopBar(){
                 .clip(RoundedCornerShape(size = 10.dp))
 
                 .padding(30.dp)
+                .shadow(
+                    elevation = 10.dp,
+                    spotColor = Color.Gray,
+                    shape = RoundedCornerShape(8.dp),
+                    ambientColor = Color.Red
+                )
         ){
             Box(
                 modifier = Modifier
@@ -247,7 +277,7 @@ fun DashTopBar(){
                     }
                     Spacer(modifier = Modifier.size(10.dp))
                     Text(text = "XXXX XXXX XXXX XXXX 5446",
-                        fontSize = 20.sp,
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.ExtraBold,
                         color =Color(255, 191, 0)
                     )
@@ -260,7 +290,7 @@ fun DashTopBar(){
                         Box (
                             modifier = Modifier
                                 .clip(RoundedCornerShape(size = 10.dp))
-                                .width(100.dp)
+                                .width(90.dp)
                                 .background(
                                     color = Color(11, 158, 55)
                                 )
@@ -284,7 +314,7 @@ fun DashTopBar(){
                         Box (
                             modifier = Modifier
                                 .clip(RoundedCornerShape(size = 10.dp))
-                                .width(100.dp)
+                                .width(90.dp)
                                 .background(
                                     color = Color(122, 24, 5)
                                 )
@@ -307,7 +337,7 @@ fun DashTopBar(){
                         Box (
                             modifier = Modifier
                                 .clip(RoundedCornerShape(size = 10.dp))
-                                .width(100.dp)
+                                .width(90.dp)
                                 .background(
                                     color = Color(102, 98, 15)
                                 )
@@ -369,47 +399,63 @@ fun TransectionRow(
     trans: TransectionItem,){
     Surface(
         modifier
-            .padding(10.dp)
+            .padding(3.dp)
+            .clip(shape = RoundedCornerShape(size = 10.dp))
+            //
             // to clip using a shape
-            .clip(RoundedCornerShape(topEnd = 33.dp, bottomStart = 33.dp))
-            .width(350.dp),
-        color = Color(18, 148, 139)) {
+            .width(330.dp)
+            .clickable { }
+            ,
+        //color = Color(18, 148, 139)
+    ) {
 
         Column(
             modifier
-                .clickable { }
                 .padding(
-                    horizontal = 14.dp,
-                    vertical = 10.dp
-                ),
-            horizontalAlignment = Alignment.Start) {
+                    10.dp, 2.dp
+                )
 
-            Text(text = trans.Description,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(10.dp),
-                color = Color.White,
-            )
+                ,
 
-            Text(text = trans.ammount.toString(),
-                style = MaterialTheme.typography.titleLarge,
-                color = Color.Yellow,
-                fontSize = 17.sp
-            )
-
-            // 1. comment it out
-            // 2. later on as the last thing
-            // 3. now it will not work
-            // 4.
+            ) {
+            Row (
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Icon(imageVector = Icons.Outlined.AirportShuttle, contentDescription = "")
+                Spacer(modifier = Modifier.size(10.dp))
+                Text(text = trans.Description,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontWeight = FontWeight.W400,
+                    fontSize = 15.sp
+                )
+                Spacer(modifier = Modifier.width(100.dp))
+                Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
+                Spacer(modifier = Modifier.size(5.dp))
+                Text(text = trans.ammount.toString(),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.Red,
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.size(5.dp))
+                Icon(imageVector = Icons.Outlined.ArrowUpward, contentDescription ="", tint = Color.Red )
+            }
 
             Row (modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp),
+                .padding(10.dp, 0.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.End
             ){
+                Icon(imageVector = Icons.Outlined.AccessTime, contentDescription ="" )
+                Spacer(modifier = Modifier.size(10.dp))
                 Text(text = formatDate(trans.entryDate.time),
-                    style = MaterialTheme.typography.titleSmall)
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontWeight = FontWeight.W400,
+                    fontSize = 13.sp)
+
             }
 
 
