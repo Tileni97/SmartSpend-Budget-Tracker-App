@@ -32,9 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
-import com.example.smartspend.Screens.Onboarding1
-import com.example.smartspend.Screens.Onboarding2
 import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -124,7 +121,7 @@ fun Landing() {
             color = Color.White,
             fontSize = 30.sp,
         )
-        
+
         Spacer(modifier = Modifier.size(100.dp))
 
     }

@@ -10,6 +10,8 @@ import com.example.smartspend.Screens.home.DashBordActivity
 import com.example.smartspend.Screens.home.HomeScreen
 import com.example.smartspend.Screens.home.ProfileScreen
 import com.example.smartspend.Screens.home.SettingScreen
+import com.example.smartspend.Screens.home.TransactionScreen
+import com.example.smartspend.Screens.screencomponents.TransferScreen
 
 @Composable
 fun NavGraph(navController: NavHostController){
@@ -26,7 +28,10 @@ fun NavGraph(navController: NavHostController){
             SettingScreen()
         }
         composable(Routes.Dashbord.routes){
-            DashBordActivity()
+            DashBordActivity(navController)
+        }
+        composable(Routes.Transactions.routes){
+            TransferScreen()
         }
 
     }

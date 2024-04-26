@@ -6,7 +6,7 @@ sealed class Routes (val routes:String){
     data object Setting : Routes("setting")
     data object Profile : Routes("profile")
     data object HomeScreen : Routes("homeScreen")
-    data object Splash : Routes("slash")
+    data object TransferScreen : Routes("transfer")
     data object BottomNav : Routes("bottomNav")
     data object Login : Routes("login")
     data object Register : Routes("register")

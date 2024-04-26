@@ -13,6 +13,11 @@
         android:theme="@style/Theme.SmartSpend"
         tools:targetApi="31">
         <activity
+            android:name=".Screens.screencomponents.Transferctivity"
+            android:exported="false"
+            android:label="@string/title_activity_transferctivity"
+            android:theme="@style/Theme.SmartSpend" />
+        <activity
             android:name=".Screens.home.DashbordActivity"
             android:exported="false"
             android:label="@string/title_activity_dashbord"

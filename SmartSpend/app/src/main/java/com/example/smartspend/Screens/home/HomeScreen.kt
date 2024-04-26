@@ -37,7 +37,7 @@ fun HomeScreen(navController: NavController){
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = Routes.Dashbord.routes){
-                DashBordActivity()
+                DashBordActivity(navControllerOne)
             }
 
             composable(Routes.Transactions.routes){

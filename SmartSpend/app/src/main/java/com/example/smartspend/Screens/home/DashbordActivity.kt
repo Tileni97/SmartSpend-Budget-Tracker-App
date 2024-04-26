@@ -1,5 +1,6 @@
 package com.example.smartspend.Screens.home
 
+import android.content.Intent
 import android.graphics.drawable.shapes.Shape
 import android.os.Bundle
 import android.widget.Toast
@@ -57,7 +58,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.notesapp.util.formatDate
+import com.example.smartspend.LandingActivity
 import com.example.smartspend.R
 import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
 import com.example.smartspend.data.NotesDataSource
@@ -67,8 +71,14 @@ import java.time.Instant
 import java.util.Date
 
 @Composable
-fun DashBordActivity() {
+fun DashBordActivity(navController: NavHostController) {
     var translist = listOf<TransectionItem>(
+        TransectionItem(Description = "Wage", ammount = 200, type = "Income"),
+        TransectionItem(Description = "transport", ammount = 200, type = "Expenses"),
+        TransectionItem(Description = "Salary", ammount = 200, type = "Income"),
+        TransectionItem(Description = "transport", ammount = 200, type = "Expenses"),
+        TransectionItem(Description = "Deposit", ammount = 200, type = "Income"),
+        TransectionItem(Description = "transport", ammount = 200, type = "Expenses"),
         TransectionItem(Description = "Wage", ammount = 200, type = "Income"),
         TransectionItem(Description = "transport", ammount = 200, type = "Expenses"),
         TransectionItem(Description = "Salary", ammount = 200, type = "Income"),
@@ -139,7 +149,9 @@ fun DashBordActivity() {
                     .background(color = MaterialTheme.colorScheme.inverseOnSurface)
                     .padding(5.dp)
                     .width(90.dp)
-                    .clickable { },
+                    .clickable {
+                        navController.navigate(Routes.TransferScreen.routes)
+                    },
 
             ){
                 Row {
@@ -192,7 +204,7 @@ fun DashBordActivity() {
                 .fillMaxWidth()
                 .padding(10.dp)
         ){
-            Text(text = "latest Transactions",
+            Text(text = "Latest Transactions",
                 fontFamily = FontFamily.SansSerif,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold
@@ -206,7 +218,7 @@ fun DashBordActivity() {
                 .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                 .background(color = MaterialTheme.colorScheme.inverseOnSurface)
                 .fillMaxWidth()
-                .heightIn(380.dp, 500.dp)
+                .heightIn(500.dp, 800.dp)
             ,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
@@ -398,11 +410,11 @@ fun TransectionRow(
     trans: TransectionItem,){
     Surface(
         modifier
-            .padding(3.dp)
+            .padding(15.dp,3.dp)
             .clip(shape = RoundedCornerShape(size = 10.dp))
             //
             // to clip using a shape
-            .width(330.dp)
+            //.width(330.dp)
             .clickable { }
             ,
         //color = Color(18, 148, 139)
@@ -538,6 +550,7 @@ fun TransectionRow(
 @Composable
 fun DashBordActivityPreview() {
     SmartSpendTheme {
-        DashBordActivity()
+        val navControllerOne = rememberNavController()
+        DashBordActivity(navControllerOne)
     }
 }

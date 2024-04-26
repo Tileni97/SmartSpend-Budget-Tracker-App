@@ -5,4 +5,5 @@
     <string name="title_activity_seting">SetingActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_dashbord">DashbordActivity</string>
+    <string name="title_activity_transferctivity">Transferctivity</string>
 </resources>
