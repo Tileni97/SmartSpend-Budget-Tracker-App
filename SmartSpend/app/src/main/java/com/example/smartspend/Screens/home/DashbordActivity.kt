@@ -151,7 +151,13 @@ fun DashBordActivity(navController: NavHostController) {
                     .width(90.dp)
                     .clickable {
                         navController.navigate(Routes.TransferScreen.routes)
-                    },
+                    }
+                    .shadow(
+                        elevation = 10.dp,
+                        spotColor = MaterialTheme.colorScheme.onBackground,
+                        shape = RoundedCornerShape(1.dp),
+                        ambientColor = MaterialTheme.colorScheme.onBackground
+                    ),
 
             ){
                 Row {
@@ -170,6 +176,12 @@ fun DashBordActivity(navController: NavHostController) {
                     .padding(5.dp)
                     .width(90.dp)
                     .clickable { }
+                    .shadow(
+                        elevation = 10.dp,
+                        spotColor = MaterialTheme.colorScheme.onBackground,
+                        shape = RoundedCornerShape(1.dp),
+                        ambientColor = MaterialTheme.colorScheme.onBackground
+                    )
             ){
                 Row {
                     Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
@@ -187,6 +199,12 @@ fun DashBordActivity(navController: NavHostController) {
                     .padding(5.dp)
                     .width(90.dp)
                     .clickable { }
+                    .shadow(
+                        elevation = 10.dp,
+                        spotColor = MaterialTheme.colorScheme.onBackground,
+                        shape = RoundedCornerShape(1.dp),
+                        ambientColor = MaterialTheme.colorScheme.onBackground
+                    )
             ){
                 Row {
                     Icon(imageVector = Icons.Outlined.Settings, contentDescription = "")
@@ -250,7 +268,7 @@ fun DashTopBar(){
 
                 .padding(30.dp)
                 .shadow(
-                    elevation = 15.dp,
+                    elevation = 10.dp,
                     spotColor = MaterialTheme.colorScheme.onBackground,
                     shape = RoundedCornerShape(1.dp),
                     ambientColor = MaterialTheme.colorScheme.onBackground

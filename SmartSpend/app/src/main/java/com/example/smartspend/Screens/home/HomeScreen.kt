@@ -24,6 +24,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.smartspend.Screens.screencomponents.TransferScreen
 import com.example.smartspend.data.BottomNavItem
 import com.example.smartspend.navigation.Routes
 
@@ -49,6 +50,9 @@ fun HomeScreen(navController: NavController){
             }
             composable(Routes.Setting.routes){
                 SettingScreen()
+            }
+            composable(Routes.TransferScreen.routes){
+                TransferScreen()
             }
         }
     }
