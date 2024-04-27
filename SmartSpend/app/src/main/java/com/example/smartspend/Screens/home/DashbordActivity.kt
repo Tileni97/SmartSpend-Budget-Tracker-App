@@ -175,7 +175,7 @@ fun DashBordActivity(navController: NavHostController) {
                     .background(color = MaterialTheme.colorScheme.inverseOnSurface)
                     .padding(5.dp)
                     .width(90.dp)
-                    .clickable { }
+                    .clickable { navController.navigate(Routes.PayScreen.routes)}
                     .shadow(
                         elevation = 10.dp,
                         spotColor = MaterialTheme.colorScheme.onBackground,
