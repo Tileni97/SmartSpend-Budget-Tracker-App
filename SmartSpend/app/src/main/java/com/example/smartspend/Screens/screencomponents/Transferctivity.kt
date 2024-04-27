@@ -76,7 +76,7 @@ fun TransferScreen(){
                     .clip(RoundedCornerShape(size = 5.dp))
                     .fillMaxWidth()
                     .height(60.dp)
-                    .background(color = Color(0xff009177))
+                    .background(color = Color(7, 7, 71))
                     .padding(10.dp, 0.dp)
                     .clickable {},
                 contentAlignment = androidx.compose.ui.Alignment.Center
@@ -107,7 +107,7 @@ fun TransferScreen(){
                     .clip(RoundedCornerShape(size = 5.dp))
                     .fillMaxWidth()
                     .height(60.dp)
-                    .background(color = Color(0xff009177))
+                    .background(color = Color(7, 7, 71))
                     .padding(10.dp, 0.dp)
                     .clickable {},
                 contentAlignment = androidx.compose.ui.Alignment.Center
@@ -137,7 +137,7 @@ fun TransferScreen(){
                     .clip(RoundedCornerShape(size = 5.dp))
                     .fillMaxWidth()
                     .height(60.dp)
-                    .background(color = Color(0xff009177))
+                    .background(color = Color(7, 7, 71))
                     .padding(10.dp, 0.dp)
                     .clickable {},
                 contentAlignment = androidx.compose.ui.Alignment.Center
@@ -168,7 +168,7 @@ fun TransferScreen(){
                     .clip(RoundedCornerShape(size = 5.dp))
                     .fillMaxWidth()
                     .height(60.dp)
-                    .background(color = Color(0xff009177))
+                    .background(color = Color(7, 7, 71))
                     .padding(10.dp, 0.dp)
                     .clickable {},
                 contentAlignment = androidx.compose.ui.Alignment.Center
@@ -198,7 +198,7 @@ fun TransferScreen(){
                     .clip(RoundedCornerShape(size = 5.dp))
                     .fillMaxWidth()
                     .height(60.dp)
-                    .background(color = Color(0xff009177))
+                    .background(color = Color(7, 7, 71))
                     .padding(10.dp, 0.dp)
                     .clickable {},
                 contentAlignment = androidx.compose.ui.Alignment.Center
@@ -281,11 +281,11 @@ fun NavBar(){
                 .padding(10.dp),
             horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
         ){
-            Icon(imageVector = Icons.Outlined.AccountBalance, contentDescription = "",tint = Color.White)
+            Icon(imageVector = Icons.Outlined.AccountBalance, contentDescription = "",tint = Color(7, 7, 71))
             Text(text = "Bank Account Balance", fontFamily = FontFamily.SansSerif,
-                color = Color.White
+                color = Color(7, 7, 71)
             )
-            Text(text = "15000", fontSize = 40.sp, fontWeight = FontWeight.W700,color = Color.White)
+            Text(text = "15000", fontSize = 40.sp, fontWeight = FontWeight.W700,color = Color(7, 7, 71))
         }
     }
 }
