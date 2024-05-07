@@ -89,21 +89,30 @@ fun DashBordActivity(navController: NavHostController) {
         TransectionItem(Description = "transport", ammount = 200, type = "Expenses")
     )
 
-    var spanding:Int =(((user.spend)/(user.budget))*100)
+    var spending:Int =((user.spend.toDouble()/user.budget.toDouble())*100).toInt()
 
-    if(spanding <=50){
+    if(spending <=50){
         Box(modifier = Modifier
             .clip(RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 100.dp))
             .fillMaxWidth()
             .height(270.dp)
             .background(color = Color(0xff009177)))
     }
+    else if(spending >50 && spending <=75){
+        Box(modifier = Modifier
+            .clip(RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 100.dp))
+            .fillMaxWidth()
+            .height(270.dp)
+            .background(color = Color(104, 115, 8))
+        )
+    }
     else {
         Box(modifier = Modifier
             .clip(RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 100.dp))
             .fillMaxWidth()
             .height(270.dp)
-            .background(color = Color(104, 115, 8)))
+            .background(color = Color.Red)
+        )
     }
 
 
@@ -144,7 +153,7 @@ fun DashBordActivity(navController: NavHostController) {
             }
 
             Text(
-                text = "N$ ${user.balance.toString()} $spanding",
+                text = "N$ ${user.balance.toString()} ",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
                 fontFamily = FontFamily.SansSerif,
