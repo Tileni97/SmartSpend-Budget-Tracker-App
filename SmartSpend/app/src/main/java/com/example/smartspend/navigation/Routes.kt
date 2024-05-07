@@ -11,4 +11,6 @@ sealed class Routes (val routes:String){
     data object Login : Routes("login")
     data object Register : Routes("register")
     data object Transactions : Routes("transactions")
+    data object Extransfere : Routes("external")
+    data object Intransfere : Routes("internal")
 }

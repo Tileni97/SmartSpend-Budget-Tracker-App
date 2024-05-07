@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.DataExploration
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.MonetizationOn
+import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.BottomAppBar
@@ -24,6 +26,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.smartspend.Screens.screencomponents.ExtransfereScreen
+import com.example.smartspend.Screens.screencomponents.IntransfereScreen
 import com.example.smartspend.Screens.screencomponents.PayScreen
 import com.example.smartspend.Screens.screencomponents.TransferScreen
 import com.example.smartspend.data.BottomNavItem
@@ -58,6 +62,12 @@ fun HomeScreen(navController: NavController){
             composable(Routes.PayScreen.routes){
                 PayScreen()
             }
+            composable(Routes.Extransfere.routes){
+                ExtransfereScreen(navControllerOne)
+            }
+            composable(Routes.Intransfere.routes){
+                IntransfereScreen(navControllerOne)
+            }
         }
     }
 }
@@ -81,15 +91,15 @@ fun MyBottomBar(navControllerOne: NavHostController){
             Icons.Rounded.MonetizationOn
         ),
 
-        BottomNavItem(title = "Profile",
+        BottomNavItem(title = "Analysis",
             Routes.Profile.routes,
-            Icons.Rounded.Person
+            Icons.Rounded.DataExploration
         ),
 
         BottomNavItem(
-            title = "Setting",
+            title = "Notification",
             Routes.Setting.routes,
-            Icons.Rounded.Settings
+            Icons.Rounded.Notifications
         )
     )
 

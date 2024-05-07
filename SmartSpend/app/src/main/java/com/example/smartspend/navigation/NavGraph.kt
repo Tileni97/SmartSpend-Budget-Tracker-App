@@ -11,6 +11,8 @@ import com.example.smartspend.Screens.home.HomeScreen
 import com.example.smartspend.Screens.home.ProfileScreen
 import com.example.smartspend.Screens.home.SettingScreen
 import com.example.smartspend.Screens.home.TransactionScreen
+import com.example.smartspend.Screens.screencomponents.ExtransfereScreen
+import com.example.smartspend.Screens.screencomponents.IntransfereScreen
 import com.example.smartspend.Screens.screencomponents.PayScreen
 import com.example.smartspend.Screens.screencomponents.TransferScreen
 
@@ -37,7 +39,12 @@ fun NavGraph(navController: NavHostController){
         composable(Routes.PayScreen.routes){
             PayScreen()
         }
-
+        composable(Routes.Extransfere.routes){
+            ExtransfereScreen(navController)
+        }
+        composable(Routes.Intransfere.routes){
+            IntransfereScreen(navController)
+        }
     }
 
 }

@@ -72,7 +72,7 @@ import java.util.Date
 
 @Composable
 fun DashBordActivity(navController: NavHostController) {
-    var user:Accounts= Accounts(username = "shikongov02@gmail.com", password = "Shikongov@99", firstname = "Shikongo", lastname = "Giideon", phone = "+264814272721", accounttype = "standard", address = "Tuba Street", balance = 20000, budget = 1500, spend = 1400, CardNumber = "5343875934363775", ExpMonth = 4, ExpYear = 24, CVV = 254, AccountNumber = "2424789349735768")
+    var user:Accounts= Accounts(username = "shikongov02@gmail.com", password = "Shikongov@99", firstname = "Shikongo", lastname = "Giideon", phone = "+264814272721", accounttype = "standard", address = "Tuba Street", balance = 20000, budget = 1500, spend = 1100, CardNumber = "5343875934363775", ExpMonth = 4, ExpYear = 24, CVV = 254, AccountNumber = "2424789349735768")
 
     var translist = listOf<TransectionItem>(
         TransectionItem(Description = "Wage", ammount = 200, type = "Income"),
@@ -91,26 +91,19 @@ fun DashBordActivity(navController: NavHostController) {
 
     var spanding:Int =(((user.spend)/(user.budget))*100)
 
-    if(spanding in 49..60){
+    if(spanding <=50){
         Box(modifier = Modifier
             .clip(RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 100.dp))
             .fillMaxWidth()
             .height(270.dp)
-            .background(color = Color(104, 115, 8)))
-    }
-    else if(spanding < 60){
-        Box(modifier = Modifier
-            .clip(RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 100.dp))
-            .fillMaxWidth()
-            .height(270.dp)
-            .background(color = Color.Red))
+            .background(color = Color(0xff009177)))
     }
     else {
         Box(modifier = Modifier
             .clip(RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 100.dp))
             .fillMaxWidth()
             .height(270.dp)
-            .background(color = Color(0xff009177)))
+            .background(color = Color(104, 115, 8)))
     }
 
 
@@ -151,7 +144,7 @@ fun DashBordActivity(navController: NavHostController) {
             }
 
             Text(
-                text = "N$ ${user.balance.toString()}",
+                text = "N$ ${user.balance.toString()} $spanding",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
                 fontFamily = FontFamily.SansSerif,

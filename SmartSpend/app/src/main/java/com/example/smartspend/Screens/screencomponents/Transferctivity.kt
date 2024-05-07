@@ -84,7 +84,7 @@ fun TransferScreen(navController: NavHostController){
                     .background(color = Color(0xff009177))
                     .padding(10.dp, 0.dp)
                     .clickable {
-                                navController.navigate(Routes.PayScreen.routes)
+                                navController.navigate(Routes.Extransfere.routes)
                     },
                 contentAlignment = androidx.compose.ui.Alignment.Center
 
@@ -115,7 +115,9 @@ fun TransferScreen(navController: NavHostController){
                     .height(60.dp)
                     .background(color = Color(0xff009177))
                     .padding(10.dp, 0.dp)
-                    .clickable {},
+                    .clickable {
+                                navController.navigate(Routes.Intransfere.routes)
+                    },
                 contentAlignment = androidx.compose.ui.Alignment.Center
 
             ){
