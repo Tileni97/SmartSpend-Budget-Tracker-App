@@ -64,7 +64,7 @@ import com.example.notesapp.util.formatDate
 import com.example.smartspend.LandingActivity
 import com.example.smartspend.R
 import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
-import com.example.smartspend.data.NotesDataSource
+import com.example.smartspend.data.Accounts
 import com.example.smartspend.data.TransectionItem
 import com.example.smartspend.navigation.Routes
 import java.time.Instant
@@ -72,6 +72,8 @@ import java.util.Date
 
 @Composable
 fun DashBordActivity(navController: NavHostController) {
+    var user:Accounts= Accounts(username = "shikongov02@gmail.com", password = "Shikongov@99", firstname = "Shikongo", lastname = "Giideon", phone = "+264814272721", accounttype = "standard", address = "Tuba Street", balance = 20000, budget = 1500, spend = 1400, CardNumber = "5343875934363775", ExpMonth = 4, ExpYear = 24, CVV = 254, AccountNumber = "2424789349735768")
+
     var translist = listOf<TransectionItem>(
         TransectionItem(Description = "Wage", ammount = 200, type = "Income"),
         TransectionItem(Description = "transport", ammount = 200, type = "Expenses"),
@@ -86,11 +88,31 @@ fun DashBordActivity(navController: NavHostController) {
         TransectionItem(Description = "Deposit", ammount = 200, type = "Income"),
         TransectionItem(Description = "transport", ammount = 200, type = "Expenses")
     )
-    Box(modifier = Modifier
-        .clip(RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 100.dp))
-        .fillMaxWidth()
-        .height(270.dp)
-        .background(color = Color(0xff009177)))
+
+    var spanding:Int =(((user.spend)/(user.budget))*100)
+
+    if(spanding in 49..60){
+        Box(modifier = Modifier
+            .clip(RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 100.dp))
+            .fillMaxWidth()
+            .height(270.dp)
+            .background(color = Color(104, 115, 8)))
+    }
+    else if(spanding < 60){
+        Box(modifier = Modifier
+            .clip(RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 100.dp))
+            .fillMaxWidth()
+            .height(270.dp)
+            .background(color = Color.Red))
+    }
+    else {
+        Box(modifier = Modifier
+            .clip(RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 100.dp))
+            .fillMaxWidth()
+            .height(270.dp)
+            .background(color = Color(0xff009177)))
+    }
+
 
     Column(
         modifier = Modifier
@@ -100,8 +122,7 @@ fun DashBordActivity(navController: NavHostController) {
 
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(color = Color(0xff009177)),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.size(15.dp))
@@ -130,7 +151,7 @@ fun DashBordActivity(navController: NavHostController) {
             }
 
             Text(
-                text = "N$15 000",
+                text = "N$ ${user.balance.toString()}",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
                 fontFamily = FontFamily.SansSerif,
@@ -138,7 +159,7 @@ fun DashBordActivity(navController: NavHostController) {
             )
         }
         Spacer(modifier = Modifier.size(15.dp))
-        DashTopBar()
+        DashTopBar(user)
         Row(modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp, 0.dp),
@@ -175,7 +196,7 @@ fun DashBordActivity(navController: NavHostController) {
                     .background(color = MaterialTheme.colorScheme.inverseOnSurface)
                     .padding(5.dp)
                     .width(90.dp)
-                    .clickable { navController.navigate(Routes.PayScreen.routes)}
+                    .clickable { navController.navigate(Routes.PayScreen.routes) }
                     .shadow(
                         elevation = 10.dp,
                         spotColor = MaterialTheme.colorScheme.onBackground,
@@ -251,7 +272,7 @@ fun DashBordActivity(navController: NavHostController) {
 // The rest of the code remains the same
 
 @Composable
-fun DashTopBar(){
+fun DashTopBar(user:Accounts){
 
     Column (
         modifier = Modifier
@@ -274,150 +295,447 @@ fun DashTopBar(){
                     ambientColor = MaterialTheme.colorScheme.onBackground
                 )
         ){
-            Box(
-                modifier = Modifier
-                    .clip(
-                        RoundedCornerShape(size = 10.dp)
-                    )
-                    .fillMaxWidth()
-                    .background(
-                        color = Color.Black
-                    )
-                    .padding(10.dp)
-            ){
-                Column {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-
-                        Text(
-                            text = "S",
-                            color =Color.White,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.ExtraBold,
+            if(user.accounttype.equals("standard")){
+                Box(
+                    modifier = Modifier
+                        .clip(
+                            RoundedCornerShape(size = 10.dp)
                         )
-                        Text(
-                            text = "S",
-                            color = Color.Green,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            modifier = Modifier
-                                .scale(1f, -1f) // Inverted vertically
-                                .rotate(degrees = 180f) // Rotated 180 degrees to correct orientation
+                        .fillMaxWidth()
+                        .background(
+                            color = Color.Black
                         )
-                    }
-                    Spacer(modifier = Modifier.size(10.dp))
-                    Text(text = "XXXX XXXX XXXX XXXX 5446",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color =Color(255, 191, 0)
-                    )
-                    Spacer(modifier = Modifier.size(10.dp))
-                    Row (
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround
-                    ){
-                        Box (
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(size = 10.dp))
-                                .width(90.dp)
-                                .background(
-                                    color = Color(11, 158, 55)
-                                )
-                                .padding(5.dp, 0.dp),
+                        .padding(10.dp)
+                ){
+                    Column {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
 
-
-                        ){
-                            Column {
-                                Text(text = "BUDGET",
-                                    fontWeight = FontWeight.W400,
-                                    color = Color.White
-                                )
-                                Text(text = "N$ 380",
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White,
-                                    fontSize = 15.sp
-                                )
-                            }
+                            Text(
+                                text = "S",
+                                color =Color.White,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                            )
+                            Text(
+                                text = "S",
+                                color = Color.Green,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                modifier = Modifier
+                                    .scale(1f, -1f) // Inverted vertically
+                                    .rotate(degrees = 180f) // Rotated 180 degrees to correct orientation
+                            )
                         }
-                        Spacer(modifier = Modifier.size(2.dp))
-                        Box (
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(size = 10.dp))
-                                .width(90.dp)
-                                .background(
-                                    color = Color(122, 24, 5)
-                                )
-                                .padding(5.dp, 0.dp)
-
-                        ){
-                            Column {
-                                Text(text = "SPEND",
-                                    fontWeight = FontWeight.W400,
-                                    color = Color.White
-                                )
-                                Text(text = "N$ 380",
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White,
-                                    fontSize = 15.sp
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.size(2.dp))
-                        Box (
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(size = 10.dp))
-                                .width(90.dp)
-                                .background(
-                                    color = Color(102, 98, 15)
-                                )
-                                .padding(5.dp, 0.dp)
-
-                        ){
-                            Column {
-                                Text(text = "REMAIN",
-                                    fontWeight = FontWeight.W400,
-                                    color = Color.White
-                                )
-                                Text(text = "N$ 380",
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White,
-                                    fontSize = 15.sp
-                                )
-                            }
-                        }
-
-                    }
-                    Spacer(modifier = Modifier.size(10.dp))
-                    Row (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(30.dp, 0.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Text(text = "03/27",color =Color.White)
-                    }
-                    Row (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp, 0.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Text(text = "Giideon s v",
+                        var size:Int = user.CardNumber.length
+                        Spacer(modifier = Modifier.size(10.dp))
+                        Text(text = "XXXX XXXX XXXX XXXX ${user.CardNumber.subSequence((size-4), (size))}",
                             fontSize = 15.sp,
-                            fontWeight = FontWeight.W400,
-                            color = Color.White
+                            fontWeight = FontWeight.ExtraBold,
+                            color =Color(255, 191, 0)
                         )
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_visa),
-                            contentDescription = "Card 18",
+                        Spacer(modifier = Modifier.size(10.dp))
+                        Row (
                             modifier = Modifier
-                                .requiredWidth(60.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceAround
+                        ){
+                            Box (
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(size = 10.dp))
+                                    .width(90.dp)
+                                    .background(
+                                        color = Color(11, 158, 55)
+                                    )
+                                    .padding(5.dp, 0.dp),
+
+
+                                ){
+                                Column {
+                                    Text(text = "BUDGET",
+                                        fontWeight = FontWeight.W400,
+                                        color = Color.White
+                                    )
+                                    Text(text = "N$ ${user.budget}",
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White,
+                                        fontSize = 15.sp
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.size(2.dp))
+                            Box (
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(size = 10.dp))
+                                    .width(90.dp)
+                                    .background(
+                                        color = Color(122, 24, 5)
+                                    )
+                                    .padding(5.dp, 0.dp)
+
+                            ){
+                                Column {
+                                    Text(text = "SPEND",
+                                        fontWeight = FontWeight.W400,
+                                        color = Color.White
+                                    )
+                                    Text(text = "N$ ${user.spend}",
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White,
+                                        fontSize = 15.sp
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.size(2.dp))
+                            Box (
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(size = 10.dp))
+                                    .width(90.dp)
+                                    .background(
+                                        color = Color(102, 98, 15)
+                                    )
+                                    .padding(5.dp, 0.dp)
+
+                            ){
+                                Column {
+                                    Text(text = "REMAIN",
+                                        fontWeight = FontWeight.W400,
+                                        color = Color.White
+                                    )
+                                    Text(text = "N$ ${(user.budget)-(user.spend)}",
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White,
+                                        fontSize = 15.sp
+                                    )
+                                }
+                            }
+
+                        }
+                        Spacer(modifier = Modifier.size(10.dp))
+                        Row (
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(30.dp, 0.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(text = "0${user.ExpMonth}/${user.ExpYear}",color =Color.White)
+                        }
+                        Row (
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp, 0.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(text = "Giideon s v",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.W400,
+                                color = Color.White
+                            )
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_visa),
+                                contentDescription = "Card 18",
+                                modifier = Modifier
+                                    .requiredWidth(60.dp)
+                            )
+                        }
+                    }
+
+                }
+            }
+            else if(user.accounttype.equals("VIP")){
+                Box(
+                    modifier = Modifier
+                        .clip(
+                            RoundedCornerShape(size = 10.dp)
                         )
+                        .fillMaxWidth()
+                        .background(
+                            color = Color.Black
+                        )
+                        .padding(10.dp)
+                ){
+                    Column {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+
+                            Text(
+                                text = "S",
+                                color =Color.White,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                            )
+                            Text(
+                                text = "S",
+                                color = Color.Green,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                modifier = Modifier
+                                    .scale(1f, -1f) // Inverted vertically
+                                    .rotate(degrees = 180f) // Rotated 180 degrees to correct orientation
+                            )
+                        }
+                        Spacer(modifier = Modifier.size(10.dp))
+                        Text(text = "XXXX XXXX XXXX XXXX 5446",
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color =Color(255, 191, 0)
+                        )
+                        Spacer(modifier = Modifier.size(10.dp))
+                        Row (
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceAround
+                        ){
+                            Box (
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(size = 10.dp))
+                                    .width(90.dp)
+                                    .background(
+                                        color = Color(11, 158, 55)
+                                    )
+                                    .padding(5.dp, 0.dp),
+
+
+                                ){
+                                Column {
+                                    Text(text = "BUDGET",
+                                        fontWeight = FontWeight.W400,
+                                        color = Color.White
+                                    )
+                                    Text(text = "N$ 380",
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White,
+                                        fontSize = 15.sp
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.size(2.dp))
+                            Box (
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(size = 10.dp))
+                                    .width(90.dp)
+                                    .background(
+                                        color = Color(122, 24, 5)
+                                    )
+                                    .padding(5.dp, 0.dp)
+
+                            ){
+                                Column {
+                                    Text(text = "SPEND",
+                                        fontWeight = FontWeight.W400,
+                                        color = Color.White
+                                    )
+                                    Text(text = "N$ 380",
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White,
+                                        fontSize = 15.sp
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.size(2.dp))
+                            Box (
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(size = 10.dp))
+                                    .width(90.dp)
+                                    .background(
+                                        color = Color(102, 98, 15)
+                                    )
+                                    .padding(5.dp, 0.dp)
+
+                            ){
+                                Column {
+                                    Text(text = "REMAIN",
+                                        fontWeight = FontWeight.W400,
+                                        color = Color.White
+                                    )
+                                    Text(text = "N$ 380",
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White,
+                                        fontSize = 15.sp
+                                    )
+                                }
+                            }
+
+                        }
+                        Spacer(modifier = Modifier.size(10.dp))
+                        Row (
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(30.dp, 0.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(text = "03/27",color =Color.White)
+                        }
+                        Row (
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp, 0.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(text = "Giideon s v",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.W400,
+                                color = Color.White
+                            )
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_visa),
+                                contentDescription = "Card 18",
+                                modifier = Modifier
+                                    .requiredWidth(60.dp)
+                            )
+                        }
                     }
                 }
             }
+            else {
+                Box(
+                    modifier = Modifier
+                        .clip(
+                            RoundedCornerShape(size = 10.dp)
+                        )
+                        .fillMaxWidth()
+                        .background(
+                            color = Color.Black
+                        )
+                        .padding(10.dp)
+                ){
+                    Column {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+
+                            Text(
+                                text = "S",
+                                color =Color.White,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                            )
+                            Text(
+                                text = "S",
+                                color = Color.Green,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                modifier = Modifier
+                                    .scale(1f, -1f) // Inverted vertically
+                                    .rotate(degrees = 180f) // Rotated 180 degrees to correct orientation
+                            )
+                        }
+                        Spacer(modifier = Modifier.size(10.dp))
+                        Text(text = "XXXX XXXX XXXX XXXX 5446",
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color =Color(255, 191, 0)
+                        )
+                        Spacer(modifier = Modifier.size(10.dp))
+                        Row (
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceAround
+                        ){
+                            Box (
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(size = 10.dp))
+                                    .width(90.dp)
+                                    .background(
+                                        color = Color(11, 158, 55)
+                                    )
+                                    .padding(5.dp, 0.dp),
+
+
+                                ){
+                                Column {
+                                    Text(text = "BUDGET",
+                                        fontWeight = FontWeight.W400,
+                                        color = Color.White
+                                    )
+                                    Text(text = "N$ 380",
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White,
+                                        fontSize = 15.sp
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.size(2.dp))
+                            Box (
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(size = 10.dp))
+                                    .width(90.dp)
+                                    .background(
+                                        color = Color(122, 24, 5)
+                                    )
+                                    .padding(5.dp, 0.dp)
+
+                            ){
+                                Column {
+                                    Text(text = "SPEND",
+                                        fontWeight = FontWeight.W400,
+                                        color = Color.White
+                                    )
+                                    Text(text = "N$ 380",
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White,
+                                        fontSize = 15.sp
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.size(2.dp))
+                            Box (
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(size = 10.dp))
+                                    .width(90.dp)
+                                    .background(
+                                        color = Color(102, 98, 15)
+                                    )
+                                    .padding(5.dp, 0.dp)
+
+                            ){
+                                Column {
+                                    Text(text = "REMAIN",
+                                        fontWeight = FontWeight.W400,
+                                        color = Color.White
+                                    )
+                                    Text(text = "N$ 380",
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White,
+                                        fontSize = 15.sp
+                                    )
+                                }
+                            }
+
+                        }
+                        Spacer(modifier = Modifier.size(10.dp))
+                        Row (
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(30.dp, 0.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(text = "03/27",color =Color.White)
+                        }
+                        Row (
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp, 0.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text(text = "Giideon s v",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.W400,
+                                color = Color.White
+                            )
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_visa),
+                                contentDescription = "Card 18",
+                                modifier = Modifier
+                                    .requiredWidth(60.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
         }
     }
 }
@@ -428,7 +746,7 @@ fun TransectionRow(
     trans: TransectionItem,){
     Surface(
         modifier
-            .padding(15.dp,3.dp)
+            .padding(15.dp, 3.dp)
             .clip(shape = RoundedCornerShape(size = 10.dp))
             //
             // to clip using a shape

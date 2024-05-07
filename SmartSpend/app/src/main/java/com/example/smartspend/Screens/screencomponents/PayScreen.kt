@@ -16,7 +16,9 @@ import androidx.compose.material.icons.outlined.AccountBalance
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,12 +42,16 @@ fun PayScreen(){
             modifier = Modifier
                 .padding(20.dp)
                 .clip(RoundedCornerShape(size = 10.dp))
-               .fillMaxWidth()
+                .fillMaxWidth()
                 .heightIn(600.dp, 1000.dp)
-               .background(color = Color(0xff009177)),
+                .background(color = MaterialTheme.colorScheme.inverseSurface),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-
+            Column {
+                TextField(value = "", onValueChange = {}, placeholder = { 
+                    Text(text = "Amount")
+                })
+            }
         }
     }
 }

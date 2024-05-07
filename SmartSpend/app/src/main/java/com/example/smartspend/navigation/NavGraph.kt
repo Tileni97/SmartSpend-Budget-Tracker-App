@@ -32,7 +32,7 @@ fun NavGraph(navController: NavHostController){
             DashBordActivity(navController)
         }
         composable(Routes.Transactions.routes){
-            TransferScreen()
+            TransferScreen(navController)
         }
         composable(Routes.PayScreen.routes){
             PayScreen()

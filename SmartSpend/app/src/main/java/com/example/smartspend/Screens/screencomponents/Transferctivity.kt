@@ -42,13 +42,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.LandingActivity
 import com.example.smartspend.Screens.screencomponents.ui.theme.SmartSpendTheme
+import com.example.smartspend.navigation.Routes
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
 @Composable
-fun TransferScreen(){
+fun TransferScreen(navController: NavHostController){
+    var option:String =""
     Column (
         modifier = Modifier
             .fillMaxSize(),
@@ -71,36 +75,6 @@ fun TransferScreen(){
                 )
 
             Spacer(modifier = Modifier.size(10.dp))
-            Box (
-                modifier = Modifier
-                    .clip(RoundedCornerShape(size = 5.dp))
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .background(color = Color(0xff009177))
-                    .padding(10.dp, 0.dp)
-                    .clickable {},
-                contentAlignment = androidx.compose.ui.Alignment.Center
-
-            ){
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-                ){
-                    Icon(imageVector = Icons.Outlined.FavoriteBorder,
-                        contentDescription = "", tint = Color.Yellow
-                    )
-                    Spacer(modifier = Modifier.size(10.dp))
-                    Text(
-                        text = "Favourite", fontFamily = FontFamily.SansSerif,
-                        color = Color.Yellow, fontSize = 20.sp,
-                        fontWeight = FontWeight.W700
-                    )
-                }
-
-            }
-
             Spacer(modifier = Modifier.size(10.dp))
             Box (
                 modifier = Modifier
@@ -109,7 +83,9 @@ fun TransferScreen(){
                     .height(60.dp)
                     .background(color = Color(0xff009177))
                     .padding(10.dp, 0.dp)
-                    .clickable {},
+                    .clickable {
+                                navController.navigate(Routes.PayScreen.routes)
+                    },
                 contentAlignment = androidx.compose.ui.Alignment.Center
 
             ){
@@ -160,70 +136,6 @@ fun TransferScreen(){
                 }
 
             }
-
-
-            Spacer(modifier = Modifier.size(10.dp))
-            Box (
-                modifier = Modifier
-                    .clip(RoundedCornerShape(size = 5.dp))
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .background(color = Color(0xff009177))
-                    .padding(10.dp, 0.dp)
-                    .clickable {},
-                contentAlignment = androidx.compose.ui.Alignment.Center
-
-            ){
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-                ){
-                    Icon(imageVector = Icons.Outlined.Savings,
-                        contentDescription = "", tint = Color.White
-                    )
-                    Spacer(modifier = Modifier.size(10.dp))
-                    Text(
-                        text = "Savings", fontFamily = FontFamily.SansSerif,
-                        color = Color.White, fontSize = 20.sp
-                    )
-                }
-
-            }
-
-            Spacer(modifier = Modifier.size(10.dp))
-            Box (
-                modifier = Modifier
-                    .clip(RoundedCornerShape(size = 5.dp))
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .background(color = Color(0xff009177))
-                    .padding(10.dp, 0.dp)
-                    .clickable {},
-                contentAlignment = androidx.compose.ui.Alignment.Center
-
-            ){
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-                ){
-                    Icon(imageVector = Icons.Outlined.PhoneIphone,
-                        contentDescription = "", tint = Color.White
-                    )
-                    Spacer(modifier = Modifier.size(10.dp))
-                    Text(
-                        text = "Mobile Account", fontFamily = FontFamily.SansSerif,
-                        color = Color.White, fontSize = 20.sp
-                    )
-                }
-
-            }
-
-
-
         }
     }
 }
@@ -246,12 +158,11 @@ fun NavBar(){
             Box (
                 modifier = Modifier
                     .clip(RoundedCornerShape(size = 5.dp))
-                    .background(color = Color.White)
                     .padding(5.dp)
                     .clickable {}
 
             ){
-                Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = "", tint = Color.Black)
+                Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = "", tint = Color.White)
             }
             Row (
                 horizontalArrangement = Arrangement.Center,
@@ -293,7 +204,7 @@ fun NavBar(){
 @Preview(showBackground = true)
 @Composable
 fun TransferScreenPreview3() {
-
-    TransferScreen()
+    val navControllerOne = rememberNavController()
+    TransferScreen(navControllerOne)
 
 }
