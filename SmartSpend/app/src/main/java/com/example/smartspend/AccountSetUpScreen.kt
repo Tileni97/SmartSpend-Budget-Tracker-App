@@ -110,7 +110,7 @@ fun AccountSetUp() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Spacer(modifier = Modifier.height(50.dp))
+
         Text(
             text = "Hi There !!!",
             fontSize = 24.sp,
@@ -124,10 +124,9 @@ fun AccountSetUp() {
             fontWeight = FontWeight.W400,
             textAlign = TextAlign.Center
         )
-
+        Spacer(modifier = Modifier.height(100.dp))
         Column (
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ){
@@ -168,7 +167,7 @@ fun AccountSetUp() {
                 ){
                     Box (
                         modifier = Modifier
-                            .width(130.dp)
+                            .width(120.dp)
                             .padding(5.dp, 0.dp),
                     ){
                         TextField(value = "", onValueChange = {},
@@ -182,7 +181,7 @@ fun AccountSetUp() {
                     }
                     Box (
                         modifier = Modifier
-                            .width(130.dp)
+                            .width(120.dp)
                             .padding(5.dp, 0.dp),
                     ){
                         TextField(value = "", onValueChange = {},
@@ -212,8 +211,8 @@ fun AccountSetUp() {
             Button(onClick = { },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(40.dp)
-                    .padding(40.dp, 0.dp),
+                    .height(50.dp)
+                    .padding(20.dp, 0.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xff009177),
                     contentColor = Color.White
