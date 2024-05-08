@@ -60,7 +60,7 @@ fun TransferScreen(navController: NavHostController){
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
 
     ){
-        NavBar()
+        NavBar(navController )
 
          Column(
             modifier = Modifier
@@ -144,7 +144,7 @@ fun TransferScreen(navController: NavHostController){
 }
 
 @Composable
-fun NavBar(){
+fun NavBar(navController: NavHostController){
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -162,7 +162,7 @@ fun NavBar(){
                 modifier = Modifier
                     .clip(RoundedCornerShape(size = 5.dp))
                     .padding(5.dp)
-                    .clickable {}
+                    .clickable {navController.popBackStack()}
 
             ){
                 Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = "", tint = Color.White)

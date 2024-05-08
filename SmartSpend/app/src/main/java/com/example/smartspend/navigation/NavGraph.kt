@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.smartspend.AccountSetUpScreen
+import com.example.smartspend.BudgetSetUpScreen
 import com.example.smartspend.Screens.home.DashBordActivity
 import com.example.smartspend.Screens.home.HomeScreen
 import com.example.smartspend.Screens.home.ProfileScreen
@@ -44,6 +46,12 @@ fun NavGraph(navController: NavHostController){
         }
         composable(Routes.Intransfere.routes){
             IntransfereScreen(navController)
+        }
+        composable(Routes.AccountSetUp.routes){
+            AccountSetUpScreen()
+        }
+        composable(Routes.BudgetSetUp.routes){
+            BudgetSetUpScreen()
         }
     }
 
