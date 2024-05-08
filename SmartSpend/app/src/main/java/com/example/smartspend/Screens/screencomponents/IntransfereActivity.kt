@@ -6,15 +6,28 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountTree
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.AttachMoney
+import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material.icons.rounded.Business
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,19 +43,103 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IntransfereScreen(navController: NavHostController) {
-    Column (
-        modifier = Modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ){
-        InNavBar("Internal Transfer")
+
+        Column (
+            modifier = Modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ){
+            InNavBar("Internal Transfer", navController)
+            Column(
+                modifier = Modifier
+                    .padding(40.dp, 0.dp)
+                    .clip(RoundedCornerShape(bottomEnd = 100.dp, bottomStart = 100.dp))
+                   .fillMaxWidth()
+                   .background(color = Color(0xff009177)),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ){
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(15.dp, 0.dp),
+                    horizontalArrangement = Arrangement.Center,
+                ){
+
+                    Text(text = "Balance N$"
+                        , fontSize = 20.sp,
+                        fontWeight = FontWeight.W700,
+                        color = Color.White)
+
+                    Spacer(modifier = Modifier.height(5.dp))
+
+                    Text(text = "100"
+                        , fontSize = 20.sp,
+                        fontWeight = FontWeight.W700,
+                        color = Color.White)
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+
+            Spacer(modifier = Modifier.height(20.dp))
+            Column (
+                modifier = Modifier
+                    .padding(20.dp, 10.dp)
+                    .clip(RoundedCornerShape(size = 10.dp))
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.inverseOnSurface),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ){
+                TextField(value = "", onValueChange = {},
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent),
+                    label = {Text(text = "Amount")},
+                    placeholder = {Text(text = "1000")},
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                TextField(value = "", onValueChange = {},
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent),
+                    label = {Text(text = "Account Number")},
+                    placeholder = {Text(text = "484885938563958035793")},
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Outlined.AccountTree, contentDescription = "")
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                Demo_ExposedDropdownMenuBox()
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+            Spacer(modifier = Modifier.height(50.dp))
+            Button(onClick = { },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(40.dp)
+                    .padding(40.dp, 0.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xff009177),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "Transfer", fontWeight = FontWeight.W700)
+
+            }
+        }
     }
-}
+
 
 @Composable
-fun InNavBar(name:String){
+fun InNavBar(name:String, navController: NavHostController){
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -59,7 +157,9 @@ fun InNavBar(name:String){
                 modifier = Modifier
                     .clip(RoundedCornerShape(size = 5.dp))
                     .padding(5.dp)
-                    .clickable {}
+                    .clickable {
+                        navController.popBackStack()
+                    }
 
             ){
                 Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = "", tint = Color.White)

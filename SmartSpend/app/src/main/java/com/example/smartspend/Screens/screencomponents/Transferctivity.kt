@@ -46,13 +46,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.LandingActivity
 import com.example.smartspend.Screens.screencomponents.ui.theme.SmartSpendTheme
+import com.example.smartspend.data.Accounts
 import com.example.smartspend.navigation.Routes
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
 @Composable
 fun TransferScreen(navController: NavHostController){
-    var option:String =""
+
     Column (
         modifier = Modifier
             .fillMaxSize(),
