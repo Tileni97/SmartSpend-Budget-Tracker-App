@@ -7,9 +7,9 @@ import java.util.UUID
 data class Cards(
     var id: UUID = UUID.randomUUID(),
     var userID: String,
-    var CardNumber: Int,
-    var ExpMonth: Int,
-    var ExpYear: Int,
-    var CVV:Int,
+    var cardNumber: Int,
+    var expMonth: Int,
+    var expYear: Int,
+    var cvv:Int,
     var entryDate: Date = Date.from(Instant.now())
 )

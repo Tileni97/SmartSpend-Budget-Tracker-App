@@ -1,14 +1,9 @@
 package com.example.smartspend.Screens.home
 
-import android.content.Intent
-import android.graphics.drawable.shapes.Shape
-import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,7 +23,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccessTime
-import androidx.compose.material.icons.outlined.AirportShuttle
 import androidx.compose.material.icons.outlined.ArrowDownward
 import androidx.compose.material.icons.outlined.ArrowOutward
 import androidx.compose.material.icons.outlined.ArrowUpward
@@ -36,10 +30,8 @@ import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.SyncAlt
 import androidx.compose.material.icons.outlined.TransitEnterexit
-import androidx.compose.material.icons.rounded.DeleteSweep
 import androidx.compose.material.icons.rounded.Logout
 import androidx.compose.material.icons.rounded.Person
-import androidx.compose.material.icons.rounded.Update
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -61,18 +53,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.notesapp.util.formatDate
-import com.example.smartspend.LandingActivity
 import com.example.smartspend.R
 import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
-import com.example.smartspend.data.Accounts
 import com.example.smartspend.data.TransectionItem
+import com.example.smartspend.data.User
 import com.example.smartspend.navigation.Routes
-import java.time.Instant
-import java.util.Date
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
+import java.util.UUID
 
 @Composable
 fun DashBordActivity(navController: NavHostController) {
-    var user:Accounts= Accounts(username = "shikongov02@gmail.com", password = "Shikongov@99", firstname = "Shikongo", lastname = "Giideon", phone = "+264814272721", accounttype = "standard", address = "Tuba Street", balance = 20000, budget = 1500, spend = 1100, CardNumber = "5343875934363775", ExpMonth = 4, ExpYear = 24, CVV = 254, AccountNumber = "2424789349735768")
+    var user:User= User(username = "shikongov02@gmail.com", password = "Shikongov@99", firstName = "Shikongo", lastName = "Giideon", phone = "+264814272721", accountType = "standard", address = "Tuba Street", balance = 20000, budget = 1500, spent = 1100, cardNumber = "5343875934363775", expMonth = 4, expYear = 24, cvv = 254, AccountNumber = "2424789349735768")
+
+    firebaseFetch()
 
     var translist = listOf<TransectionItem>(
         TransectionItem(Description = "Wage", ammount = 200, type = "Income"),
@@ -89,7 +83,7 @@ fun DashBordActivity(navController: NavHostController) {
         TransectionItem(Description = "transport", ammount = 200, type = "Expenses")
     )
 
-    var spending:Int =((user.spend.toDouble()/user.budget.toDouble())*100).toInt()
+    var spending:Int =((user.spent.toDouble()/user.budget.toDouble())*100).toInt()
 
     if(spending <=50){
         Box(modifier = Modifier
@@ -137,7 +131,7 @@ fun DashBordActivity(navController: NavHostController) {
             ){
                 Icon(imageVector = Icons.Rounded.Person, contentDescription = "", tint = Color.White)
                 Text(
-                    text = "Bank Balance",
+                    text = "Account Balance",
                     fontWeight = FontWeight.ExtraBold,
                     color = Color.White,
                     fontFamily = FontFamily.SansSerif
@@ -270,11 +264,9 @@ fun DashBordActivity(navController: NavHostController) {
     }
 }
 
-// ...
-// The rest of the code remains the same
 
 @Composable
-fun DashTopBar(user:Accounts){
+fun DashTopBar(user:User){
 
     Column (
         modifier = Modifier
@@ -297,7 +289,7 @@ fun DashTopBar(user:Accounts){
                     ambientColor = MaterialTheme.colorScheme.onBackground
                 )
         ){
-            if(user.accounttype.equals("standard")){
+            if(user.accountType.equals("standard")){
                 Box(
                     modifier = Modifier
                         .clip(
@@ -328,9 +320,9 @@ fun DashTopBar(user:Accounts){
                                     .rotate(degrees = 180f) // Rotated 180 degrees to correct orientation
                             )
                         }
-                        var size:Int = user.CardNumber.length
+                        var size:Int = user.cardNumber.length
                         Spacer(modifier = Modifier.size(10.dp))
-                        Text(text = "XXXX XXXX XXXX XXXX ${user.CardNumber.subSequence((size-4), (size))}",
+                        Text(text = "XXXX XXXX XXXX XXXX ${user.cardNumber.subSequence((size-4), (size))}",
                             fontSize = 15.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color =Color(255, 191, 0)
@@ -376,11 +368,11 @@ fun DashTopBar(user:Accounts){
 
                             ){
                                 Column {
-                                    Text(text = "SPEND",
+                                    Text(text = "SPENT",
                                         fontWeight = FontWeight.W400,
                                         color = Color.White
                                     )
-                                    Text(text = "N$ ${user.spend}",
+                                    Text(text = "N$ ${user.spent}",
                                         fontWeight = FontWeight.Bold,
                                         color = Color.White,
                                         fontSize = 15.sp
@@ -403,7 +395,7 @@ fun DashTopBar(user:Accounts){
                                         fontWeight = FontWeight.W400,
                                         color = Color.White
                                     )
-                                    Text(text = "N$ ${(user.budget)-(user.spend)}",
+                                    Text(text = "N$ ${(user.budget)-(user.spent)}",
                                         fontWeight = FontWeight.Bold,
                                         color = Color.White,
                                         fontSize = 15.sp
@@ -420,7 +412,7 @@ fun DashTopBar(user:Accounts){
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ){
-                            Text(text = "0${user.ExpMonth}/${user.ExpYear}",color =Color.White)
+                            Text(text = "0${user.expMonth}/${user.expYear}",color =Color.White)
                         }
                         Row (
                             modifier = Modifier
@@ -429,7 +421,7 @@ fun DashTopBar(user:Accounts){
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ){
-                            Text(text = "Giideon s v",
+                            Text(text = "" + user.firstName + " " + user.lastName,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.W400,
                                 color = Color.White
@@ -445,7 +437,7 @@ fun DashTopBar(user:Accounts){
 
                 }
             }
-            else if(user.accounttype.equals("VIP")){
+            else if(user.accountType.equals("VIP")){
                 Box(
                     modifier = Modifier
                         .clip(
@@ -477,7 +469,7 @@ fun DashTopBar(user:Accounts){
                             )
                         }
                         Spacer(modifier = Modifier.size(10.dp))
-                        Text(text = "XXXX XXXX XXXX XXXX 5446",
+                        Text(text = user.cardNumber,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color =Color(255, 191, 0)
@@ -882,6 +874,100 @@ fun TransectionRow(
 
     }
 
+}
+
+fun firebaseFetch() {
+    val db = Firebase.firestore
+    val userDocRef = db.collection("Users").document("Tangi Petrus")
+    var user: User = User(
+        id = UUID.randomUUID(),
+        username = "",
+        password = "",
+        firstName = "",
+        lastName = "",
+        phone = "",
+        accountType = "",
+        address = "",
+        balance = 0,
+        spent = 0,
+        budget = 0,
+        cardNumber = "",
+        expMonth = 0,
+        expYear = 0,
+        cvv = 0,
+        AccountNumber = ""
+    )
+
+    userDocRef.get()
+        /*.addOnSuccessListener { querySnapshot ->
+            for (document in querySnapshot.document) {
+                // Access document data here
+                val data = document.data
+                if (data != null) {
+                    // Log document ID and data
+                    Log.d(TAG, "${document.id} => $data")
+                } else {
+                    // Handle null data if needed
+                    Log.e(TAG, "Document data is null for document ${document.id}")
+                }
+            }
+        }
+        .addOnFailureListener { exception ->
+            // Handle errors
+            Log.e(TAG, "Error getting documents: ", exception)
+        }*/
+
+        .addOnSuccessListener { documentSnapshot ->
+            if (documentSnapshot.exists()) {
+                val userData = documentSnapshot.data
+                val id = userData?.get("id") as? Int
+                val username = userData?.get("username") as? String
+                val password = userData?.get("password") as? String
+                val firstName = userData?.get("firstName") as? String
+                val lastName = userData?.get("lastName") as? String
+                val phone = userData?.get("phone") as? String
+                val accountType = userData?.get("accountType") as? String
+                val address = userData?.get("address") as? String
+                val balance = userData?.get("balance") as? Double
+                val spent = userData?.get("spent") as? Double
+                val budget = userData?.get("budget") as? Double
+                val cardNumber = userData?.get("cardNumber") as? String
+                val expMonth = userData?.get("expMonth") as? Int
+                val expYear = userData?.get("expYear") as? Int
+                val cvv = userData?.get("cvv") as? Int
+                val AccountNumber = userData?.get("AccountNumber") as? String
+
+                // Update your `User` object with the fetched values
+                user = User(
+                    username = username ?: "",
+                    password = password ?: "",
+                    firstName = firstName ?: "",
+                    lastName = lastName ?: "",
+                    phone = phone ?: "",
+                    accountType = accountType ?: "",
+                    address = address ?: "",
+                    balance = balance?.toInt() ?: 0,
+                    spent = spent?.toInt() ?: 0,
+                    budget = budget?.toInt() ?: 0,
+                    cardNumber = cardNumber ?: "",
+                    expMonth = expMonth ?: 0,
+                    expYear = expYear ?: 0,
+                    cvv = cvv ?: 0,
+                    AccountNumber = AccountNumber ?: ""
+                )
+
+
+            } else {
+                // Handle the case where the document doesn't exist
+                //Toast.makeText(context, "Account not set up fully, contact your admin", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "Document data is null for document ${documentSnapshot.id}")
+            }
+        }
+        .addOnFailureListener { exception ->
+            // Handle any errors that occurred
+            //Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
+            Log.w(TAG, "Error getting documents.", exception)
+        }
 }
 
 @Preview(showBackground = true)
