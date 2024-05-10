@@ -1,18 +1,14 @@
 package com.example.smartspend.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.smartspend.AccountSetUpScreen
-import com.example.smartspend.BudgetSetUpScreen
+import com.example.smartspend.Screens.LoginScreen
 import com.example.smartspend.Screens.home.DashBordActivity
 import com.example.smartspend.Screens.home.HomeScreen
 import com.example.smartspend.Screens.home.ProfileScreen
 import com.example.smartspend.Screens.home.SettingScreen
-import com.example.smartspend.Screens.home.TransactionScreen
 import com.example.smartspend.Screens.screencomponents.ExtransfereScreen
 import com.example.smartspend.Screens.screencomponents.IntransfereScreen
 import com.example.smartspend.Screens.screencomponents.PayScreen
@@ -21,7 +17,11 @@ import com.example.smartspend.Screens.screencomponents.TransferScreen
 @Composable
 fun NavGraph(navController: NavHostController){
 
-    NavHost(navController = navController, startDestination = Routes.HomeScreen.routes) {
+    NavHost(navController = navController, startDestination = Routes.LoginScreen.routes) {
+
+        composable(Routes.LoginScreen.routes){
+            LoginScreen(navigateToAccountSetUp = {navController})
+        }
 
         composable(Routes.HomeScreen.routes){
             HomeScreen(navController)
@@ -47,12 +47,12 @@ fun NavGraph(navController: NavHostController){
         composable(Routes.Intransfere.routes){
             IntransfereScreen(navController)
         }
-        composable(Routes.AccountSetUp.routes){
+        /*composable(Routes.AccountSetUp.routes){
             AccountSetUpScreen()
         }
         composable(Routes.BudgetSetUp.routes){
             BudgetSetUpScreen()
-        }
+        }*/
     }
 
 }

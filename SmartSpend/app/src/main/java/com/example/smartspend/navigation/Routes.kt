@@ -8,7 +8,7 @@ sealed class Routes (val routes:String){
     data object HomeScreen : Routes("homeScreen")
     data object TransferScreen : Routes("transfer")
     data object PayScreen : Routes("pay")
-    data object Login : Routes("login")
+    data object LoginScreen : Routes("login")
     data object Register : Routes("register")
     data object Transactions : Routes("transactions")
     data object Extransfere : Routes("external")
