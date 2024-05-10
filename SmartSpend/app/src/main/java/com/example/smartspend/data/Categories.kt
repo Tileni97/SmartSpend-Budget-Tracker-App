@@ -4,12 +4,11 @@ import java.time.Instant
 import java.util.Date
 import java.util.UUID
 
-data class Cards(
+data class Categories(
     var id: UUID = UUID.randomUUID(),
-    var userID: String,
-    var CardNumber: Int,
-    var ExpMonth: Int,
-    var ExpYear: Int,
-    var CVV:Int,
+    var name: String,
+    var budgetAlocated: Int,
+    var spand: Int,
+    var remainingBudget: Int,
     var entryDate: Date = Date.from(Instant.now())
 )

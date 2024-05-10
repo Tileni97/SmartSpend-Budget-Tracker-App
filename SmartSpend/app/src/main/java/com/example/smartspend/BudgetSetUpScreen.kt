@@ -41,6 +41,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.smartspend.Screens.screencomponents.ui.theme.SmartSpendTheme
+import com.example.smartspend.data.Categories
+import com.example.smartspend.data.TransectionItem
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class BudgetSetUpScreen: ComponentActivity() {
@@ -71,6 +73,10 @@ class BudgetSetUpScreen: ComponentActivity() {
         }
     }
 }
+
+var translist = listOf<Categories>(
+
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
