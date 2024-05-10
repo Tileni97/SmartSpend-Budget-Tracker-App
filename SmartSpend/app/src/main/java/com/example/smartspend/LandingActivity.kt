@@ -33,7 +33,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.smartspend.Screens.home.HomeActivity
 import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -46,7 +45,7 @@ class LandingActivity : ComponentActivity() {
         setContent {
             SmartSpendTheme {
                 SetBarColor(color = Color(0xff009177))
-                val intent = Intent(this, HomeActivity::class.java)
+                val intent = Intent(this, LoginScreenActivity::class.java)
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),

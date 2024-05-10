@@ -13,6 +13,21 @@
         android:theme="@style/Theme.SmartSpend"
         tools:targetApi="31">
         <activity
+            android:name=".BudgetSetActivity"
+            android:exported="false"
+            android:label="@string/title_activity_budget_set"
+            android:theme="@style/Theme.SmartSpend" />
+        <activity
+            android:name=".AccountSetActivity"
+            android:exported="false"
+            android:label="@string/title_activity_account_set"
+            android:theme="@style/Theme.SmartSpend" />
+        <activity
+            android:name=".LoginScreenActivity"
+            android:exported="false"
+            android:label="@string/title_activity_login_screen"
+            android:theme="@style/Theme.SmartSpend" />
+        <activity
             android:name=".Screens.screencomponents.Transferctivity"
             android:exported="false"
             android:label="@string/title_activity_transferctivity"

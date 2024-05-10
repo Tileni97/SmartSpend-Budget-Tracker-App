@@ -6,4 +6,7 @@
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_dashbord">DashbordActivity</string>
     <string name="title_activity_transferctivity">Transferctivity</string>
+    <string name="title_activity_login_screen">LoginScreenActivity</string>
+    <string name="title_activity_account_set">AccountSetActivity</string>
+    <string name="title_activity_budget_set">BudgetSetActivity</string>
 </resources>

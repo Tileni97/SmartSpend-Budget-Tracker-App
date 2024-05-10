@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.smartspend.Screens.LoginScreen
 import com.example.smartspend.Screens.home.DashBordActivity
 import com.example.smartspend.Screens.home.HomeScreen
 import com.example.smartspend.Screens.home.ProfileScreen
@@ -17,11 +16,8 @@ import com.example.smartspend.Screens.screencomponents.TransferScreen
 @Composable
 fun NavGraph(navController: NavHostController){
 
-    NavHost(navController = navController, startDestination = Routes.LoginScreen.routes) {
+    NavHost(navController = navController, startDestination = Routes.HomeScreen.routes) {
 
-        composable(Routes.LoginScreen.routes){
-            LoginScreen(navigateToAccountSetUp = {navController})
-        }
 
         composable(Routes.HomeScreen.routes){
             HomeScreen(navController)
