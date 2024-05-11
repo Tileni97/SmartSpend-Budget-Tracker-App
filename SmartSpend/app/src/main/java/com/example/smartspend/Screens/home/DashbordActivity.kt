@@ -54,9 +54,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.notesapp.util.formatDate
+import com.example.notesapp.util.*
 import com.example.smartspend.R
-import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
+import com.example.smartspend.Screens.home.ui.theme.*
 import com.example.smartspend.data.TransectionItem
 import com.example.smartspend.data.User
 import com.example.smartspend.navigation.Routes
@@ -902,77 +902,21 @@ fun firebaseFetch() {
         AccountNumber = ""
     )
 
+
     userDocRef.get()
-        /*.addOnSuccessListener { querySnapshot ->
-            for (document in querySnapshot.document) {
-                // Access document data here
-                val data = document.data
-                if (data != null) {
-                    // Log document ID and data
-                    Log.d(TAG, "${document.id} => $data")
-                } else {
-                    // Handle null data if needed
-                    Log.e(TAG, "Document data is null for document ${document.id}")
-                }
-            }
-        }
-        .addOnFailureListener { exception ->
-            // Handle errors
-            Log.e(TAG, "Error getting documents: ", exception)
-        }*/
+        .addOnSuccessListener { document ->
 
-        .addOnSuccessListener { documentSnapshot ->
-            if (documentSnapshot.exists()) {
-                val userData = documentSnapshot.data
-                val id = userData?.get("id") as? Int
-                val username = userData?.get("username") as? String
-                val password = userData?.get("password") as? String
-                val firstName = userData?.get("firstName") as? String
-                val lastName = userData?.get("lastName") as? String
-                val phone = userData?.get("phone") as? String
-                val accountType = userData?.get("accountType") as? String
-                val address = userData?.get("address") as? String
-                val balance = userData?.get("balance") as? Double
-                val spent = userData?.get("spent") as? Double
-                val budget = userData?.get("budget") as? Double
-                val cardNumber = userData?.get("cardNumber") as? String
-                val expMonth = userData?.get("expMonth") as? Int
-                val expYear = userData?.get("expYear") as? Int
-                val cvv = userData?.get("cvv") as? Int
-                val AccountNumber = userData?.get("AccountNumber") as? String
-
-                // Update your `User` object with the fetched values
-                user = User(
-                    username = username ?: "",
-                    password = password ?: "",
-                    firstName = firstName ?: "",
-                    lastName = lastName ?: "",
-                    phone = phone ?: "",
-                    accountType = accountType ?: "",
-                    address = address ?: "",
-                    balance = balance?.toInt() ?: 0,
-                    spent = spent?.toInt() ?: 0,
-                    budget = budget?.toInt() ?: 0,
-                    cardNumber = cardNumber ?: "",
-                    expMonth = expMonth ?: 0,
-                    expYear = expYear ?: 0,
-                    cvv = cvv ?: 0,
-                    AccountNumber = AccountNumber ?: ""
-                )
-
-
+            if (document != null) {
+                var name = document.data?.get("username") as? String
+                Log.d(TAG, "DocumentSnapshot data: ${document.data}")
+                Toast.makeText(context, "DocumentSnapshot data: $name", Toast.LENGTH_SHORT).show()
             } else {
-                // Handle the case where the document doesn't exist
-                Toast.makeText(context, "Account not set up fully, contact your admin", Toast.LENGTH_SHORT).show()
-                Log.e(TAG, "Document data is null for document ${documentSnapshot.id}")
+                Log.d(TAG, "No such document")
             }
         }
         .addOnFailureListener { exception ->
-            // Handle any errors that occurred
-            Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
-            Log.w(TAG, "Error getting documents.", exception)
+            Log.d(TAG, "get failed with ", exception)
         }
-
 
 }
 
