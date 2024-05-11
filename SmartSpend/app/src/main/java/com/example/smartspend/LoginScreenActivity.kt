@@ -39,8 +39,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -73,12 +75,15 @@ class LoginScreenActivity : ComponentActivity() {
                     val loginState by viewModel.loginState.collectAsState()
                     val context = LocalContext.current
 
+                    val focusManager: FocusManager = LocalFocusManager.current
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
+
                     ) {
                         // Logo
                         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -148,6 +153,9 @@ class LoginScreenActivity : ComponentActivity() {
                         Button(
                             onClick = {
                                 viewModel.signIn(username, password)
+
+                                // Hide the keyboard
+                                focusManager.clearFocus()
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {

@@ -2,6 +2,7 @@ package com.example.smartspend.Screens.home
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,6 +45,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -322,7 +324,7 @@ fun DashTopBar(user:User){
                         }
                         var size:Int = user.cardNumber.length
                         Spacer(modifier = Modifier.size(10.dp))
-                        Text(text = "XXXX XXXX XXXX XXXX ${user.cardNumber.subSequence((size-4), (size))}",
+                        Text(text = "XXXX XXXX XXXX ${user.cardNumber.subSequence((size-4), (size))}",
                             fontSize = 15.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color =Color(255, 191, 0)
@@ -421,7 +423,7 @@ fun DashTopBar(user:User){
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ){
-                            Text(text = "" + user.firstName + " " + user.lastName,
+                            Text(text = "" + user.firstName[0] + " " + user.lastName,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.W400,
                                 color = Color.White
@@ -438,7 +440,7 @@ fun DashTopBar(user:User){
                 }
             }
             else if(user.accountType.equals("VIP")){
-                Box(
+                /*Box(
                     modifier = Modifier
                         .clip(
                             RoundedCornerShape(size = 10.dp)
@@ -568,7 +570,7 @@ fun DashTopBar(user:User){
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ){
-                            Text(text = "Giideon s v",
+                            Text(text = user.firstName[0] + " " + user.lastName,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.W400,
                                 color = Color.White
@@ -581,10 +583,10 @@ fun DashTopBar(user:User){
                             )
                         }
                     }
-                }
+                }*/
             }
             else {
-                Box(
+                /*Box(
                     modifier = Modifier
                         .clip(
                             RoundedCornerShape(size = 10.dp)
@@ -714,7 +716,7 @@ fun DashTopBar(user:User){
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ){
-                            Text(text = "Giideon s v",
+                            Text(text = user.firstName[0] + " " + user.lastName,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.W400,
                                 color = Color.White
@@ -727,7 +729,7 @@ fun DashTopBar(user:User){
                             )
                         }
                     }
-                }
+                }*/
             }
 
         }
@@ -876,7 +878,9 @@ fun TransectionRow(
 
 }
 
+@Composable
 fun firebaseFetch() {
+    val context= LocalContext.current
     val db = Firebase.firestore
     val userDocRef = db.collection("Users").document("Tangi Petrus")
     var user: User = User(
@@ -959,15 +963,17 @@ fun firebaseFetch() {
 
             } else {
                 // Handle the case where the document doesn't exist
-                //Toast.makeText(context, "Account not set up fully, contact your admin", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Account not set up fully, contact your admin", Toast.LENGTH_SHORT).show()
                 Log.e(TAG, "Document data is null for document ${documentSnapshot.id}")
             }
         }
         .addOnFailureListener { exception ->
             // Handle any errors that occurred
-            //Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
             Log.w(TAG, "Error getting documents.", exception)
         }
+
+
 }
 
 @Preview(showBackground = true)
