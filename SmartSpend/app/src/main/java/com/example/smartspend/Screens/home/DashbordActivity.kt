@@ -220,7 +220,7 @@ fun DashBordActivity(navController: NavHostController) {
             }
 
             Text(
-                text = "N$ ${userBalance.toString()} ",
+                text = "N$ $userBalance ",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
                 fontFamily = FontFamily.SansSerif,
