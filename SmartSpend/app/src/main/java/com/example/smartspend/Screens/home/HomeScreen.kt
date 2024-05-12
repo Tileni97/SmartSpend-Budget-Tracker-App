@@ -77,6 +77,12 @@ fun HomeScreen(navController: NavController){
             composable(Routes.Intransfere.routes){
                 IntransfereScreen(navControllerOne)
             }
+            composable(Routes.AddBudget.routes){
+                AddBudgetActivity()
+            }
+            composable(Routes.Analysis.routes){
+                AnalysisActivity()
+            }
         }
     }
 }

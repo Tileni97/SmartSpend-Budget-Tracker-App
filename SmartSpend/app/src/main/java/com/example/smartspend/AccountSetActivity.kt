@@ -35,6 +35,8 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -73,10 +75,29 @@ class AccountSetActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.Center,
                     ) {
 
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "S",
+                                color =Color.White,
+                                fontSize = 100.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                            )
+                            Text(
+                                text = "S",
+                                color = Color.Green,
+                                fontSize = 100.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                modifier = Modifier
+                                    .scale(1f, -1f) // Inverted vertically
+                                    .rotate(degrees = 180f) // Rotated 180 degrees to correct orientation
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(20.dp))
                         Text(
                             text = "Hi There !!!",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
+                            color = Color(0xff009177),
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -97,7 +118,8 @@ class AccountSetActivity : ComponentActivity() {
                                     .padding(10.dp, 10.dp)
                                     .clip(RoundedCornerShape(size = 10.dp))
                                     .fillMaxWidth()
-                                    .background(color = MaterialTheme.colorScheme.inverseOnSurface),
+                                    .background(color = MaterialTheme.colorScheme.inverseOnSurface)
+                                ,
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 TextField(
@@ -110,7 +132,7 @@ class AccountSetActivity : ComponentActivity() {
                                     leadingIcon = {
                                         Icon(
                                             imageVector = Icons.Outlined.Business,
-                                            contentDescription = ""
+                                            contentDescription = "", tint = Color(0xff009177)
                                         )
                                     },
                                     singleLine = true,
@@ -127,7 +149,7 @@ class AccountSetActivity : ComponentActivity() {
                                     leadingIcon = {
                                         Icon(
                                             imageVector = Icons.Rounded.AddCard,
-                                            contentDescription = ""
+                                            contentDescription = "", tint = Color.Green
                                         )
                                     },
                                     singleLine = true
@@ -189,7 +211,9 @@ class AccountSetActivity : ComponentActivity() {
                             Button(
                                 onClick = { startActivity(intent)},
                                 modifier = Modifier
-                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(15.dp))
+                                    .width(200.dp)
+                                    .background(color = Color(0xff009177))
                                     .height(50.dp)
                                     .padding(20.dp, 0.dp),
                                 colors = ButtonDefaults.buttonColors(

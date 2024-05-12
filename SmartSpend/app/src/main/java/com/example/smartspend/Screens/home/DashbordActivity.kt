@@ -131,7 +131,15 @@ fun DashBordActivity(navController: NavHostController) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Icon(imageVector = Icons.Rounded.Person, contentDescription = "", tint = Color.White)
+                Box (
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(size = 20.dp))
+                        .padding(10.dp)
+                        .clickable {navController.navigate(Routes.Profile.routes)}
+                ){
+                    Icon(imageVector = Icons.Rounded.Person, contentDescription = "", tint = Color.White)
+                }
+
                 Text(
                     text = "Account Balance",
                     fontWeight = FontWeight.ExtraBold,
