@@ -28,7 +28,7 @@ fun NavGraph(navController: NavHostController){
             ProfileScreen()
         }
         composable(Routes.Setting.routes){
-            SettingScreen()
+            SettingScreen(navController)
         }
         composable(Routes.Dashbord.routes){
             DashBordActivity(navController)

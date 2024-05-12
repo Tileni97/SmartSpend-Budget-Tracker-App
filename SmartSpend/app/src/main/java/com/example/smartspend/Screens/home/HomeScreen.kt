@@ -63,7 +63,7 @@ fun HomeScreen(navController: NavController){
                 ProfileScreen()
             }
             composable(Routes.Setting.routes){
-                SettingScreen()
+                SettingScreen(navControllerOne)
             }
             composable(Routes.TransferScreen.routes){
                 TransferScreen(navControllerOne)
@@ -104,7 +104,7 @@ fun MyBottomBar(navControllerOne: NavHostController) {
         ),
         BottomNavItem(
             title = "Analysis",
-            Routes.Profile.routes,
+            Routes.Analysis.routes,
             Icons.Rounded.DataExploration
         ),
         BottomNavItem(
@@ -157,7 +157,7 @@ fun MyBottomBar(navControllerOne: NavHostController) {
 
 
             FloatingActionButton(
-                onClick = { navControllerOne.navigate(Routes.TransferScreen.routes) {
+                onClick = { navControllerOne.navigate(Routes.AddBudget.routes) {
 
                     popUpTo(navControllerOne.graph.findStartDestination().id){
                        saveState = true
