@@ -7,7 +7,6 @@ import java.util.UUID
 data class User(
     var id: UUID = UUID.randomUUID(),
     var username: String,
-    var password: String,
     var firstName: String,
     var lastName: String,
     var phone: String,

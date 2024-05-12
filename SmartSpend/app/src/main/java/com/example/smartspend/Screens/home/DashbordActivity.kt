@@ -38,6 +38,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,21 +58,80 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.notesapp.util.*
+import com.example.notesapp.util.formatDate
 import com.example.smartspend.R
-import com.example.smartspend.Screens.home.ui.theme.*
+import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
 import com.example.smartspend.data.TransectionItem
 import com.example.smartspend.data.User
 import com.example.smartspend.navigation.Routes
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import java.util.UUID
 
 @Composable
 fun DashBordActivity(navController: NavHostController) {
-    var user:User= User(username = "shikongov02@gmail.com", password = "Shikongov@99", firstName = "Shikongo", lastName = "Giideon", phone = "+264814272721", accountType = "standard", address = "Tuba Street", balance = 20000, budget = 1500, spent = 1100, cardNumber = "5343875934363775", expMonth = 4, expYear = 24, cvv = 254, AccountNumber = "2424789349735768")
+    var user:User= User(username = "shikongov02@gmail.com", firstName = "Shikongo", lastName = "Giideon", phone = "+264814272721", accountType = "standard", address = "Tuba Street", balance = 20000, budget = 1500, spent = 1100, cardNumber = "5343875934363775", expMonth = 4, expYear = 24, cvv = 254, AccountNumber = "2424789349735768")
 
-    firebaseFetch()
+    // Create a mutable state variable to store the lastName
+    var userFirstName by remember { mutableStateOf("") }
+    var userLastName by remember { mutableStateOf("") }
+    var userPhone by remember { mutableStateOf("") }
+    var userAccountType by remember { mutableStateOf("") }
+    var userAddress by remember { mutableStateOf("") }
+    var userBalance by remember { mutableStateOf(0) }
+    var userSpent by remember { mutableStateOf(0) }
+    var userBudget by remember { mutableStateOf(0) }
+    var userCardNumber by remember { mutableStateOf("") }
+    var userExpMonth by remember { mutableStateOf(0) }
+    var userExpYear by remember { mutableStateOf(0) }
+    var userCvv by remember { mutableStateOf(0) }
+
+
+
+
+    FirebaseFetch()
+    val db = FirebaseFirestore.getInstance()
+    val userDocRef = db.collection("Users").document("Tangi Petrus")
+    val document = userDocRef.get().addOnSuccessListener { document ->
+        var username = document.data?.get("username") as? String
+        var firstName = document.data?.get("firstName") as? String
+        var lastName = (document.data?.get("lastName") as? String)
+        var phone = document.data?.get("phone") as? String
+        var accountType = document.data?.get("accountType") as? String
+        var address = document.data?.get("address") as? String
+        var balance = document.data?.get("balance") as? String
+        var spent = document.data?.get("spent") as? String
+        var budget = document.data?.get("budget") as? String
+        var cardNumber = document.data?.get("cardNumber") as? String
+        var expMonth = document.data?.get("expMonth") as? String
+        var expYear = document.data?.get("expYear") as? String
+        var cvv = document.data?.get("cvv") as? String
+
+        userFirstName = firstName.toString()
+        userLastName = lastName.toString()
+        userPhone = phone.toString()
+        userAccountType = accountType.toString()
+        userAddress = address.toString()
+        if (balance != null) {
+            userBalance = balance.toInt()
+        }
+        if (spent != null) {
+            userSpent = spent.toInt()
+        }
+        if (budget != null) {
+            userBudget = budget.toInt()
+        }
+        userCardNumber = cardNumber.toString()
+        if (expMonth != null) {
+            userExpMonth = expMonth.toInt()
+        }
+        if (expYear != null) {
+            userExpYear = expYear.toInt()
+        }
+        if (cvv != null) {
+            userCvv = cvv.toInt()
+        }
+    }
 
     var translist = listOf<TransectionItem>(
         TransectionItem(Description = "Wage", ammount = 200, type = "Income"),
@@ -85,7 +148,7 @@ fun DashBordActivity(navController: NavHostController) {
         TransectionItem(Description = "transport", ammount = 200, type = "Expenses")
     )
 
-    var spending:Int =((user.spent.toDouble()/user.budget.toDouble())*100).toInt()
+    var spending:Int =((userSpent.toDouble()/userBudget.toDouble())*100).toInt()
 
     if(spending <=50){
         Box(modifier = Modifier
@@ -149,7 +212,7 @@ fun DashBordActivity(navController: NavHostController) {
             }
 
             Text(
-                text = "N$ ${user.balance.toString()} ",
+                text = "N$ ${userBalance.toString()} ",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
                 fontFamily = FontFamily.SansSerif,
@@ -270,6 +333,68 @@ fun DashBordActivity(navController: NavHostController) {
 @Composable
 fun DashTopBar(user:User){
 
+    // Create a mutable state variable to store the lastName
+    var userFirstName by remember { mutableStateOf("") }
+    var userLastName by remember { mutableStateOf("") }
+    var userPhone by remember { mutableStateOf("") }
+    var userAccountType by remember { mutableStateOf("") }
+    var userAddress by remember { mutableStateOf("") }
+    var userBalance by remember { mutableStateOf(0) }
+    var userSpent by remember { mutableStateOf(0) }
+    var userBudget by remember { mutableStateOf(0) }
+    var userCardNumber by remember { mutableStateOf("") }
+    var userExpMonth by remember { mutableStateOf(0) }
+    var userExpYear by remember { mutableStateOf(0) }
+    var userCvv by remember { mutableStateOf(0) }
+
+
+
+
+    FirebaseFetch()
+    val db = FirebaseFirestore.getInstance()
+    val userDocRef = db.collection("Users").document("Tangi Petrus")
+    val document = userDocRef.get().addOnSuccessListener { document ->
+        var username = document.data?.get("username") as? String
+        var firstName = document.data?.get("firstName") as? String
+        var lastName = (document.data?.get("lastName") as? String)
+        var phone = document.data?.get("phone") as? String
+        var accountType = document.data?.get("accountType") as? String
+        var address = document.data?.get("address") as? String
+        var balance = document.data?.get("balance") as? String
+        var spent = document.data?.get("spent") as? String
+        var budget = document.data?.get("budget") as? String
+        var cardNumber = document.data?.get("cardNumber") as? String
+        var expMonth = document.data?.get("expMonth") as? String
+        var expYear = document.data?.get("expYear") as? String
+        var cvv = document.data?.get("cvv") as? String
+
+        userFirstName = firstName.toString()
+        userLastName = lastName.toString()
+        userPhone = phone.toString()
+        userAccountType = accountType.toString()
+        userAddress = address.toString()
+        if (balance != null) {
+            userBalance = balance.toInt()
+        }
+        if (spent != null) {
+            userSpent = spent.toInt()
+        }
+        if (budget != null) {
+            userBudget = budget.toInt()
+        }
+        userCardNumber = cardNumber.toString()
+        if (expMonth != null) {
+            userExpMonth = expMonth.toInt()
+        }
+        if (expYear != null) {
+            userExpYear = expYear.toInt()
+        }
+        if (cvv != null) {
+            userCvv = cvv.toInt()
+        }
+    }
+
+
     Column (
         modifier = Modifier
 
@@ -351,7 +476,7 @@ fun DashTopBar(user:User){
                                         fontWeight = FontWeight.W400,
                                         color = Color.White
                                     )
-                                    Text(text = "N$ ${user.budget}",
+                                    Text(text = "N$" + (userBudget).toString(),
                                         fontWeight = FontWeight.Bold,
                                         color = Color.White,
                                         fontSize = 15.sp
@@ -374,7 +499,7 @@ fun DashTopBar(user:User){
                                         fontWeight = FontWeight.W400,
                                         color = Color.White
                                     )
-                                    Text(text = "N$ ${user.spent}",
+                                    Text(text = "N$" + (userSpent).toString(),
                                         fontWeight = FontWeight.Bold,
                                         color = Color.White,
                                         fontSize = 15.sp
@@ -397,7 +522,7 @@ fun DashTopBar(user:User){
                                         fontWeight = FontWeight.W400,
                                         color = Color.White
                                     )
-                                    Text(text = "N$ ${(user.budget)-(user.spent)}",
+                                    Text(text = "N$" + (userBudget - userSpent).toString(),
                                         fontWeight = FontWeight.Bold,
                                         color = Color.White,
                                         fontSize = 15.sp
@@ -414,7 +539,7 @@ fun DashTopBar(user:User){
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ){
-                            Text(text = "0${user.expMonth}/${user.expYear}",color =Color.White)
+                            Text(text = "0" + userExpMonth + "/" + userExpYear,color =Color.White)
                         }
                         Row (
                             modifier = Modifier
@@ -423,7 +548,7 @@ fun DashTopBar(user:User){
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ){
-                            Text(text = "" + user.firstName[0] + " " + user.lastName,
+                            Text(text = "$userFirstName $userLastName",
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.W400,
                                 color = Color.White
@@ -879,40 +1004,37 @@ fun TransectionRow(
 }
 
 @Composable
-fun firebaseFetch() {
+fun FirebaseFetch() {
     val context= LocalContext.current
     val db = Firebase.firestore
     val userDocRef = db.collection("Users").document("Tangi Petrus")
-    var user: User = User(
-        id = UUID.randomUUID(),
-        username = "",
-        password = "",
-        firstName = "",
-        lastName = "",
-        phone = "",
-        accountType = "",
-        address = "",
-        balance = 0,
-        spent = 0,
-        budget = 0,
-        cardNumber = "",
-        expMonth = 0,
-        expYear = 0,
-        cvv = 0,
-        AccountNumber = ""
-    )
 
 
     userDocRef.get()
         .addOnSuccessListener { document ->
 
             if (document != null) {
-                var name = document.data?.get("username") as? String
+                var username = document.data?.get("username") as? String
+                var firstName = document.data?.get("firstName") as? String
+                var lastName = document.data?.get("lastName") as? String
+                var phone = document.data?.get("phone") as? String
+                var accountType = document.data?.get("accountType") as? String
+                var address = document.data?.get("address") as? String
+                var balance = document.data?.get("balance") as? String
+                var spent = document.data?.get("spent") as? String
+                var budget = document.data?.get("budget") as? String
+                var cardNumber = document.data?.get("cardNumber") as? String
+                var expMonth = document.data?.get("expMonth") as? String
+                var expYear = document.data?.get("expYear") as? String
+                var cvv = document.data?.get("cvv") as? String
+
+
                 Log.d(TAG, "DocumentSnapshot data: ${document.data}")
-                Toast.makeText(context, "DocumentSnapshot data: $name", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "$expYear", Toast.LENGTH_SHORT).show()
             } else {
                 Log.d(TAG, "No such document")
             }
+
         }
         .addOnFailureListener { exception ->
             Log.d(TAG, "get failed with ", exception)
