@@ -9,7 +9,7 @@ fun LoginValidation(password:String,username:String,context: Context):Boolean{
         Toast.makeText(context,"Please Enter username",Toast.LENGTH_SHORT).show()
         isvalid = false
     }
-    else if(password.isEmpty()){
+    if(password.isEmpty()){
         Toast.makeText(context,"Please Enter password",Toast.LENGTH_SHORT).show()
         isvalid = false
     }

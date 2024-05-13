@@ -161,7 +161,7 @@ class LoginScreenActivity : ComponentActivity() {
 
                         Button(
                             onClick = {
-                                if(LoginValidation(username, password, context)){
+                                if(LoginValidation(password, username, context)){
                                     viewModel.signIn(username, password)
                                 }
                                 else{
