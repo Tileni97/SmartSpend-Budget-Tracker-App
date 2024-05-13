@@ -98,7 +98,7 @@ class AccountSetActivity : ComponentActivity() {
                         }
                         Spacer(modifier = Modifier.height(20.dp))
                         Text(
-                            text = "Hi ${userData?.firstName} !",
+                            text = "Hi ${userData?.username} !",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xff009177),

@@ -212,7 +212,7 @@ class LoginScreenActivity : ComponentActivity() {
                                 // Show a toast for successful login
                                 LaunchedEffect(Unit) {
                                     showToast(context, "Login Successful")
-                                    startActivity(intent)
+                                    //startActivity(intent)
                                 }
 
                                 // Fetch the user's data from Firestore
@@ -229,7 +229,14 @@ class LoginScreenActivity : ComponentActivity() {
                                             // Pass the user data to the AccountSetActivity
                                             val intent = Intent(this@LoginScreenActivity, AccountSetActivity::class.java)
                                             intent.putExtra("USER_DATA", userModel)
+
+                                            //Toast.makeText(this@LoginScreenActivity, "${user.email}", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(this@LoginScreenActivity, "$firstName", Toast.LENGTH_SHORT).show()
                                             startActivity(intent)
+
+
+
+
                                         } else {
                                             Log.d(TAG, "No such document")
                                         }
