@@ -45,7 +45,7 @@ class LandingActivity : ComponentActivity() {
         setContent {
             SmartSpendTheme {
                 SetBarColor(color = Color(0xff009177))
-                val intent = Intent(this, AccountSetActivity::class.java)
+                val intent = Intent(this, LoginScreenActivity::class.java)
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
