@@ -43,6 +43,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.smartspend.data.UserData
 import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -60,6 +61,9 @@ class AccountSetActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+
+                    val userData = intent.getParcelableExtra<UserData>("USER_DATA")
+
                     Box (
                         modifier = Modifier
                             .fillMaxSize()
@@ -94,7 +98,7 @@ class AccountSetActivity : ComponentActivity() {
                         }
                         Spacer(modifier = Modifier.height(20.dp))
                         Text(
-                            text = "Hi There !!!",
+                            text = "Hi ${userData?.firstName} !",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xff009177),
