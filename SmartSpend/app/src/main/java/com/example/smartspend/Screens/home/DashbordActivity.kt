@@ -62,7 +62,7 @@ import com.example.notesapp.util.formatDate
 import com.example.smartspend.R
 import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
 import com.example.smartspend.data.TransectionItem
-import com.example.smartspend.data.User
+import com.example.smartspend.data.UserData
 import com.example.smartspend.navigation.Routes
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -70,7 +70,7 @@ import com.google.firebase.firestore.firestore
 
 @Composable
 fun DashBordActivity(navController: NavHostController) {
-    var user:User= User(username = "shikongov02@gmail.com", firstName = "Shikongo", lastName = "Giideon", phone = "+264814272721", accountType = "standard", address = "Tuba Street", balance = 20000, budget = 1500, spent = 1100, cardNumber = "5343875934363775", expMonth = 4, expYear = 24, cvv = 254, AccountNumber = "2424789349735768")
+    var user: UserData = UserData(username = "shikongov02@gmail.com", firstName = "Shikongo", lastName = "Giideon", phone = "+264814272721", accountType = "standard", address = "Tuba Street", balance = 20000, budget = 1500, spent = 1100, cardNumber = "5343875934363775", expMonth = 4, expYear = 24, cvv = 254, AccountNumber = "2424789349735768")
 
     // Create a mutable state variable to store the lastName
     var userFirstName by remember { mutableStateOf("") }
@@ -339,7 +339,7 @@ fun DashBordActivity(navController: NavHostController) {
 
 
 @Composable
-fun DashTopBar(user:User){
+fun DashTopBar(user: UserData){
 
     // Create a mutable state variable to store the lastName
     var userFirstName by remember { mutableStateOf("") }
@@ -455,9 +455,9 @@ fun DashTopBar(user:User){
                                     .rotate(degrees = 180f) // Rotated 180 degrees to correct orientation
                             )
                         }
-                        var size:Int = user.cardNumber.length
+                        var size: Any = user.cardNumber?.length ?:
                         Spacer(modifier = Modifier.size(10.dp))
-                        Text(text = "XXXX XXXX XXXX ${user.cardNumber.subSequence((size-4), (size))}",
+                        Text(userCardNumber,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color =Color(255, 191, 0)

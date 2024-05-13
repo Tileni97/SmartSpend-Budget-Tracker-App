@@ -1,8 +1,10 @@
 package com.example.smartspend
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -55,9 +57,11 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.smartspend.data.UserData
 import com.example.smartspend.firebase.AuthViewModel
 import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.delay
 
 class LoginScreenActivity : ComponentActivity() {
@@ -203,13 +207,37 @@ class LoginScreenActivity : ComponentActivity() {
                                 val user = (loginState as AuthViewModel.LoginState.Success).user
                                 // Print the signed-in user to the terminal for monitoring
                                 println("Signed-in user: $user")
-                                // Navigate to the AccountSetUp screen
 
+                                // Navigate to the AccountSetUp screen
                                 // Show a toast for successful login
                                 LaunchedEffect(Unit) {
                                     showToast(context, "Login Successful")
                                     startActivity(intent)
                                 }
+
+                                // Fetch the user's data from Firestore
+                                val db = FirebaseFirestore.getInstance()
+                                val userDocRef = db.collection("Users").document(user.email ?: "")
+
+                                userDocRef.get()
+                                    .addOnSuccessListener { document ->
+                                        if (document != null) {
+
+                                            val firstName = document.data?.get("firstName") as? String
+                                            val userModel = UserData(firstName)
+
+                                            // Pass the user data to the AccountSetActivity
+                                            val intent = Intent(this@LoginScreenActivity, AccountSetActivity::class.java)
+                                            intent.putExtra("USER_DATA", userModel)
+                                            startActivity(intent)
+                                        } else {
+                                            Log.d(TAG, "No such document")
+                                        }
+                                    }
+                                    .addOnFailureListener { exception ->
+                                        Log.d(TAG, "get failed with ", exception)
+                                    }
+
                             }
 
                             else -> {}
