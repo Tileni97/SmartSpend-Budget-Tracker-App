@@ -210,8 +210,7 @@ class LoginScreenActivity : ComponentActivity() {
 
                             is AuthViewModel.LoginState.Success -> {
                                 val user = (loginState as AuthViewModel.LoginState.Success).user
-                                // Print the signed-in user to the terminal for monitoring
-                                println("Signed-in user: $user")
+
 
                                 // Navigate to the AccountSetUp screen
                                 // Show a toast for successful login
@@ -233,7 +232,6 @@ class LoginScreenActivity : ComponentActivity() {
                                             currentUser.firstName = firstName
 
                                             UserRepository.addUser(currentUser)
-
                                             startActivity(intent)
                                         } else {
                                             Log.d(TAG, "No such document")
