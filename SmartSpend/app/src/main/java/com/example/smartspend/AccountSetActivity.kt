@@ -94,6 +94,7 @@ class AccountSetActivity : ComponentActivity() {
                                 color =Color.White,
                                 fontSize = 100.sp,
                                 fontWeight = FontWeight.ExtraBold,
+                                
                             )
                             Text(
                                 text = "S",
