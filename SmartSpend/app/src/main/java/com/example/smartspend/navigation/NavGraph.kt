@@ -49,7 +49,7 @@ fun NavGraph(navController: NavHostController){
             AddBudgetActivity()
         }
         composable(Routes.Analysis.routes){
-            AnalysisActivity()
+            AnalysisActivity(navController)
         }
     }
 
