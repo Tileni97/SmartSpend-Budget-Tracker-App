@@ -205,8 +205,7 @@ class LoginScreenActivity : ComponentActivity() {
 
                             is AuthViewModel.LoginState.Success -> {
                                 val user = (loginState as AuthViewModel.LoginState.Success).user
-                                // Print the signed-in user to the terminal for monitoring
-                                println("Signed-in user: $user")
+
 
                                 // Navigate to the AccountSetUp screen
                                 // Show a toast for successful login
@@ -231,7 +230,7 @@ class LoginScreenActivity : ComponentActivity() {
                                             intent.putExtra("USER_DATA", userModel)
 
                                             //Toast.makeText(this@LoginScreenActivity, "${user.email}", Toast.LENGTH_SHORT).show()
-                                            Toast.makeText(this@LoginScreenActivity, "$firstName", Toast.LENGTH_SHORT).show()
+                                            //Toast.makeText(this@LoginScreenActivity, "$firstName", Toast.LENGTH_SHORT).show()
                                             startActivity(intent)
 
 

@@ -1,7 +1,10 @@
 package com.example.smartspend
 
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -31,21 +34,30 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.smartspend.data.UserData
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.smartspend.firebase.AuthViewModel
 import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.withContext
 
 class AccountSetActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -62,186 +74,227 @@ class AccountSetActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 
-                    val userData = intent.getParcelableExtra<UserData>("USER_DATA")
-
-                    Box (
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(color = MaterialTheme.colorScheme.background),
-                        contentAlignment = Alignment.Center
-                    ){
-                    }
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(10.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = "S",
-                                color =Color.White,
-                                fontSize = 100.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                            )
-                            Text(
-                                text = "S",
-                                color = Color.Green,
-                                fontSize = 100.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                modifier = Modifier
-                                    .scale(1f, -1f) // Inverted vertically
-                                    .rotate(degrees = 180f) // Rotated 180 degrees to correct orientation
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(20.dp))
-                        Text(
-                            text = "Hi ${userData?.username} !",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xff009177),
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = "Let's start with setting up your account.",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.W400,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(60.dp))
-                        Column(
-                            modifier = Modifier,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(10.dp, 10.dp)
-                                    .clip(RoundedCornerShape(size = 10.dp))
-                                    .fillMaxWidth()
-                                    .background(color = MaterialTheme.colorScheme.inverseOnSurface)
-                                ,
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                            ) {
-                                TextField(
-                                    value = "", onValueChange = {},
-                                    colors = TextFieldDefaults.textFieldColors(
-                                        containerColor = Color.Transparent
-                                    ),
-                                    label = { Text(text = "Account Number") },
-                                    placeholder = { Text(text = "4848653456755435") },
-                                    leadingIcon = {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Business,
-                                            contentDescription = "", tint = Color(0xff009177)
-                                        )
-                                    },
-                                    singleLine = true,
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-                                )
-                                Spacer(modifier = Modifier.height(5.dp))
-                                TextField(
-                                    value = "", onValueChange = {},
-                                    colors = TextFieldDefaults.textFieldColors(
-                                        containerColor = Color.Transparent
-                                    ),
-                                    label = { Text(text = "Card Number") },
-                                    placeholder = { Text(text = "64274623874246824") },
-                                    leadingIcon = {
-                                        Icon(
-                                            imageVector = Icons.Rounded.AddCard,
-                                            contentDescription = "", tint = Color.Green
-                                        )
-                                    },
-                                    singleLine = true
-                                )
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(10.dp),
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .width(120.dp)
-                                            .padding(5.dp, 0.dp),
-                                    ) {
-                                        TextField(
-                                            value = "", onValueChange = {},
-                                            colors = TextFieldDefaults.textFieldColors(
-                                                containerColor = Color.Transparent
-                                            ),
-                                            label = { Text(text = "Exp Mon", fontSize = 15.sp) },
-                                            placeholder = { Text(text = "3") },
-                                            singleLine = true,
-                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                                        )
-                                    }
-                                    Box(
-                                        modifier = Modifier
-                                            .width(120.dp)
-                                            .padding(5.dp, 0.dp),
-                                    ) {
-                                        TextField(
-                                            value = "", onValueChange = {},
-                                            colors = TextFieldDefaults.textFieldColors(
-                                                containerColor = Color.Transparent
-                                            ),
-                                            label = { Text(text = "Exp Year") },
-                                            placeholder = { Text(text = "3") },
-                                            singleLine = true,
-                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                                        )
-                                    }
-                                    TextField(
-                                        value = "", onValueChange = {},
-                                        colors = TextFieldDefaults.textFieldColors(
-                                            containerColor = Color.Transparent
-                                        ),
-                                        label = { Text(text = "CVV") },
-                                        placeholder = { Text(text = "472") },
-                                        singleLine = true,
-                                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                                    )
-                                }
-
-                                Spacer(modifier = Modifier.height(5.dp))
-
-                                Spacer(modifier = Modifier.height(20.dp))
-                            }
-                            Spacer(modifier = Modifier.height(50.dp))
-                            Button(
-                                onClick = { startActivity(intent)},
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(15.dp))
-                                    .width(200.dp)
-                                    .background(color = Color(0xff009177))
-                                    .height(50.dp)
-                                    .padding(20.dp, 0.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xff009177),
-                                    contentColor = Color.White
-                                )
-                            ) {
-                                Text(text = "DONE", fontWeight = FontWeight.W700)
-
-                            }
-                        }
-                    }
+                    //val userData = intent.getParcelableExtra<UserData>("USER_DATA")
+                    val viewModel: AuthViewModel = viewModel()
+                    AccountSetActivity(viewModel)
                 }
             }
         }
     }
-    @Composable
-    private fun SetBarColor(color: Color) {
-        val systemUiController = rememberSystemUiController()
-        SideEffect {
-            systemUiController.setSystemBarsColor(
-                color = color
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AccountSetActivity(viewModel: AuthViewModel) {
+    val loginState by viewModel.loginState.collectAsState()
+    val context = LocalContext.current
+    val (userFirstName, setUserFirstName) = remember { mutableStateOf("") }
+    val intent = Intent(context, BudgetSetActivity::class.java)
+
+    when (loginState) {
+        is AuthViewModel.LoginState.Success -> {
+            val user = (loginState as AuthViewModel.LoginState.Success).user
+            val db = FirebaseFirestore.getInstance()
+            val userDocRef = db.collection("Users").document(user.email ?: "")
+
+            LaunchedEffect(key1 = user.email) {
+                withContext(coroutineContext) {
+                    userDocRef.get()
+                        .addOnSuccessListener { document ->
+                            val fetchedData = document.data
+                            val firstName = fetchedData?.get("firstName") as? String
+
+                            if (fetchedData != null && firstName != null) {
+                                Toast.makeText(context, "Fetched firstName: $firstName", Toast.LENGTH_LONG).show()
+                            } else {
+                                Toast.makeText(context, "Failed to fetch firstName", Toast.LENGTH_SHORT).show()
+                            }
+
+                            setUserFirstName(firstName ?: "")
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.d(ContentValues.TAG, "get failed with ", exception)
+                            setUserFirstName("User") // Set a default value if firstName is not available
+                        }
+                }
+            }
+        }
+        else -> {}
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.Center
+    ) {}
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = "S",
+                color = Color.White,
+                fontSize = 100.sp,
+                fontWeight = FontWeight.ExtraBold,
             )
+            Text(
+                text = "S",
+                color = Color.Green,
+                fontSize = 100.sp,
+                fontWeight = FontWeight.ExtraBold,
+                modifier = Modifier
+                    .scale(1f, -1f) // Inverted vertically
+                    .rotate(degrees = 180f) // Rotated 180 degrees to correct orientation
+            )
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+        Text(
+            text = "Hi ${userFirstName.ifBlank { "there" }}!",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xff009177),
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "Let's start with setting up your account.",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.W400,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(60.dp))
+        Column(
+            modifier = Modifier,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(10.dp, 10.dp)
+                    .clip(RoundedCornerShape(size = 10.dp))
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.inverseOnSurface)
+                ,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                TextField(
+                    value = "", onValueChange = {},
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent
+                    ),
+                    label = { Text(text = "Account Number") },
+                    placeholder = { Text(text = "4848653456755435") },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Business,
+                            contentDescription = "", tint = Color(0xff009177)
+                        )
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                TextField(
+                    value = "", onValueChange = {},
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent
+                    ),
+                    label = { Text(text = "Card Number") },
+                    placeholder = { Text(text = "64274623874246824") },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Rounded.AddCard,
+                            contentDescription = "", tint = Color.Green
+                        )
+                    },
+                    singleLine = true
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(120.dp)
+                            .padding(5.dp, 0.dp),
+                    ) {
+                        TextField(
+                            value = "", onValueChange = {},
+                            colors = TextFieldDefaults.textFieldColors(
+                                containerColor = Color.Transparent
+                            ),
+                            label = { Text(text = "Exp Mon", fontSize = 15.sp) },
+                            placeholder = { Text(text = "3") },
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .width(120.dp)
+                            .padding(5.dp, 0.dp),
+                    ) {
+                        TextField(
+                            value = "", onValueChange = {},
+                            colors = TextFieldDefaults.textFieldColors(
+                                containerColor = Color.Transparent
+                            ),
+                            label = { Text(text = "Exp Year") },
+                            placeholder = { Text(text = "3") },
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
+                    }
+                    TextField(
+                        value = "", onValueChange = {},
+                        colors = TextFieldDefaults.textFieldColors(
+                            containerColor = Color.Transparent
+                        ),
+                        label = { Text(text = "CVV") },
+                        placeholder = { Text(text = "472") },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(5.dp))
+
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+            Spacer(modifier = Modifier.height(50.dp))
+            Button(
+                onClick = { context.startActivity(intent) },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(15.dp))
+                    .width(200.dp)
+                    .background(color = Color(0xff009177))
+                    .height(50.dp)
+                    .padding(20.dp, 0.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xff009177),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "DONE", fontWeight = FontWeight.W700)
+            }
         }
     }
 }
 
+@Composable
+private fun SetBarColor(color: Color) {
+    val systemUiController = rememberSystemUiController()
+    SideEffect {
+        systemUiController.setSystemBarsColor(
+            color = color
+        )
+    }
+}
