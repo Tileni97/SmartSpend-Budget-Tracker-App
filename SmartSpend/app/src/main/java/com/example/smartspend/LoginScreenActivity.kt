@@ -230,6 +230,9 @@ class LoginScreenActivity : ComponentActivity() {
                                             val userModel = UserData(firstName)
 
                                             currentUser.firstName = firstName
+                                            currentUser.username = user.email
+
+                                            UserRepository.setEmail(user.email.toString())
 
                                             UserRepository.addUser(currentUser)
                                             startActivity(intent)
