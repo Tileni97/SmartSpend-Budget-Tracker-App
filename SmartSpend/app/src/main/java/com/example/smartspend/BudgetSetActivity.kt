@@ -1,7 +1,9 @@
 package com.example.smartspend
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -19,20 +21,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AttachMoney
-import androidx.compose.material.icons.outlined.Business
 import androidx.compose.material.icons.outlined.DirectionsCar
 import androidx.compose.material.icons.outlined.Fastfood
 import androidx.compose.material.icons.outlined.Hotel
 import androidx.compose.material.icons.outlined.LocalHospital
 import androidx.compose.material.icons.outlined.School
-import androidx.compose.material.icons.rounded.AddCard
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -50,12 +48,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.smartspend.Screens.home.HomeActivity
+import com.example.smartspend.data.UserRepository
 import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.firebase.firestore.FirebaseFirestore
 
 class BudgetSetActivity : ComponentActivity() {
 
@@ -67,6 +66,23 @@ class BudgetSetActivity : ComponentActivity() {
             SmartSpendTheme {
                 SetBarColor(color = Color(0xff009177))
                 val intent = Intent(this, HomeActivity::class.java)
+
+                // Mutable state variables for each field
+                var transport by remember { mutableStateOf("") }
+                var food by remember { mutableStateOf("") }
+                var health by remember { mutableStateOf("") }
+                var education by remember { mutableStateOf("") }
+                var accommodation by remember { mutableStateOf("") }
+                //var total by remember { mutableStateOf("") }
+
+
+                val currentUser = UserRepository.getUsers()
+                var userEmail: String = UserRepository.getEmail()
+                var userFirstName: String? = null
+
+
+                // Initialize Firebase Firestore
+                val db = FirebaseFirestore.getInstance()
 
                 Surface (
                     modifier = Modifier.fillMaxSize(),
@@ -80,16 +96,11 @@ class BudgetSetActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.Center,
                     ) {
 
-                        var transport by remember { mutableStateOf("") }
-                        var food by remember { mutableStateOf("") }
-                        var health by remember { mutableStateOf("") }
-                        var education by remember { mutableStateOf("") }
-                        var acommodation by remember { mutableStateOf("") }
 
-                        var total:String ="0"
+                        //total =(transport.toInt()+food.toInt()+health.toInt()+education.toInt()+accommodation.toInt()).toString()
 
                         Text(
-                            text = "Hi There !!!",
+                            text = "Great work!",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xff009177),
@@ -97,7 +108,7 @@ class BudgetSetActivity : ComponentActivity() {
 
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "Let's start with setting up your budget.",
+                            text = "Now it's time to define your budget.",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.W400,
                             textAlign = TextAlign.Center,
@@ -113,7 +124,7 @@ class BudgetSetActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Text(
-                            text = "N$ $total",
+                            text = "N$ 0"/*$total*/,
                             fontSize = 30.sp,
                             fontWeight = FontWeight.W700,
                             textAlign = TextAlign.Center
@@ -142,7 +153,7 @@ class BudgetSetActivity : ComponentActivity() {
                                 ){
                                     Icon(imageVector = Icons.Outlined.DirectionsCar, contentDescription = "", tint = Color(0xff009177))
                                     Spacer(modifier = Modifier.width(10.dp))
-                                    Text(text = "TRANSPORT", textAlign = TextAlign.Start, fontWeight = FontWeight.W700)
+                                    Text(text = "Transport", textAlign = TextAlign.Start, fontWeight = FontWeight.W700)
                                     Box(
                                         modifier = Modifier
                                             .width(150.dp)
@@ -150,13 +161,13 @@ class BudgetSetActivity : ComponentActivity() {
                                         TextField(value = transport, onValueChange = {transport=it},
                                             colors = TextFieldDefaults.textFieldColors(
                                                 containerColor = Color.Transparent),
-                                            placeholder = {Text(text = "500")},
+                                            placeholder = {Text(text = "0.00")},
                                             singleLine = true,
                                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                             leadingIcon = {
-                                                Icon(
-                                                    imageVector = Icons.Outlined.AttachMoney,
-                                                    contentDescription = "", tint = Color(0xff009177)
+                                                Text(
+                                                    text = "N$",
+                                                    color = Color(0xff009177)
                                                 )
                                             }
                                         )
@@ -173,7 +184,7 @@ class BudgetSetActivity : ComponentActivity() {
                                 ){
                                     Icon(imageVector = Icons.Outlined.Fastfood, contentDescription = "", tint = Color(0xff009177))
                                     Spacer(modifier = Modifier.width(10.dp))
-                                    Text(text = "FOOD", textAlign = TextAlign.Start, fontWeight = FontWeight.W700)
+                                    Text(text = "Food", textAlign = TextAlign.Start, fontWeight = FontWeight.W700)
                                     Box(
                                         modifier = Modifier
                                             .width(150.dp)
@@ -181,13 +192,13 @@ class BudgetSetActivity : ComponentActivity() {
                                         TextField(value = food, onValueChange = {food=it},
                                             colors = TextFieldDefaults.textFieldColors(
                                                 containerColor = Color.Transparent),
-                                            placeholder = {Text(text = "1500")},
+                                            placeholder = {Text(text = "0.00")},
                                             singleLine = true,
                                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                             leadingIcon = {
-                                                Icon(
-                                                    imageVector = Icons.Outlined.AttachMoney,
-                                                    contentDescription = "", tint = Color(0xff009177)
+                                                Text(
+                                                    text = "N$",
+                                                    color = Color(0xff009177)
                                                 )
                                             }
                                         )
@@ -205,7 +216,7 @@ class BudgetSetActivity : ComponentActivity() {
                                 ){
                                     Icon(imageVector = Icons.Outlined.LocalHospital, contentDescription = "", tint = Color.Red)
                                     Spacer(modifier = Modifier.width(10.dp))
-                                    Text(text = "HEALTH" , textAlign = TextAlign.Start, fontWeight = FontWeight.W700)
+                                    Text(text = "Health" , textAlign = TextAlign.Start, fontWeight = FontWeight.W700)
                                     Box(
                                         modifier = Modifier
                                             .width(150.dp)
@@ -213,13 +224,13 @@ class BudgetSetActivity : ComponentActivity() {
                                         TextField(value = health, onValueChange = {health=it},
                                             colors = TextFieldDefaults.textFieldColors(
                                                 containerColor = Color.Transparent),
-                                            placeholder = {Text(text = "200")},
+                                            placeholder = {Text(text = "0.00")},
                                             singleLine = true,
                                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                             leadingIcon = {
-                                                Icon(
-                                                    imageVector = Icons.Outlined.AttachMoney,
-                                                    contentDescription = "", tint = Color(0xff009177)
+                                                Text(
+                                                    text = "N$",
+                                                    color = Color(0xff009177)
                                                 )
                                             }
                                         )
@@ -236,7 +247,7 @@ class BudgetSetActivity : ComponentActivity() {
                                 ){
                                     Icon(imageVector = Icons.Outlined.School, contentDescription = "", tint = Color.Green)
                                     Spacer(modifier = Modifier.width(10.dp))
-                                    Text(text = "EDUCATION", textAlign = TextAlign.Start, fontWeight = FontWeight.W700)
+                                    Text(text = "Education", textAlign = TextAlign.Start, fontWeight = FontWeight.W700)
                                     Box(
                                         modifier = Modifier
                                             .width(150.dp)
@@ -244,13 +255,13 @@ class BudgetSetActivity : ComponentActivity() {
                                         TextField(value = education, onValueChange = {education=it},
                                             colors = TextFieldDefaults.textFieldColors(
                                                 containerColor = Color.Transparent),
-                                            placeholder = {Text(text = "500")},
+                                            placeholder = {Text(text = "0.00")},
                                             singleLine = true,
                                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                             leadingIcon = {
-                                                Icon(
-                                                    imageVector = Icons.Outlined.AttachMoney,
-                                                    contentDescription = "", tint = Color(0xff009177)
+                                                Text(
+                                                    text = "N$",
+                                                    color = Color(0xff009177)
                                                 )
                                             }
                                         )
@@ -267,21 +278,21 @@ class BudgetSetActivity : ComponentActivity() {
                                 ){
                                     Icon(imageVector = Icons.Outlined.Hotel, contentDescription = "", tint = Color(0xff009177))
                                     Spacer(modifier = Modifier.width(10.dp))
-                                    Text(text = "ACOMODATION", textAlign = TextAlign.Start, fontWeight = FontWeight.W700)
+                                    Text(text = "Accommodation", textAlign = TextAlign.Start, fontWeight = FontWeight.W700)
                                     Box(
                                         modifier = Modifier
                                             .width(150.dp)
                                     ){
-                                        TextField(value = acommodation, onValueChange = {acommodation=it},
+                                        TextField(value = accommodation, onValueChange = {accommodation=it},
                                             colors = TextFieldDefaults.textFieldColors(
                                                 containerColor = Color.Transparent),
-                                            placeholder = {Text(text = "500")},
+                                            placeholder = {Text(text = "0.00")},
                                             singleLine = true,
                                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                                             leadingIcon = {
-                                                Icon(
-                                                    imageVector = Icons.Outlined.AttachMoney,
-                                                    contentDescription = "", tint = Color(0xff009177)
+                                                Text(
+                                                    text = "N$",
+                                                    color = Color(0xff009177)
                                                 )
                                             }
                                         )
@@ -291,7 +302,29 @@ class BudgetSetActivity : ComponentActivity() {
                                 Spacer(modifier = Modifier.height(15.dp))
                             }
                             Spacer(modifier = Modifier.height(20.dp))
-                            Button(onClick = { startActivity(intent)},
+                            Button(onClick = {
+
+                                // Update the data in Firestore
+                                val userDocRef = db.collection("Categories").document(userEmail)
+                                userDocRef.update(
+                                    mapOf(
+                                        "transport" to transport,
+                                        "food" to food,
+                                        "health" to health,
+                                        "education" to education,
+                                        "accommodation" to accommodation
+                                    )
+                                )
+                                    .addOnSuccessListener {
+                                        showToast(this@BudgetSetActivity, "Account information updated successfully")
+                                        startActivity(intent)
+                                    }
+                                    .addOnFailureListener { exception ->
+                                        showToast(this@BudgetSetActivity, "Error updating account information: ${exception.message}")
+                                    }
+
+
+                                },
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(15.dp))
                                     .width(200.dp)
@@ -318,5 +351,9 @@ class BudgetSetActivity : ComponentActivity() {
                 color = color
             )
         }
+    }
+
+    private fun showToast(context: Context, message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }
