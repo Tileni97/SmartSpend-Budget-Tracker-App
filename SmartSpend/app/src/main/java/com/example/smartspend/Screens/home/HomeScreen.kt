@@ -81,7 +81,7 @@ fun HomeScreen(navController: NavController){
                 AddBudgetActivity()
             }
             composable(Routes.Analysis.routes){
-                AnalysisActivity()
+                AnalysisActivity(navControllerOne)
             }
         }
     }
