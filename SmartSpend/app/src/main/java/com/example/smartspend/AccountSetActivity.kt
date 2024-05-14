@@ -1,9 +1,8 @@
 package com.example.smartspend
 
-import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -34,19 +33,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -56,8 +53,6 @@ import com.example.smartspend.data.UserData
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.withContext
 
 class AccountSetActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -68,6 +63,13 @@ class AccountSetActivity : ComponentActivity() {
             SmartSpendTheme {
                 SetBarColor(color = Color(0xff009177))
                 val intent = Intent(this, BudgetSetActivity::class.java)
+
+                // mutable state variables for each field
+                var accountNumber by remember { mutableStateOf("") }
+                var cardNumber by remember { mutableStateOf("") }
+                var expMonth by remember { mutableStateOf("") }
+                var expYear by remember { mutableStateOf("") }
+                var cvv by remember { mutableStateOf("") }
 
                 val currentUser = UserRepository.getUsers()
                 var userFirstName: String? = null
@@ -118,7 +120,7 @@ class AccountSetActivity : ComponentActivity() {
                         }
                         Spacer(modifier = Modifier.height(20.dp))
                         Text(
-                            text = "Hi $userFirstName !",
+                            text = "Hi $userFirstName!",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xff009177),
@@ -126,7 +128,7 @@ class AccountSetActivity : ComponentActivity() {
 
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "Let's start with setting up your account.",
+                            text = "Let's start setting up your account.",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.W400,
                             textAlign = TextAlign.Center
@@ -147,7 +149,7 @@ class AccountSetActivity : ComponentActivity() {
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 TextField(
-                                    value = "", onValueChange = {},
+                                    value = accountNumber, onValueChange = {accountNumber = it},
                                     colors = TextFieldDefaults.textFieldColors(
                                         containerColor = Color.Transparent
                                     ),
@@ -164,7 +166,7 @@ class AccountSetActivity : ComponentActivity() {
                                 )
                                 Spacer(modifier = Modifier.height(5.dp))
                                 TextField(
-                                    value = "", onValueChange = {},
+                                    value = cardNumber, onValueChange = {cardNumber = it},
                                     colors = TextFieldDefaults.textFieldColors(
                                         containerColor = Color.Transparent
                                     ),
@@ -176,7 +178,8 @@ class AccountSetActivity : ComponentActivity() {
                                             contentDescription = "", tint = Color.Green
                                         )
                                     },
-                                    singleLine = true
+                                    singleLine = true,
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
                                 )
                                 Row(
                                     modifier = Modifier
@@ -189,7 +192,7 @@ class AccountSetActivity : ComponentActivity() {
                                             .padding(5.dp, 0.dp),
                                     ) {
                                         TextField(
-                                            value = "", onValueChange = {},
+                                            value = expMonth, onValueChange = {expMonth = it},
                                             colors = TextFieldDefaults.textFieldColors(
                                                 containerColor = Color.Transparent
                                             ),
@@ -205,7 +208,7 @@ class AccountSetActivity : ComponentActivity() {
                                             .padding(5.dp, 0.dp),
                                     ) {
                                         TextField(
-                                            value = "", onValueChange = {},
+                                            value = expYear, onValueChange = {expYear = it},
                                             colors = TextFieldDefaults.textFieldColors(
                                                 containerColor = Color.Transparent
                                             ),
@@ -216,7 +219,7 @@ class AccountSetActivity : ComponentActivity() {
                                         )
                                     }
                                     TextField(
-                                        value = "", onValueChange = {},
+                                        value = cvv, onValueChange = {cvv = it},
                                         colors = TextFieldDefaults.textFieldColors(
                                             containerColor = Color.Transparent
                                         ),
@@ -233,7 +236,36 @@ class AccountSetActivity : ComponentActivity() {
                             }
                             Spacer(modifier = Modifier.height(50.dp))
                             Button(
-                                onClick = { startActivity(intent)},
+                                onClick = {
+                                    var isValid = true
+
+                                    if (accountNumber.isBlank()) {
+                                        showToast(this@AccountSetActivity, "Please enter Account Number")
+                                        isValid = false
+                                    }
+
+                                    if (cardNumber.isBlank()) {
+                                        showToast(this@AccountSetActivity, "Please enter Card Number")
+                                        isValid = false
+                                    }
+
+                                    if (expMonth.isBlank()) {
+                                        showToast(this@AccountSetActivity, "Please enter Exp Month")
+                                        isValid = false
+                                    }
+
+                                    if (expYear.isBlank()) {
+                                        showToast(this@AccountSetActivity, "Please enter Exp Year")
+                                        isValid = false
+                                    }
+
+                                    if (cvv.isBlank()) {
+                                        showToast(this@AccountSetActivity, "Please enter CVV")
+                                        isValid = false
+                                    }
+                                    if (isValid) {
+                                        startActivity(intent)
+                                    }},
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(15.dp))
                                     .width(200.dp)
@@ -266,4 +298,8 @@ private fun SetBarColor(color: Color) {
             color = color
         )
     }
+}
+
+private fun showToast(context: Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
