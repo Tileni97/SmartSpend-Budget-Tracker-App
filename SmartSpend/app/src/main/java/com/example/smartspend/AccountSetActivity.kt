@@ -53,6 +53,7 @@ import com.example.smartspend.data.UserData
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AccountSetActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -74,13 +75,17 @@ class AccountSetActivity : ComponentActivity() {
                 val currentUser = UserRepository.getUsers()
                 var userEmail: String = UserRepository.getEmail()
                 var userFirstName: String? = null
+
+                // Initialize Firebase Firestore
+                val db = FirebaseFirestore.getInstance()
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
 
-
+                    //val userData = intent.getParcelableExtra<UserData>("USER_DATA")
 
                     Box (
                         modifier = Modifier
@@ -122,12 +127,6 @@ class AccountSetActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(20.dp))
                         Text(
                             text = "Hi $userFirstName!",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xff009177),
-                        )
-                        Text(
-                            text = "Hi $userEmail !",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xff009177),
@@ -271,8 +270,26 @@ class AccountSetActivity : ComponentActivity() {
                                         isValid = false
                                     }
                                     if (isValid) {
-                                        startActivity(intent)
-                                    }},
+                                        // Update the data in Firestore
+                                        val userDocRef = db.collection("Users").document(userEmail)
+                                        userDocRef.update(
+                                            mapOf(
+                                                "accountNumber" to accountNumber,
+                                                "cardNumber" to cardNumber,
+                                                "expMonth" to expMonth,
+                                                "expYear" to expYear,
+                                                "cvv" to cvv
+                                            )
+                                        )
+                                            .addOnSuccessListener {
+                                                showToast(this@AccountSetActivity, "Account information updated successfully")
+                                                startActivity(intent)
+                                            }
+                                            .addOnFailureListener { exception ->
+                                                showToast(this@AccountSetActivity, "Error updating account information: ${exception.message}")
+                                            }
+                                    }
+                                },
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(15.dp))
                                     .width(200.dp)
