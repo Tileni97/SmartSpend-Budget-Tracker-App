@@ -72,6 +72,7 @@ class AccountSetActivity : ComponentActivity() {
                 var cvv by remember { mutableStateOf("") }
 
                 val currentUser = UserRepository.getUsers()
+                var userEmail: String = UserRepository.getEmail()
                 var userFirstName: String? = null
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -121,6 +122,12 @@ class AccountSetActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(20.dp))
                         Text(
                             text = "Hi $userFirstName!",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xff009177),
+                        )
+                        Text(
+                            text = "Hi $userEmail !",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xff009177),
