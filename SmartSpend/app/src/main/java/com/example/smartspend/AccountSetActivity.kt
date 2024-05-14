@@ -44,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.smartspend.data.UserData
+import com.example.smartspend.data.UserRepository
 import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -56,13 +57,17 @@ class AccountSetActivity : ComponentActivity() {
             SmartSpendTheme {
                 SetBarColor(color = Color(0xff009177))
                 val intent = Intent(this, BudgetSetActivity::class.java)
+
+                val currentUser = UserRepository.getUsers()
+                var userFirstName: String? = null
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
 
-                    val userData = intent.getParcelableExtra<UserData>("USER_DATA")
+
+
 
                     Box (
                         modifier = Modifier
@@ -78,6 +83,10 @@ class AccountSetActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center,
                     ) {
+
+                        currentUser.forEach {user: UserData ->
+                            userFirstName = user.firstName
+                        }
 
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
@@ -98,7 +107,7 @@ class AccountSetActivity : ComponentActivity() {
                         }
                         Spacer(modifier = Modifier.height(20.dp))
                         Text(
-                            text = "Hi ${userData?.firstName} !",
+                            text = "Hi $userFirstName !",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xff009177),

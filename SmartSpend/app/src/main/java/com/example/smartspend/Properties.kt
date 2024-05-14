@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.example.notesapp.util.formatDate
 import com.example.smartspend.data.Notifications
 import com.example.smartspend.data.TransectionItem
+import com.google.firebase.firestore.auth.User
 
 @Composable
 fun notificationRow(
@@ -244,3 +245,4 @@ fun notificationRow(
     }
 
 }
+

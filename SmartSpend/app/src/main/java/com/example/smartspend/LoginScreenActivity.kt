@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartspend.data.UserData
+import com.example.smartspend.data.UserRepository
 import com.example.smartspend.firebase.AuthViewModel
 import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -72,6 +73,10 @@ class LoginScreenActivity : ComponentActivity() {
             SmartSpendTheme {
                 SetBarColor(color = Color(0xff009177))
                 val intent = Intent(this, AccountSetActivity::class.java)
+
+                // Initialize the UserData object
+                var currentUser:UserData = UserData()
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -212,7 +217,6 @@ class LoginScreenActivity : ComponentActivity() {
                                 // Show a toast for successful login
                                 LaunchedEffect(Unit) {
                                     showToast(context, "Login Successful")
-                                    startActivity(intent)
                                 }
 
                                 // Fetch the user's data from Firestore
@@ -226,9 +230,10 @@ class LoginScreenActivity : ComponentActivity() {
                                             val firstName = document.data?.get("firstName") as? String
                                             val userModel = UserData(firstName)
 
-                                            // Pass the user data to the AccountSetActivity
-                                            val intent = Intent(this@LoginScreenActivity, AccountSetActivity::class.java)
-                                            intent.putExtra("USER_DATA", userModel)
+                                            currentUser.firstName = firstName
+
+                                            UserRepository.addUser(currentUser)
+
                                             startActivity(intent)
                                         } else {
                                             Log.d(TAG, "No such document")
