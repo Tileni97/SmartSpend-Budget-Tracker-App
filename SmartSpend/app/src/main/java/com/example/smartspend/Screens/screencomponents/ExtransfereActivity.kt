@@ -199,33 +199,33 @@ fun ExtransfereScreen(navController: NavHostController) {
             var newBalance : String = ""
 
             if (amount.isBlank()) {
-                showToast(context, "Please enter Account Number")
+                showToast(context, "Please enter Amount")
                 isValid = false
             }else{
                 newBalance = (userBalance.toDouble() - amount.toDouble()).toString()
             }
 
             if (bankName.isBlank()) {
-                showToast(context, "Please enter Card Number")
+                showToast(context, "Please enter Bank Name")
                 isValid = false
             }
 
             if (accountNumber.isBlank()) {
-                showToast(context, "Please enter Exp Month")
+                showToast(context, "Please enter Account Number")
                 isValid = false
             }
 
             if (branchCode.isBlank()) {
-                showToast(context, "Please enter Exp Year")
+                showToast(context, "Please enter Branch Code")
                 isValid = false
             }
 
             if (reference.isBlank()) {
-                showToast(context, "Please enter CVV")
+                showToast(context, "Please enter Reference")
                 isValid = false
             }
             if (reason.isBlank()) {
-                showToast(context, "Please enter CVV")
+                showToast(context, "Please enter Reason")
                 isValid = false
             }
             if (isValid) {
