@@ -1,8 +1,6 @@
 package com.example.smartspend.Screens.screencomponents
 
-import android.widget.ScrollView
 import android.widget.Toast
-import androidx.compose.animation.expandHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,14 +15,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AccountBalance
 import androidx.compose.material.icons.outlined.AccountTree
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Money
-import androidx.compose.material.icons.rounded.Business
+import androidx.compose.material.icons.rounded.AccountBalance
+import androidx.compose.material.icons.rounded.AttachFile
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -54,12 +51,37 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.smartspend.navigation.Routes
+import com.example.smartspend.data.UserRepository
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExtransfereScreen(navController: NavHostController) {
+
+    // Mutable state variables for each fields
+    var amount by remember { mutableStateOf("") }
+    var bankName by remember { mutableStateOf("") }
+    var accountNumber by remember { mutableStateOf("") }
+    var branchCode by remember { mutableStateOf("") }
+    var accommodation by remember { mutableStateOf("") }
+    var budget by remember { mutableStateOf("") }
+
+    //Fetch user email from repository
+    var userEmail: String = UserRepository.getEmail()
+
+    // Initialize Firebase Firestore
+    val db = FirebaseFirestore.getInstance()
+
+
+
+
+
+
+
+
+
+
     Column (
         modifier = Modifier
             .fillMaxSize(),
@@ -108,10 +130,10 @@ fun ExtransfereScreen(navController: NavHostController) {
             TextField(value = "", onValueChange = {},
                     colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent),
-                    label = {Text(text = "Amount")},
-                    placeholder = {Text(text = "1000")},
+                    label = {Text(text = "Amount",color = Color(0xff009177))},
+                    placeholder = {Text(text = "0.00")},
                 leadingIcon = {
-                    Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
+                    Icon(imageVector = Icons.Outlined.Money, contentDescription = "")
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
@@ -120,10 +142,10 @@ fun ExtransfereScreen(navController: NavHostController) {
             TextField(value = "", onValueChange = {},
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent),
-                label = {Text(text = "Bank Name")},
+                label = {Text(text = "Bank Name",color = Color(0xff009177))},
                 placeholder = {Text(text = "FNB")},
                 leadingIcon = {
-                    Icon(imageVector = Icons.Rounded.Business, contentDescription = "")
+                    Icon(imageVector = Icons.Rounded.AccountBalance, contentDescription = "")
                 },
                 singleLine = true
             )
@@ -131,7 +153,7 @@ fun ExtransfereScreen(navController: NavHostController) {
             TextField(value = "", onValueChange = {},
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent),
-                label = {Text(text = "Account Number")},
+                label = {Text(text = "Account Number",color = Color(0xff009177))},
                 placeholder = {Text(text = "484885938563958035793")},
                 leadingIcon = {
                     Icon(imageVector = Icons.Outlined.AccountTree, contentDescription = "")
@@ -143,7 +165,7 @@ fun ExtransfereScreen(navController: NavHostController) {
             TextField(value = "", onValueChange = {},
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent),
-                label = {Text(text = "Branch Code")},
+                label = {Text(text = "Branch Code",color = Color(0xff009177))},
                 placeholder = {Text(text = "53472")},
                 leadingIcon = {
                     Icon(imageVector = Icons.Outlined.Code, contentDescription = "")
@@ -152,11 +174,24 @@ fun ExtransfereScreen(navController: NavHostController) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
             Spacer(modifier = Modifier.height(5.dp))
+            TextField(value = "", onValueChange = {},
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent),
+                label = {Text(text = "Reference",color = Color(0xff009177))},
+                placeholder = {Text(text = "e.g Name,Number.")},
+                leadingIcon = {
+                    Icon(imageVector = Icons.Rounded.AttachFile, contentDescription = "")
+                },
+                singleLine = true
+            )
+            Spacer(modifier = Modifier.height(5.dp))
             Demo_ExposedDropdownMenuBox()
             Spacer(modifier = Modifier.height(20.dp))
         }
         Spacer(modifier = Modifier.height(50.dp))
-        Button(onClick = { },
+        Button(onClick = {
+
+        },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(40.dp)
@@ -176,10 +211,16 @@ fun ExtransfereScreen(navController: NavHostController) {
 @Composable
 fun Demo_ExposedDropdownMenuBox() {
     val context = LocalContext.current
-    val coffeeDrinks = arrayOf("Americano", "Cappuccino", "Espresso", "Latte",
-        "Mocha")
+    val reason = arrayOf("Interest", "Dividend", "Annuity", "Pension",
+        "Agents Commission","Ips Use","VAT","P.A.Y.E","Medical Aid","Salary","Insurance","Loan", "Other")
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(coffeeDrinks[0]) }
+    var selectedText by remember { mutableStateOf(reason[0]) }
+
+    //Fetch User Email
+    var userEmail: String = UserRepository.getEmail()
+
+    // Initialize Firebase Firestore
+    val db = FirebaseFirestore.getInstance()
 
     Box(
     ) {
@@ -189,9 +230,13 @@ fun Demo_ExposedDropdownMenuBox() {
                 expanded = !expanded
             },
         ) {
+            Text(
+                text = "Reason",
+                color = Color(0xff009177)
+            )
             TextField(
                 value = selectedText,
-                onValueChange = {},
+                onValueChange = {selectedText = it},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier.menuAnchor(),
@@ -203,7 +248,7 @@ fun Demo_ExposedDropdownMenuBox() {
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
             ) {
-                coffeeDrinks.forEach { item ->
+                reason.forEach { item ->
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
@@ -237,7 +282,7 @@ fun ExtNavBar(name:String, navController: NavHostController){
                 modifier = Modifier
                     .clip(RoundedCornerShape(size = 5.dp))
                     .padding(5.dp)
-                    .clickable {navController.popBackStack()}
+                    .clickable { navController.popBackStack() }
 
             ){
                 Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = "", tint = Color.White)
