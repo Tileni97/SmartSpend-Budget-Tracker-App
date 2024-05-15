@@ -61,18 +61,25 @@ import com.example.notesapp.util.formatDate
 import com.example.smartspend.R
 import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
 import com.example.smartspend.data.TransectionItem
+import com.example.smartspend.data.TransectionRepository
 import com.example.smartspend.data.UserData
 import com.example.smartspend.data.UserRepository
+import com.example.smartspend.data.dataBaseRepository
 import com.example.smartspend.navigation.Routes
+import com.example.smartspend.setTransection
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import java.time.Instant
+import java.util.Date
 
 @Composable
 fun DashBordActivity(navController: NavHostController) {
     var user: UserData = UserData(username = "shikongov02@gmail.com", firstName = "Shikongo", lastName = "Giideon", phone = "+264814272721", accountType = "standard", address = "Tuba Street", balance = 20000, budget = 1500, spent = 1100, cardNumber = "5343875934363775", expMonth = 4, expYear = 24, cvv = 254, AccountNumber = "2424789349735768")
 
     var userEmail: String = UserRepository.getEmail()
+
+    setTransection(userEmail)
 
     // Create a mutable state variable to store the lastName
     var userFirstName by remember { mutableStateOf("") }
@@ -92,8 +99,10 @@ fun DashBordActivity(navController: NavHostController) {
 
 
     FirebaseFetch()
-    val db = FirebaseFirestore.getInstance()
+    val db = dataBaseRepository.getDb()
     val userDocRef = db.collection("Users").document(userEmail)
+
+
     val document = userDocRef.get().addOnSuccessListener { document ->
         var username = document.data?.get("username") as? String
         var firstName = document.data?.get("firstName") as? String
@@ -108,6 +117,8 @@ fun DashBordActivity(navController: NavHostController) {
         var expMonth = document.data?.get("expMonth") as? String
         var expYear = document.data?.get("expYear") as? String
         var cvv = document.data?.get("cvv") as? String
+
+
 
         userFirstName = firstName.toString()
         userLastName = lastName.toString()
@@ -135,20 +146,7 @@ fun DashBordActivity(navController: NavHostController) {
         }
     }
 
-    var translist = listOf<TransectionItem>(
-        TransectionItem(Description = "Wage", ammount = 200, type = "Income"),
-        TransectionItem(Description = "transport", ammount = 200, type = "Expenses"),
-        TransectionItem(Description = "Salary", ammount = 200, type = "Income"),
-        TransectionItem(Description = "transport", ammount = 200, type = "Expenses"),
-        TransectionItem(Description = "Deposit", ammount = 200, type = "Income"),
-        TransectionItem(Description = "transport", ammount = 200, type = "Expenses"),
-        TransectionItem(Description = "Wage", ammount = 200, type = "Income"),
-        TransectionItem(Description = "transport", ammount = 200, type = "Expenses"),
-        TransectionItem(Description = "Salary", ammount = 200, type = "Income"),
-        TransectionItem(Description = "transport", ammount = 200, type = "Expenses"),
-        TransectionItem(Description = "Deposit", ammount = 200, type = "Income"),
-        TransectionItem(Description = "transport", ammount = 200, type = "Expenses")
-    )
+    var translist = TransectionRepository.getTransection()
 
     var spending:Int =((userSpent.toDouble()/userBudget.toDouble())*100).toInt()
 
@@ -332,7 +330,7 @@ fun DashBordActivity(navController: NavHostController) {
             ,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            items(translist) { transItem ->
+            items(translist.toList()) { transItem ->
                 TransectionRow(trans = transItem)
             }
         }
@@ -898,7 +896,7 @@ fun TransectionRow(
 
             ) {
 
-            if(trans.type =="Income"){
+            if(trans.type =="income" || trans.type =="Income"){
                 Row (
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -907,7 +905,7 @@ fun TransectionRow(
                     Row{
                         Icon(imageVector = Icons.Outlined.TransitEnterexit, contentDescription = "")
                         Spacer(modifier = Modifier.size(10.dp))
-                        Text(text = trans.Description,
+                        Text(text = trans.category?:"No Category",
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onBackground,
                             fontWeight = FontWeight.W400,
@@ -917,7 +915,7 @@ fun TransectionRow(
                     Row {
                         Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
                         Spacer(modifier = Modifier.size(5.dp))
-                        Text(text = trans.ammount.toString(),
+                        Text(text = trans.ammount.toString()?:"NO Amount",
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.Green,
                             fontSize = 17.sp,
@@ -939,7 +937,7 @@ fun TransectionRow(
                 ){
                     Icon(imageVector = Icons.Outlined.AccessTime, contentDescription ="" )
                     Spacer(modifier = Modifier.size(10.dp))
-                    Text(text = formatDate(trans.entryDate.time),
+                    Text(text = trans.entryDate?: "",
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.W400,
@@ -956,7 +954,7 @@ fun TransectionRow(
                     Row {
                         Icon(imageVector = Icons.Outlined.ArrowOutward, contentDescription = "")
                         Spacer(modifier = Modifier.size(10.dp))
-                        Text(text = trans.Description,
+                        Text(text = trans.category?:"NO Category",
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onBackground,
                             fontWeight = FontWeight.W400,
@@ -967,7 +965,7 @@ fun TransectionRow(
                     Row {
                         Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
                         Spacer(modifier = Modifier.size(5.dp))
-                        Text(text = trans.ammount.toString(),
+                        Text(text = trans.ammount.toString()?:"NO Amount",
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.Red,
                             fontSize = 17.sp,
@@ -987,7 +985,7 @@ fun TransectionRow(
                 ){
                     Icon(imageVector = Icons.Outlined.AccessTime, contentDescription ="" )
                     Spacer(modifier = Modifier.size(10.dp))
-                    Text(text = formatDate(trans.entryDate.time),
+                    Text(text = trans.entryDate?: "",
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.W400,

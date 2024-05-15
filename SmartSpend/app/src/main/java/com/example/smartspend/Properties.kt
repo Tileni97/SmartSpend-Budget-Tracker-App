@@ -13,13 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccessTime
-import androidx.compose.material.icons.outlined.ArrowDownward
-import androidx.compose.material.icons.outlined.ArrowOutward
-import androidx.compose.material.icons.outlined.ArrowUpward
-import androidx.compose.material.icons.outlined.AttachMoney
-import androidx.compose.material.icons.outlined.Drafts
 import androidx.compose.material.icons.outlined.MailOutline
-import androidx.compose.material.icons.outlined.TransitEnterexit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -38,7 +32,8 @@ import androidx.compose.ui.unit.sp
 import com.example.notesapp.util.formatDate
 import com.example.smartspend.data.Notifications
 import com.example.smartspend.data.TransectionItem
-import com.google.firebase.firestore.auth.User
+import com.example.smartspend.data.TransectionRepository
+import com.example.smartspend.data.dataBaseRepository
 
 @Composable
 fun notificationRow(
@@ -246,3 +241,34 @@ fun notificationRow(
 
 }
 
+fun setTransection(userEmail: String){
+    var newTrans = TransectionItem()
+    val db = dataBaseRepository.getDb()
+    db.collection("transections")
+        .document(userEmail)
+        .collection("transections")
+        .get()
+        .addOnSuccessListener { result ->
+            for (document in result) {
+                if (document != null){
+                    var category = document.data?.get("category") as? String
+                    var amount = document.data?.get("amount") as? String
+                    var type = document.data?.get("transType") as? String
+                    var docId = document.id
+                    var entryDate = document.data?.get("date") as? String
+
+                    var newTrans = TransectionItem(category, amount, type, docId,entryDate)
+
+                    TransectionRepository.addTransection(newTrans)
+                }
+            }
+        }
+        .addOnFailureListener { exception ->
+            println("Error getting documents: $exception")
+        }
+
+}
+
+fun setAnalysis(transList: MutableSet<TransectionItem>){
+
+}

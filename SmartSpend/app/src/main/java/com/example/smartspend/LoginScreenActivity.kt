@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartspend.Screens.home.HomeActivity
+import com.example.smartspend.data.TransectionRepository
 import com.example.smartspend.data.UserData
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.firebase.AuthViewModel
@@ -247,6 +248,12 @@ class LoginScreenActivity : ComponentActivity() {
                                             val cvv = document.data?.get("cvv") as? String
 
                                             if ((accountNumber != null && cardNumber != null && expMonth != null && expYear != null && cvv != null)&&(accountNumber != "" && cardNumber != "" && expMonth != "" && expYear != "" && cvv != "")) {
+                                                try {
+                                                    setTransection(user.email.toString())
+                                                }
+                                                catch (e:Exception){
+
+                                                }
                                                 // User has account information, navigate to DashboardActivity
                                                 startActivity(intentHomeActivity)
 
