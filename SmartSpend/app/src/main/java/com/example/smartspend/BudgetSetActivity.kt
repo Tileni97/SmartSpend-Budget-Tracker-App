@@ -37,6 +37,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,7 +74,23 @@ class BudgetSetActivity : ComponentActivity() {
                 var health by remember { mutableStateOf("") }
                 var education by remember { mutableStateOf("") }
                 var accommodation by remember { mutableStateOf("") }
-                //var total by remember { mutableStateOf("") }
+                var budget by remember { mutableStateOf("") }
+
+
+                // Derive the total budget amount from the text field values
+                val totalBudget by remember {
+                    derivedStateOf {
+                        val transportValue = transport.toIntOrNull() ?: 0
+                        val foodValue = food.toIntOrNull() ?: 0
+                        val healthValue = health.toIntOrNull() ?: 0
+                        val educationValue = education.toIntOrNull() ?: 0
+                        val accommodationValue = accommodation.toIntOrNull() ?: 0
+
+                        transportValue + foodValue + healthValue + educationValue + accommodationValue
+                    }
+                }
+
+                budget = totalBudget.toString()
 
 
                 val currentUser = UserRepository.getUsers()
@@ -124,7 +141,7 @@ class BudgetSetActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Text(
-                            text = "N$ 0"/*$total*/,
+                            text = "N$ $totalBudget",
                             fontSize = 30.sp,
                             fontWeight = FontWeight.W700,
                             textAlign = TextAlign.Center
@@ -306,15 +323,25 @@ class BudgetSetActivity : ComponentActivity() {
 
                                 // Update the data in Firestore
                                 val userDocRef = db.collection("Categories").document(userEmail)
-                                userDocRef.update(
+                                userDocRef.set(
                                     mapOf(
                                         "transport" to transport,
                                         "food" to food,
                                         "health" to health,
                                         "education" to education,
-                                        "accommodation" to accommodation
+                                        "accommodation" to accommodation,
+                                        "budget" to budget
                                     )
                                 )
+                                val userDocRef1 = db.collection("Users").document(userEmail)
+                                userDocRef1.update(
+                                    mapOf(
+                                        "budget" to budget
+                                    )
+                                )
+
+
+
                                     .addOnSuccessListener {
                                         showToast(this@BudgetSetActivity, "Account information updated successfully")
                                         startActivity(intent)
@@ -324,7 +351,7 @@ class BudgetSetActivity : ComponentActivity() {
                                     }
 
 
-                                },
+                            },
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(15.dp))
                                     .width(200.dp)

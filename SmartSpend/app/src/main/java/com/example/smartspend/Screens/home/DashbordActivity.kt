@@ -2,7 +2,6 @@ package com.example.smartspend.Screens.home
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -63,6 +62,7 @@ import com.example.smartspend.R
 import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
 import com.example.smartspend.data.TransectionItem
 import com.example.smartspend.data.UserData
+import com.example.smartspend.data.UserRepository
 import com.example.smartspend.navigation.Routes
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -72,13 +72,15 @@ import com.google.firebase.firestore.firestore
 fun DashBordActivity(navController: NavHostController) {
     var user: UserData = UserData(username = "shikongov02@gmail.com", firstName = "Shikongo", lastName = "Giideon", phone = "+264814272721", accountType = "standard", address = "Tuba Street", balance = 20000, budget = 1500, spent = 1100, cardNumber = "5343875934363775", expMonth = 4, expYear = 24, cvv = 254, AccountNumber = "2424789349735768")
 
+    var userEmail: String = UserRepository.getEmail()
+
     // Create a mutable state variable to store the lastName
     var userFirstName by remember { mutableStateOf("") }
     var userLastName by remember { mutableStateOf("") }
     var userPhone by remember { mutableStateOf("") }
     var userAccountType by remember { mutableStateOf("") }
     var userAddress by remember { mutableStateOf("") }
-    var userBalance by remember { mutableStateOf(0) }
+    var userBalance by remember { mutableStateOf("") }
     var userSpent by remember { mutableStateOf(0) }
     var userBudget by remember { mutableStateOf(0) }
     var userCardNumber by remember { mutableStateOf("") }
@@ -91,7 +93,7 @@ fun DashBordActivity(navController: NavHostController) {
 
     FirebaseFetch()
     val db = FirebaseFirestore.getInstance()
-    val userDocRef = db.collection("Users").document("Tangi Petrus")
+    val userDocRef = db.collection("Users").document(userEmail)
     val document = userDocRef.get().addOnSuccessListener { document ->
         var username = document.data?.get("username") as? String
         var firstName = document.data?.get("firstName") as? String
@@ -113,7 +115,7 @@ fun DashBordActivity(navController: NavHostController) {
         userAccountType = accountType.toString()
         userAddress = address.toString()
         if (balance != null) {
-            userBalance = balance.toInt()
+            userBalance = balance.toString()
         }
         if (spent != null) {
             userSpent = spent.toInt()
@@ -347,7 +349,7 @@ fun DashTopBar(user: UserData){
     var userPhone by remember { mutableStateOf("") }
     var userAccountType by remember { mutableStateOf("") }
     var userAddress by remember { mutableStateOf("") }
-    var userBalance by remember { mutableStateOf(0) }
+    var userBalance by remember { mutableStateOf("") }
     var userSpent by remember { mutableStateOf(0) }
     var userBudget by remember { mutableStateOf(0) }
     var userCardNumber by remember { mutableStateOf("") }
@@ -355,12 +357,12 @@ fun DashTopBar(user: UserData){
     var userExpYear by remember { mutableStateOf(0) }
     var userCvv by remember { mutableStateOf(0) }
 
-
+    var userEmail: String = UserRepository.getEmail()
 
 
     FirebaseFetch()
     val db = FirebaseFirestore.getInstance()
-    val userDocRef = db.collection("Users").document("Tangi Petrus")
+    val userDocRef = db.collection("Users").document(userEmail)
     val document = userDocRef.get().addOnSuccessListener { document ->
         var username = document.data?.get("username") as? String
         var firstName = document.data?.get("firstName") as? String
@@ -382,7 +384,7 @@ fun DashTopBar(user: UserData){
         userAccountType = accountType.toString()
         userAddress = address.toString()
         if (balance != null) {
-            userBalance = balance.toInt()
+            userBalance = balance.toString()
         }
         if (spent != null) {
             userSpent = spent.toInt()
@@ -391,6 +393,7 @@ fun DashTopBar(user: UserData){
             userBudget = budget.toInt()
         }
         userCardNumber = cardNumber.toString()
+
         if (expMonth != null) {
             userExpMonth = expMonth.toInt()
         }
@@ -1013,9 +1016,10 @@ fun TransectionRow(
 
 @Composable
 fun FirebaseFetch() {
+    var userEmail: String = UserRepository.getEmail()
     val context= LocalContext.current
     val db = Firebase.firestore
-    val userDocRef = db.collection("Users").document("Tangi Petrus")
+    val userDocRef = db.collection("Users").document(userEmail)
 
 
     userDocRef.get()
@@ -1038,7 +1042,7 @@ fun FirebaseFetch() {
 
 
                 Log.d(TAG, "DocumentSnapshot data: ${document.data}")
-                Toast.makeText(context, "$expYear", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, "$expYear", Toast.LENGTH_SHORT).show()
             } else {
                 Log.d(TAG, "No such document")
             }

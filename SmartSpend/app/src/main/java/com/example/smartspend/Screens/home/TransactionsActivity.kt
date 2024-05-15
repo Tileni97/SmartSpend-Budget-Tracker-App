@@ -2,6 +2,7 @@ package com.example.smartspend.Screens.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,28 +13,37 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountBalanceWallet
+import androidx.compose.material.icons.outlined.AttachMoney
+import androidx.compose.material.icons.outlined.SyncAlt
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.R
 import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
+import com.example.smartspend.navigation.Routes
 
 // Main composable function for the Transaction screen
 @Composable
-fun TransactionScreen() {
+fun TransactionScreen(navController: NavHostController) {
     // Box composable with rounded corner shape, background color, and fixed height
     Box(
         modifier = Modifier
@@ -81,60 +91,95 @@ fun TransactionScreen() {
             )
         )
         Spacer(modifier = Modifier.height(32.dp)) // Vertical spacing
+
+
         // Row of buttons with styling
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // Transfer button
-            Button(
-                onClick = { /* Handle update */ },
-                modifier = Modifier.height(48.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text(
-                    text = "Transfer",
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Bold
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp, 0.dp),
+            horizontalArrangement = Arrangement.SpaceAround) {
+            //Transfer button
+            Box (
+                modifier = Modifier
+                    .clip(RoundedCornerShape(size = 10.dp))
+                    .background(color = MaterialTheme.colorScheme.inverseOnSurface)
+                    .padding(5.dp)
+                    .width(90.dp)
+                    .clickable {
+
+                            navController.navigate(Routes.TransferScreen.routes)
+
+                    }
+                    .shadow(
+                        elevation = 10.dp,
+                        spotColor = MaterialTheme.colorScheme.onBackground,
+                        shape = RoundedCornerShape(1.dp),
+                        ambientColor = MaterialTheme.colorScheme.onBackground
+                    ),
+
+                ){
+                Row {
+                    Icon(imageVector = Icons.Outlined.SyncAlt, contentDescription = "")
+                    Text(text = "Transfer",
+                        fontWeight = FontWeight.W400,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = 15.sp,fontFamily = FontFamily.SansSerif
                     )
-                )
+                }
             }
-            // Pay button
-            Button(
-                onClick = { /* Handle update */ },
-                modifier = Modifier.height(48.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text(
-                    text = "Pay",
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Bold
+
+            //Pay button
+            Box (
+                modifier = Modifier
+                    .clip(RoundedCornerShape(size = 10.dp))
+                    .background(color = MaterialTheme.colorScheme.inverseOnSurface)
+                    .padding(5.dp)
+                    .width(90.dp)
+                    .clickable {
+
+                            navController.navigate(Routes.PayScreen.routes)
+
+                    }
+                    .shadow(
+                        elevation = 10.dp,
+                        spotColor = MaterialTheme.colorScheme.onBackground,
+                        shape = RoundedCornerShape(1.dp),
+                        ambientColor = MaterialTheme.colorScheme.onBackground
                     )
-                )
+            ){
+                Row {
+                    Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
+                    Text(text = "Pay",
+                        fontWeight = FontWeight.W400,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = 15.sp,fontFamily = FontFamily.SansSerif
+                    )
+                }
             }
-            // Buy button
-            Button(
-                onClick = { /* Handle update */ },
-                modifier = Modifier.height(48.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text(
-                    text = "Buy",
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Bold
+
+            //Buy button
+            Box (
+                modifier = Modifier
+                    .clip(RoundedCornerShape(size = 10.dp))
+                    .background(color = MaterialTheme.colorScheme.inverseOnSurface)
+                    .padding(5.dp)
+                    .width(90.dp)
+                    .clickable { }
+                    .shadow(
+                        elevation = 10.dp,
+                        spotColor = MaterialTheme.colorScheme.onBackground,
+                        shape = RoundedCornerShape(1.dp),
+                        ambientColor = MaterialTheme.colorScheme.onBackground
                     )
-                )
+            ){
+                Row {
+                    Icon(imageVector = Icons.Outlined.AccountBalanceWallet, contentDescription = "")
+                    Text(text = "Buy",
+                        fontWeight = FontWeight.W400,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = 15.sp,fontFamily = FontFamily.SansSerif
+                    )
+                }
             }
         }
     }
@@ -144,7 +189,8 @@ fun TransactionScreen() {
 @Preview(showBackground = true)
 @Composable
 fun TransactionScreenPreview() {
+    val navController = rememberNavController()
     SmartSpendTheme {
-        TransactionScreen()
+        TransactionScreen(navController)
     }
 }
