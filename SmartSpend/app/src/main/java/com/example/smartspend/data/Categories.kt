@@ -5,10 +5,6 @@ import java.util.Date
 import java.util.UUID
 
 data class Categories(
-    var id: UUID = UUID.randomUUID(),
-    var name: String,
-    var budgetAlocated: Int,
-    var spand: Int,
-    var remainingBudget: Int,
-    var entryDate: Date = Date.from(Instant.now())
+    var name: String? = null,
+    var amount: Int? = null
 )

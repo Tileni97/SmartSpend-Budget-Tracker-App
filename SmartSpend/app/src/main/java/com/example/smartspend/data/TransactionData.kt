@@ -5,9 +5,9 @@ import java.util.Date
 import java.util.UUID
 
 data class TransectionItem(
-    var id: UUID = UUID.randomUUID(),
-    val Description:String,
-    val ammount:Int,
-    val type:String,
-    var entryDate: Date = Date.from(Instant.now())
+    val category:String? = null,
+    val ammount:String? = null,
+    val type:String? = null,
+    var documentId: String? = null,
+    var entryDate: String? = null
 )
