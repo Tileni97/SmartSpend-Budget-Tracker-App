@@ -272,7 +272,7 @@ class AccountSetActivity : ComponentActivity() {
                                     if (isValid) {
                                         // Update the data in Firestore
                                         val userDocRef = db.collection("Users").document(userEmail)
-                                        userDocRef.update(
+                                        userDocRef.set(
                                             mapOf(
                                                 "accountNumber" to accountNumber,
                                                 "cardNumber" to cardNumber,
