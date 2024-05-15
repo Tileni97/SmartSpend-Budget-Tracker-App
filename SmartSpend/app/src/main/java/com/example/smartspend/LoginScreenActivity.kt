@@ -57,6 +57,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.smartspend.Screens.home.HomeActivity
 import com.example.smartspend.data.UserData
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.firebase.AuthViewModel
@@ -72,7 +73,9 @@ class LoginScreenActivity : ComponentActivity() {
         setContent {
             SmartSpendTheme {
                 SetBarColor(color = Color(0xff009177))
-                val intent = Intent(this, AccountSetActivity::class.java)
+                val intentAccountSetup = Intent(this, AccountSetActivity::class.java)
+                val intentHomeActivity = Intent(this, HomeActivity::class.java)
+
 
                 // Initialize the UserData object
                 var currentUser:UserData = UserData()
@@ -235,7 +238,24 @@ class LoginScreenActivity : ComponentActivity() {
                                             UserRepository.setEmail(user.email.toString())
 
                                             UserRepository.addUser(currentUser)
-                                            startActivity(intent)
+
+                                            //Check if the user has account information
+                                            val accountNumber = document.data?.get("accountNumber") as? String
+                                            val cardNumber = document.data?.get("cardNumber") as? String
+                                            val expMonth = document.data?.get("expMonth") as? String
+                                            val expYear = document.data?.get("expYear") as? String
+                                            val cvv = document.data?.get("cvv") as? String
+
+                                            if ((accountNumber != null && cardNumber != null && expMonth != null && expYear != null && cvv != null)&&(accountNumber != "" && cardNumber != "" && expMonth != "" && expYear != "" && cvv != "")) {
+                                                // User has account information, navigate to DashboardActivity
+                                                startActivity(intentHomeActivity)
+
+                                            } else {
+                                                // User doesn't have account information, navigate to AccountSetActivity
+                                                startActivity(intentAccountSetup)
+                                            }
+
+
                                         } else {
                                             Log.d(TAG, "No such document")
                                         }

@@ -301,7 +301,7 @@ class AccountSetActivity : ComponentActivity() {
                                     contentColor = Color.White
                                 )
                             ) {
-                                Text(text = "DONE", fontWeight = FontWeight.W700)
+                                Text(text = "Done", fontWeight = FontWeight.W700)
 
                             }
                         }
