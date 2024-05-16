@@ -45,12 +45,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.smartspend.data.AnalysisRepository
+import com.example.smartspend.data.Categories
+import com.example.smartspend.data.CategoryRepository
+import com.example.smartspend.data.TransectionRepository
+import com.example.smartspend.setAnalysis
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
 @Composable
 fun AnalysisActivity(navController: NavHostController) {
+    setAnalysis(TransectionRepository.getTransection(),CategoryRepository.getAllCategories())
     Surface (
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -92,18 +98,12 @@ fun AnalysisActivity(navController: NavHostController) {
 
 @Composable
 fun PieChartWithLabels() {
-    val chartDataList = listOf(
-        ChartData("Rent", Color.Green, 1f),
-        ChartData("Food", Color.Red, 60f),
-        ChartData("Transportation", Color.Blue, 100f),
-        ChartData("Entertainment", Color.Gray, 100f),
-        ChartData("Others", Color.Yellow, 20f),
-    )
+    val chartDataList = analist(AnalysisRepository.getAllCategories().toMutableList())
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var total = ((((chartDataList.sumOf { it.data.toDouble() }))/300)*100).toInt()
+        var total = AnalysisRepository.getOverAllPercentage().toInt()
 
         Column (
             modifier = Modifier
@@ -113,7 +113,7 @@ fun PieChartWithLabels() {
         ){
 
 
-            Text(text = "$total%",
+            Text(text = "${total.toInt()}%",
                 fontSize = 50.sp,
                 fontWeight = FontWeight.W700,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -143,7 +143,7 @@ fun PieChartWithLabels() {
 
                 for (index in 0..chartDataList.lastIndex) {
                     val chartData = chartDataList[index]
-                    val sweepAngle = chartData.data.toFloat() / 100f * 360f
+                    val sweepAngle = chartData.data.toFloat() / 180f * 360f
                     val angleInRadians = (startAngle + sweepAngle / 2).degreeToAngle
 
                     drawArc(
@@ -211,7 +211,7 @@ fun PieChartWithLabels() {
                             color = MaterialTheme.colorScheme.onBackground,
                             fontWeight = FontWeight.W700
                         )
-                        Text(text = "${chartData.data}%",
+                        Text(text = "${chartData.data.toInt()}%",
                             fontSize = 20.sp,
                             color = Color(0xff009177),
                             fontWeight = FontWeight.ExtraBold
@@ -245,13 +245,13 @@ fun AnalysisTopBar(navController: NavHostController){
                     .clickable { navController.popBackStack() }
 
             ){
-                Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = "", tint = Color.White)
+                Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
             }
             Row (
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Text(text = "Notifications",
+                Text(text = "",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.W700,
                     fontFamily = FontFamily.SansSerif,
@@ -270,6 +270,20 @@ fun AnalysisTopBar(navController: NavHostController){
             }
         }
     }
+}
+
+fun analist(category: MutableList<Categories>):List<ChartData>{
+    val list = mutableSetOf<ChartData>()
+    var random = {
+        Random.nextInt(256)
+        Random.nextInt(256)
+        Random.nextInt(256)
+    }
+    for (c in category){
+        var amm =  c.amount.toString()
+        list.add(ChartData(label = c.name.toString(),Color(random(),random(),random()), data = amm.toFloat()))
+    }
+    return list.toList()
 }
 
 private val Float.degreeToAngle

@@ -6,5 +6,5 @@ import java.util.UUID
 
 data class Categories(
     var name: String? = null,
-    var amount: Int? = null
+    var amount: String? = null
 )
