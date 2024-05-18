@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -49,14 +50,17 @@ import com.example.smartspend.data.AnalysisRepository
 import com.example.smartspend.data.Categories
 import com.example.smartspend.data.CategoryRepository
 import com.example.smartspend.data.TransectionRepository
+import com.example.smartspend.data.UserRepository
 import com.example.smartspend.setAnalysis
+import org.junit.runner.manipulation.Ordering.Context
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
 @Composable
 fun AnalysisActivity(navController: NavHostController) {
-    setAnalysis(TransectionRepository.getTransection(),CategoryRepository.getAllCategories())
+    var context = LocalContext.current
+    setAnalysis(TransectionRepository.getTransection(),CategoryRepository.getAllCategories(), UserRepository.getEmail(), context)
     Surface (
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background

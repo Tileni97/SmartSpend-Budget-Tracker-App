@@ -1,5 +1,7 @@
 package com.example.smartspend
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.smartspend.data.AnalysisRepository
@@ -90,9 +92,8 @@ fun setCategory(userEmail: String){
 }
 
 // This function calculates and sets the analysis data based on transactions and categories
-fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<Categories>){
-
-    var amount: String = null.toString()
+fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<Categories>, userEmail: String, context:Context){
+    setCategory(userEmail)
 
     // Initialize variables for tracking transaction totals
     var totalAccommodation = 0.0
@@ -101,7 +102,7 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
     var totalFood = 0.0
     var totalHealth = 0.0
 
-    // Initialize variables for tracking category amounts
+    // Initialize variables for tracking budget category amounts
     var accommodation = 0.0
     var education = 0.0
     var transport = 0.0
@@ -110,6 +111,7 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
 
     // Calculate the total spending for each category based on transactions
     for (trans in transList) {
+        var amount: String = null.toString()
         if (trans.category == "accommodation" || trans.category == "Accommodation") {
             amount = trans.ammount.toString()
             totalAccommodation += amount.toDouble()
@@ -137,6 +139,7 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
 
     // Get the category amounts from the categories data
     for (category in categories){
+        var amount: String = null.toString()
         if (category.name.equals("accommodation") || category.name.equals("Accommodation")){
             amount = category.amount.toString()
             accommodation = amount.toDouble()
@@ -159,6 +162,8 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
         }
     }
 
+
+
     // Calculate the total spending and total categories
     var totalSpending = totalAccommodation + totalTransport + totalEducation + totalFood + totalHealth
     var totalCategories = accommodation + education + transport + food + health
@@ -167,9 +172,7 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
     var accommodationPercentage = (totalAccommodation / accommodation * 100).toInt()
     var educationPercentage = (totalEducation / education * 100).toInt()
     var transportPercentage = (totalTransport / transport * 100).toInt()
-
     var foodPercentage = (totalFood / food * 100).toInt()
-// Calculate the percentage of spending for the health category
     var healthPercentage = (totalHealth / health * 100).toInt()
 
 // Calculate the overall percentage of spending
@@ -184,4 +187,6 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
     AnalysisRepository.addCategory(Categories("transport", transportPercentage.toString()))
     AnalysisRepository.addCategory(Categories("food", foodPercentage.toString()))
     AnalysisRepository.addCategory(Categories("health", healthPercentage.toString()))
+
+    Toast.makeText(context,"$food",Toast.LENGTH_SHORT).show()
 }
