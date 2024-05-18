@@ -114,7 +114,7 @@ fun welcoming() {
         )
         Spacer(modifier = Modifier.size(20.dp))
         Text(
-            text = "Manage Your Spending with SmartSpend",
+            text = "Manage Your Spending with Smart Spend",
             style = TextStyle(fontSize = 30.sp),
             textAlign = TextAlign.Center,
             color = Color.White

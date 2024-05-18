@@ -35,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,7 +54,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.data.UserRepository
+import com.example.smartspend.transectionConfirm
 import com.google.firebase.firestore.FirebaseFirestore
+import java.time.Instant
+import java.util.Date
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,6 +75,8 @@ fun ExtransfereScreen(navController: NavHostController) {
     var reason by remember { mutableStateOf("") }
     var userBalance by remember { mutableStateOf("") }
 
+
+
     //Fetch user email from repository
     var userEmail: String = UserRepository.getEmail()
 
@@ -84,6 +90,18 @@ fun ExtransfereScreen(navController: NavHostController) {
             userBalance = balance.toString()
         }
     }
+
+    // Derive the total budget amount from the text field values
+    val totalBalance by remember {
+        derivedStateOf {
+            val transportValue = amount.toIntOrNull() ?: 0
+            val baalance = userBalance.toIntOrNull() ?: 0
+
+            baalance - transportValue
+        }
+    }
+    var setbalance : String = userBalance
+    setbalance = totalBalance.toString()
 
 
     Column (
@@ -114,7 +132,7 @@ fun ExtransfereScreen(navController: NavHostController) {
 
                 Spacer(modifier = Modifier.height(5.dp))
 
-                Text(text = userBalance,
+                Text(text = setbalance,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.W700,
                     color = Color.White)
@@ -131,7 +149,7 @@ fun ExtransfereScreen(navController: NavHostController) {
                 .background(color = MaterialTheme.colorScheme.inverseOnSurface),
             horizontalAlignment = Alignment.CenterHorizontally,
         ){
-            TextField(value = "amount", onValueChange = {amount = it},
+            TextField(value = amount, onValueChange = {amount = it},
                     colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent),
                     label = {Text(text = "Amount",color = Color(0xff009177))},
@@ -143,7 +161,7 @@ fun ExtransfereScreen(navController: NavHostController) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
             )
             Spacer(modifier = Modifier.height(5.dp))
-            TextField(value = "bankName", onValueChange = {bankName = it},
+            TextField(value = bankName, onValueChange = {bankName = it},
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent),
                 label = {Text(text = "Bank Name",color = Color(0xff009177))},
@@ -154,7 +172,7 @@ fun ExtransfereScreen(navController: NavHostController) {
                 singleLine = true
             )
             Spacer(modifier = Modifier.height(5.dp))
-            TextField(value = "accountNumber", onValueChange = {accountNumber = it},
+            TextField(value = accountNumber, onValueChange = {accountNumber = it},
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent),
                 label = {Text(text = "Account Number",color = Color(0xff009177))},
@@ -166,7 +184,7 @@ fun ExtransfereScreen(navController: NavHostController) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
             Spacer(modifier = Modifier.height(5.dp))
-            TextField(value = "branchCode", onValueChange = {branchCode = it},
+            TextField(value = branchCode, onValueChange = {branchCode = it},
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent),
                 label = {Text(text = "Branch Code",color = Color(0xff009177))},
@@ -178,7 +196,7 @@ fun ExtransfereScreen(navController: NavHostController) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
             Spacer(modifier = Modifier.height(5.dp))
-            TextField(value = "reference", onValueChange = {reference = it},
+            TextField(value = reference, onValueChange = {reference = it},
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent),
                 label = {Text(text = "Reference",color = Color(0xff009177))},
@@ -189,7 +207,7 @@ fun ExtransfereScreen(navController: NavHostController) {
                 singleLine = true
             )
             Spacer(modifier = Modifier.height(5.dp))
-            Demo_ExposedDropdownMenuBox()
+            reason = Demo_ExposedDropdownMenuBox()
             Spacer(modifier = Modifier.height(20.dp))
         }
         Spacer(modifier = Modifier.height(50.dp))
@@ -198,62 +216,48 @@ fun ExtransfereScreen(navController: NavHostController) {
 
             var newBalance : String = ""
 
-            if (amount.isBlank()) {
-                showToast(context, "Please enter Amount")
-                isValid = false
-            }else{
-                newBalance = (userBalance.toDouble() - amount.toDouble()).toString()
-            }
-
-            if (bankName.isBlank()) {
-                showToast(context, "Please enter Bank Name")
+            if (amount.isBlank() || bankName.isBlank() || accountNumber.isBlank() || branchCode.isBlank() || reference.isBlank() || reason.isBlank()) {
+                showToast(context, "All fields are required")
                 isValid = false
             }
 
-            if (accountNumber.isBlank()) {
-                showToast(context, "Please enter Account Number")
-                isValid = false
-            }
-
-            if (branchCode.isBlank()) {
-                showToast(context, "Please enter Branch Code")
-                isValid = false
-            }
-
-            if (reference.isBlank()) {
-                showToast(context, "Please enter Reference")
-                isValid = false
-            }
-            if (reason.isBlank()) {
-                showToast(context, "Please enter Reason")
-                isValid = false
-            }
             if (isValid) {
                 // Update the data in Firestore
-                val extransferDocRef = db.collection("Extransferes").document(userEmail)
+                val extransferDocRef = db.collection("transections").document(userEmail).collection("transections").document()
                 val userDocRef = db.collection("Users").document(userEmail)
-                extransferDocRef.set(
-                    mapOf(
-                        "amount" to amount,
-                        "bankName" to bankName,
-                        "accountNumber" to accountNumber,
-                        "branchCode" to branchCode,
-                        "reference" to reference,
-                        "reason" to reason
+
+                if (transectionConfirm(userEmail, reason, amount.toDouble())) {
+                    extransferDocRef.set(
+                        mapOf(
+                            "amount" to amount,
+                            "bankName" to bankName,
+                            "accountNumber" to accountNumber,
+                            "branchCode" to branchCode,
+                            "reference" to reference,
+                            "category" to reason,
+                            "transType" to "expense",
+                            "date" to Date.from(Instant.now())
+                        )
                     )
-                )
-                userDocRef.set(
-                    mapOf(
-                        "balance" to newBalance,
+                    userDocRef.update(
+                        mapOf(
+                            "balance" to setbalance,
+                        )
                     )
-                )
-                    .addOnSuccessListener {
-                        showToast(context, "Account information updated successfully")
-                        //startActivity(intent)
-                    }
-                    .addOnFailureListener { exception ->
-                        showToast(context, "Error updating account information: ${exception.message}")
-                    }
+                        .addOnSuccessListener {
+                            showToast(context, "Account information updated successfully")
+                            //startActivity(intent)
+                        }
+                        .addOnFailureListener { exception ->
+                            showToast(
+                                context,
+                                "Error updating account information: ${exception.message}"
+                            )
+                        }
+                }
+                else{
+                    Toast.makeText(context, "Insufficient funds to make this transaction, please increase your category spending !!!", Toast.LENGTH_SHORT).show()
+                }
             }
         },
             modifier = Modifier
@@ -273,10 +277,10 @@ fun ExtransfereScreen(navController: NavHostController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Demo_ExposedDropdownMenuBox() {
+fun Demo_ExposedDropdownMenuBox():String {
     val context = LocalContext.current
-    val reason = arrayOf("Interest", "Dividend", "Annuity", "Pension",
-        "Agents Commission","Ips Use","VAT","P.A.Y.E","Medical Aid","Salary","Insurance","Loan", "Other")
+    val reason = arrayOf("transport", "accomodation", "food", "health",
+        "education")
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(reason[0]) }
 
@@ -325,6 +329,8 @@ fun Demo_ExposedDropdownMenuBox() {
             }
         }
     }
+
+    return selectedText.toString()
 }
 
 @Composable
