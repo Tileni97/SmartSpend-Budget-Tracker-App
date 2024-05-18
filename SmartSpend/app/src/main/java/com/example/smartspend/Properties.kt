@@ -1,7 +1,9 @@
 package com.example.smartspend
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.example.smartspend.data.AnalysisRepository
 import com.example.smartspend.data.Categories
 import com.example.smartspend.data.CategoryRepository
@@ -60,15 +62,16 @@ fun setTransection(userEmail: String){
 }
 
 // This function fetches and sets the category data from the database
-fun setCategory(userEmail: String){
-    var newTrans = Categories()
+fun setCategory(userEmail: String, context: Context){
+
     val db = dataBaseRepository.getDb()
     // Query the database to get the user's categories
-    db.collection("categories")
+    db.collection("Categories")
         .document(userEmail)
         .get()
         .addOnSuccessListener {
             if(it != null){
+
                 // Extract category details from the document
                 var accommodation = it.data?.get("accommodation") as? String
                 var education = it.data?.get("education") as? String
@@ -77,11 +80,13 @@ fun setCategory(userEmail: String){
                 var health = it.data?.get("health") as? String
 
                 // Add the categories to the repository
-                CategoryRepository.addCategory(Categories("accommodation", accommodation?:"0"))
-                CategoryRepository.addCategory(Categories("education", education?:"0"))
-                CategoryRepository.addCategory(Categories("transport", transport?:"0"))
-                CategoryRepository.addCategory(Categories("food", food?:"0"))
-                CategoryRepository.addCategory(Categories("health", health?:"0"))
+                CategoryRepository.addCategory(Categories("accommodation", Color(225,7,8),accommodation?:"0"))
+                CategoryRepository.addCategory(Categories("education", Color(0,225,0),education?:"0"))
+                CategoryRepository.addCategory(Categories("transport",Color(0,0,225), transport?:"0"))
+                CategoryRepository.addCategory(Categories("food", Color(225,225,0),food?:"0"))
+                CategoryRepository.addCategory(Categories("health",Color(225,0,225), health?:"0"))
+
+               // Toast.makeText(context, "$accommodation $education $transport $food $health", Toast.LENGTH_SHORT).show()
             }
         }
         .addOnFailureListener {
@@ -90,9 +95,9 @@ fun setCategory(userEmail: String){
 }
 
 // This function calculates and sets the analysis data based on transactions and categories
-fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<Categories>){
+fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<Categories>,context: Context): MutableSet<Categories> {
 
-    var amount: String = null.toString()
+    var analysis = mutableSetOf<Categories>()
 
     // Initialize variables for tracking transaction totals
     var totalAccommodation = 0.0
@@ -110,24 +115,27 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
 
     // Calculate the total spending for each category based on transactions
     for (trans in transList) {
+
+        var amount: String = null.toString()
+
         if (trans.category == "accommodation" || trans.category == "Accommodation") {
-            amount = trans.ammount.toString()
+            amount = trans.amount.toString()
             totalAccommodation += amount.toDouble()
         }
         else if (trans.category.equals("education") || trans.category.equals("Education")){
-            amount = trans.ammount.toString()
+            amount = trans.amount.toString()
             totalEducation += amount.toDouble()
         }
         else if (trans.category.equals("transport") || trans.category.equals("Transport")) {
-            amount = trans.ammount.toString()
+            amount = trans.amount.toString()
             totalTransport += amount.toDouble()
         }
         else if (trans.category.equals("food") || trans.category.equals("Food")) {
-            amount = trans.ammount.toString()
+            amount = trans.amount.toString()
             totalFood += amount.toDouble()
         }
         else if (trans.category.equals("health") || trans.category.equals("Health")) {
-            amount = trans.ammount.toString()
+            amount = trans.amount.toString()
             totalHealth += amount.toDouble()
         }
         else{
@@ -137,6 +145,9 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
 
     // Get the category amounts from the categories data
     for (category in categories){
+
+        var amount: String = null.toString()
+
         if (category.name.equals("accommodation") || category.name.equals("Accommodation")){
             amount = category.amount.toString()
             accommodation = amount.toDouble()
@@ -164,6 +175,7 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
     var totalCategories = accommodation + education + transport + food + health
 
     // Calculate the percentage of spending for each category
+
     var accommodationPercentage = (totalAccommodation / accommodation * 100).toInt()
     var educationPercentage = (totalEducation / education * 100).toInt()
     var transportPercentage = (totalTransport / transport * 100).toInt()
@@ -179,9 +191,13 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
     AnalysisRepository.setOverAllPercentage(overallPercentage.toString())
 
 // Add the category percentages to the repository
-    AnalysisRepository.addCategory(Categories("accommodation", accommodationPercentage.toString()))
-    AnalysisRepository.addCategory(Categories("education", educationPercentage.toString()))
-    AnalysisRepository.addCategory(Categories("transport", transportPercentage.toString()))
-    AnalysisRepository.addCategory(Categories("food", foodPercentage.toString()))
-    AnalysisRepository.addCategory(Categories("health", healthPercentage.toString()))
+    analysis.add(Categories("accommodation",Color(225,7,8), accommodationPercentage.toString()))
+    analysis.add(Categories("education",Color(0,225,0), educationPercentage.toString()))
+    analysis.add(Categories("transport",Color(0,0,225), transportPercentage.toString()))
+    analysis.add(Categories("food",Color(225,225,0), foodPercentage.toString()))
+    analysis.add(Categories("health", Color(225,0,225),healthPercentage.toString()))
+
+    //Toast.makeText(context, "$food", Toast.LENGTH_SHORT).show()
+
+    return analysis
 }

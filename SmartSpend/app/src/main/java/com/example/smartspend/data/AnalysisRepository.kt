@@ -1,13 +1,13 @@
 package com.example.smartspend.data
 
-import androidx.compose.runtime.mutableStateOf
-
 object AnalysisRepository {
     private var analysis = mutableSetOf<Categories>()
     private var overallPercentage:String = mutableSetOf("").toString()
 
     fun addCategory(analysis: Categories) {
-        this.analysis.add(analysis)
+        this.analysis.forEach{
+
+        }
     }
 
     fun getAllCategories(): MutableSet<Categories> {

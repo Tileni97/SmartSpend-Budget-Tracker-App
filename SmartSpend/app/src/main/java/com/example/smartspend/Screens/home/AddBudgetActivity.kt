@@ -47,7 +47,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
 import com.example.smartspend.data.UserRepository
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -309,6 +308,15 @@ fun AddBudgetActivity(){
                 Spacer(modifier = Modifier.height(20.dp))
                 Button(onClick = {
 
+                    var isValid = true
+
+                    if (transport.isBlank() || food.isBlank() || health.isBlank() || education.isBlank() || accommodation.isBlank()) {
+                        isValid = false
+                        showToast(context, "Please fill in all fields")
+                    }
+
+                    if (isValid){
+
                     // Update the data in Firestore
                     val userDocRef = db.collection("Categories").document(userEmail)
                     userDocRef.set(
@@ -329,15 +337,17 @@ fun AddBudgetActivity(){
                     )
 
 
-
                         .addOnSuccessListener {
                             showToast(context, "Account information updated successfully")
 
                         }
                         .addOnFailureListener { exception ->
-                            showToast(context, "Error updating account information: ${exception.message}")
+                            showToast(
+                                context,
+                                "Error updating account information: ${exception.message}"
+                            )
                         }
-
+                    }
 
                 },
                     modifier = Modifier
