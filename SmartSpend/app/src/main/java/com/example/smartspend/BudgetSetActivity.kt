@@ -321,19 +321,8 @@ class BudgetSetActivity : ComponentActivity() {
                             Spacer(modifier = Modifier.height(20.dp))
                             Button(onClick = {
 
-
-                                var isValid = true
-
-                                if (transport.isBlank() || food.isBlank() || health.isBlank() || education.isBlank() || accommodation.isBlank()) {
-                                    isValid = false
-                                    showToast(this@BudgetSetActivity, "Please fill in all fields")
-                                }
-
-                                if (isValid){
-
                                 // Update the data in Firestore
-                                val categoriesDocRef =
-                                    db.collection("Categories").document(userEmail)
+                                val categoriesDocRef = db.collection("Categories").document(userEmail)
                                 categoriesDocRef.set(
                                     mapOf(
                                         "transport" to transport,
@@ -352,20 +341,15 @@ class BudgetSetActivity : ComponentActivity() {
                                 )
 
 
+
                                     .addOnSuccessListener {
-                                        showToast(
-                                            this@BudgetSetActivity,
-                                            "Account information updated successfully"
-                                        )
+                                        showToast(this@BudgetSetActivity, "Account information updated successfully")
                                         startActivity(intent)
                                     }
                                     .addOnFailureListener { exception ->
-                                        showToast(
-                                            this@BudgetSetActivity,
-                                            "Error updating account information: ${exception.message}"
-                                        )
+                                        showToast(this@BudgetSetActivity, "Error updating account information: ${exception.message}")
                                     }
-                            }
+
 
                             },
                                 modifier = Modifier

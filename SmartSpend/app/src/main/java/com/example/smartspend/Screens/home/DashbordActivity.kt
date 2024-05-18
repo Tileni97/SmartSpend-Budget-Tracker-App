@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.notesapp.util.formatDate
 import com.example.smartspend.R
 import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
 import com.example.smartspend.data.TransectionItem
@@ -69,6 +70,8 @@ import com.example.smartspend.setTransection
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import java.time.Instant
+import java.util.Date
 
 @Composable
 fun DashBordActivity(navController: NavHostController) {
@@ -912,7 +915,7 @@ fun TransectionRow(
                     Row {
                         Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
                         Spacer(modifier = Modifier.size(5.dp))
-                        Text(text = trans.amount.toString()?:"NO Amount",
+                        Text(text = trans.ammount.toString()?:"NO Amount",
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.Green,
                             fontSize = 17.sp,
@@ -962,7 +965,7 @@ fun TransectionRow(
                     Row {
                         Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
                         Spacer(modifier = Modifier.size(5.dp))
-                        Text(text = trans.amount.toString()?:"NO Amount",
+                        Text(text = trans.ammount.toString()?:"NO Amount",
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.Red,
                             fontSize = 17.sp,
