@@ -23,7 +23,10 @@ import androidx.compose.material.icons.outlined.Money
 import androidx.compose.material.icons.rounded.AttachFile
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,7 +34,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,14 +65,18 @@ fun IntransfereScreen(navController: NavHostController) {
 
     val context = LocalContext.current
 
+    val reasonElements = arrayOf("transport", "accomodation", "food", "health",
+        "education")
+
     // Mutable state variables for each fields
     var amount by remember { mutableStateOf("") }
     var accountNumber by remember { mutableStateOf("") }
     var reference by remember { mutableStateOf("") }
-    var reason by remember { mutableStateOf("") }
+    //var reason by remember { mutableStateOf("") }
     var userBalance by remember { mutableStateOf(0) }
     var recipientName by remember { mutableStateOf("") }
-
+    var selectedText by remember { mutableStateOf(reasonElements[0]) }
+    var newBalance by remember { mutableStateOf("") }
 
 
     //Fetch user email from repository
@@ -86,15 +92,9 @@ fun IntransfereScreen(navController: NavHostController) {
         userBalance = balance.toInt() // Update userBalance with the fetched balance
     }
 
-    // Derive the total budget amount from the text field values
-    val totalBalance by remember {
-        derivedStateOf {
-            val transportValue = amount.toIntOrNull() ?: 0
 
-            userBalance - transportValue
-        }
-    }
-    var setbalance : String = totalBalance.toString()
+    var setbalance : String = userBalance.toString()
+
 
 // Fetch user data based on the entered account number
     LaunchedEffect(accountNumber) {
@@ -206,7 +206,54 @@ fun IntransfereScreen(navController: NavHostController) {
                     singleLine = true
                 )
                 Spacer(modifier = Modifier.height(5.dp))
-                Demo_ExposedDropdownMenuBox()
+                //Demo_ExposedDropdownMenuBox()
+
+                ///////////////////////////////
+
+                var expanded by remember { mutableStateOf(false) }
+
+                Box(
+                ) {
+                    ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = {
+                            expanded = !expanded
+                        },
+                    ) {
+                        Text(
+                            text = "Reason",
+                            color = Color(0xff009177)
+                        )
+                        TextField(
+                            value = selectedText,
+                            onValueChange = {selectedText = it},
+                            readOnly = true,
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                            modifier = Modifier.menuAnchor(),
+                            colors = TextFieldDefaults.textFieldColors(
+                                containerColor = Color.Transparent)
+                        )
+
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                        ) {
+                            reasonElements.forEach { item ->
+                                DropdownMenuItem(
+                                    text = { Text(text = item) },
+                                    onClick = {
+                                        selectedText = item
+                                        expanded = false
+                                        Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                //////////////////////////////
+
                 Spacer(modifier = Modifier.height(20.dp))
             }
             Spacer(modifier = Modifier.height(20.dp))
@@ -221,7 +268,7 @@ fun IntransfereScreen(navController: NavHostController) {
 
                 var isValid = true
 
-                if (amount.isBlank() || accountNumber.isBlank() || reference.isBlank() || reason.equals("select reason")) {
+                if (amount.isBlank() || accountNumber.isBlank() || reference.isBlank() || selectedText.equals("select reason")) {
                     showToast(context, "All fields are required")
                     isValid = false
                 }
@@ -230,24 +277,25 @@ fun IntransfereScreen(navController: NavHostController) {
 
                     if (!recipientName.startsWith("Account number")) {
 
+                        newBalance = (setbalance.toDouble() - amount.toDouble()).toString()
 
                     // Update the data in Firestore
                     val extransferDocRef = db.collection("transections").document(userEmail).collection("transections").document()
                     val userDocRef = db.collection("Users").document(userEmail)
 
-                    if (transectionConfirm(reason, amount, context)) {
+                    if (transectionConfirm(selectedText, amount, context)) {
                         extransferDocRef.set(
                             mapOf(
                                 "amount" to amount,
                                 "reference" to reference,
-                                "category" to reason,
+                                "category" to selectedText,
                                 "transType" to "expense",
                                 "date" to Date.from(Instant.now())
                             )
                         )
                         userDocRef.update(
                             mapOf(
-                                "balance" to setbalance,
+                                "balance" to newBalance
                             )
                         )
                             .addOnSuccessListener {
