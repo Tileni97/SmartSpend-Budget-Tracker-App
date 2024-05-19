@@ -53,9 +53,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.smartspend.cateUpdate
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.transectionConfirm
+import com.example.smartspend.updateCategory
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.Instant
 import java.util.Date
@@ -223,10 +223,43 @@ fun ExtransfereScreen(navController: NavHostController) {
             }
 
             if (isValid) {
+
                 // Update the data in Firestore
                 val extransferDocRef = db.collection("transections").document(userEmail).collection("transections").document()
                 val userDocRef = db.collection("Users").document(userEmail)
 
+                db.collection("Categories").document(userEmail)
+                    .collection("budget")
+                    .get()
+                    .addOnSuccessListener { result ->
+                        for (document in result) {
+                            if (document.data["category"] == reason) {
+                                val budgt = document.data["budget"] as? String
+                                val spent = document.data["spent"] as? String
+
+                                val remaining = budgt.toString().toInt() - spent.toString().toInt()
+
+                                if (remaining < amount.toInt()){
+                                    Toast.makeText(context, "Insufficient funds to make this transaction, please increase your category spending !!!", Toast.LENGTH_SHORT).show()
+                                }
+                                else{
+                                    userDocRef.update(
+                                        mapOf(
+                                            "balance" to setbalance,
+                                            "spent" to spent.toString().toInt() + amount.toInt()
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    .addOnFailureListener {
+
+                    }
+
+                db.collection("Categories").document(userEmail)
+                    .collection("budget")
+                    .get()
 
 
                 if (!transectionConfirm( reason, amount, context)) {
@@ -243,10 +276,13 @@ fun ExtransfereScreen(navController: NavHostController) {
                             "date" to Date.from(Instant.now())
                         )
                     )
-                   // cateUpdate(userEmail, reason, amount)
+                    val spending:Int = (updateCategory(reason, amount)).toInt()
+
+                    // Update the balance in the user's document
                     userDocRef.update(
                         mapOf(
                             "balance" to setbalance,
+                            "spent" to spending
                         )
                     )
                         .addOnSuccessListener {

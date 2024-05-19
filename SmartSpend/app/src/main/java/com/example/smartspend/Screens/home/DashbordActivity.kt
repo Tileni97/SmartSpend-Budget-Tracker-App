@@ -505,7 +505,7 @@ fun DashTopBar(user: UserData){
                                         fontWeight = FontWeight.W400,
                                         color = Color.White
                                     )
-                                    Text(text = "N$" + (userSpent).toString(),
+                                    Text(text = "N$${userSpent}",
                                         fontWeight = FontWeight.Bold,
                                         color = Color.White,
                                         fontSize = 15.sp

@@ -3,6 +3,10 @@ package com.example.smartspend
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.smartspend.data.AnalysisRepository
@@ -205,6 +209,11 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
 // This function is confirming if the transaction amount is greater than the category amount
 fun transectionConfirm(category: String, budget:String, context: Context): Boolean{
 
+    var budgt : Int? = null
+    var spnt : Int? = null
+    var remaining : Int? = null
+    val money : Int = budget.toInt()
+
     var isError:Boolean = false
     val db = dataBaseRepository.getDb()
 
@@ -219,22 +228,72 @@ fun transectionConfirm(category: String, budget:String, context: Context): Boole
                     var spent = ((document.data?.get("spent") as? String))?.toIntOrNull() ?: 0
                     var amount = ((document.data?.get("budget") as? String))?.toIntOrNull() ?: 0
 
-                    Toast.makeText(context, "$spent $amount", Toast.LENGTH_SHORT).show()
-
-                    isError = true
-
+                    budgt = amount
+                    spnt = spent
+                    break
                 }
             }
         }
 
-    Toast.makeText(context, "$isError", Toast.LENGTH_SHORT).show()
+    remaining = budgt?.minus(spnt!!)
+
+    if (money > remaining!!){
+        isError = true
+        Toast.makeText(context, "You don't have enough money to spend $remaining", Toast.LENGTH_SHORT).show()
+    }
 
     return isError
+
 }
 
-fun cateUpdate(userEmail: String, category: String, amount: String){
+fun updateCategory(category: String, amount: String): String{
+
+    var categry by mutableStateOf("")
+    var spending by mutableStateOf(0)
+    var money by mutableStateOf(0)
+
+    money = amount.toInt()
+
+    val db = dataBaseRepository.getDb()
 
 
+    db.collection("Categories")
+        .document(UserRepository.getEmail())
+        .collection("budget")
+        .get()
+        .addOnSuccessListener {
+            for (document in it){
+                if (document.data.get("cateName") == category){
+                    // Extract category details from the document
+                    val spent = ((document.data?.get("spent") as? String))?.toIntOrNull() ?: 0
+                    categry = category
+                    spending = spent
+                    break
+                }
+            }
+        }
+        .addOnFailureListener {
+            println("Error getting documents: ${it.message}")
+        }
+
+    spending += money
+
+    db.collection("Categories")
+        .document(UserRepository.getEmail())
+        .collection("budget").document(category)
+        .update(
+            mapOf(
+                "spent" to spending.toString()
+            )
+        )
+        .addOnSuccessListener {
+            println("DocumentSnapshot successfully updated!")
+        }
+        .addOnFailureListener { e ->
+            println("Error updating document: ${e.message}")
+        }
+
+    return spending.toString()
 }
 
 
