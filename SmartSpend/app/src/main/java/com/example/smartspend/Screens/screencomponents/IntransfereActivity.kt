@@ -34,6 +34,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,19 +66,21 @@ fun IntransfereScreen(navController: NavHostController) {
 
     val context = LocalContext.current
 
-    val reasonElements = arrayOf("transport", "accomodation", "food", "health",
+    val reasonElements = arrayOf("select reason", "transport", "accomodation", "food", "health",
         "education")
 
     // Mutable state variables for each fields
     var amount by remember { mutableStateOf("") }
     var accountNumber by remember { mutableStateOf("") }
     var reference by remember { mutableStateOf("") }
-    //var reason by remember { mutableStateOf("") }
     var userBalance by remember { mutableStateOf("") }
     var recipientName by remember { mutableStateOf("") }
+    var recipientBalance by remember { mutableStateOf("") }
+    var recipientFirstName by remember { mutableStateOf("") }
     var selectedText by remember { mutableStateOf(reasonElements[0]) }
     var newBalance by remember { mutableStateOf("") }
-    var budget by remember { mutableStateOf("") }
+    var recipientNewBalance by remember { mutableStateOf("") }
+    var remainingBudget by remember { mutableStateOf("") }
 
 
     //Fetch user email from repository
@@ -92,6 +95,18 @@ fun IntransfereScreen(navController: NavHostController) {
         var balance = document.data?.get("balance") as? String
         userBalance = balance.toString() // Update userBalance with the fetched balance
     }
+
+    // Derive the total budget amount from the text field values
+    val totalBalance by remember {
+        derivedStateOf {
+            val transportValue = amount.toIntOrNull() ?: 0
+            val baalance = userBalance.toIntOrNull() ?: 0
+
+            baalance - transportValue
+        }
+    }
+    var setbalance : String = userBalance
+    setbalance = totalBalance.toString()
 
 
 
@@ -108,7 +123,10 @@ fun IntransfereScreen(navController: NavHostController) {
                         val document = querySnapshot.documents.first()
                         val firstName = document.getString("firstName") ?: ""
                         val lastName = document.getString("lastName") ?: ""
+                        val balance = document.getString("balance") ?: ""
                         recipientName = "$firstName $lastName".trim()
+                        recipientBalance = balance
+                        recipientFirstName = firstName
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -148,7 +166,7 @@ fun IntransfereScreen(navController: NavHostController) {
 
                     Spacer(modifier = Modifier.height(5.dp))
 
-                    Text(text = userBalance,
+                    Text(text = setbalance,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W700,
                         color = Color.White)
@@ -277,36 +295,41 @@ fun IntransfereScreen(navController: NavHostController) {
                     if (!recipientName.startsWith("Account number")) {
 
                         newBalance = (userBalance.toDouble() - amount.toDouble()).toString()
+                        recipientNewBalance = (recipientBalance.toDouble() - amount.toDouble()).toString()
 
                     // Update the data in Firestore
                     val extransferDocRef = db.collection("transections").document(userEmail).collection("transections").document()
                     val userDocRef = db.collection("Users").document(userEmail)
 
 
-                        //calculate remaining budget for the selcted category
-                        val categoryDocRef = db.collection("Category").document(userEmail).collection("transections").document()
-
-
-                        db.collection("Categories")
-                            .document(UserRepository.getEmail())
+                        //calculate remaining budget for the selected category
+                        val categoryDocRef = db.collection("Categories")
+                            .document(userEmail)
                             .collection("budget")
-                            .get()
-                            .addOnSuccessListener { result ->
-                                for (document in result){
-                                    if (document.data.get("cateName") == selectedText){
-                                        // Extract category details from the document
-                                        var spent = ((document.data?.get("spent") as? String))?.toIntOrNull() ?: 0
-                                        var amount = ((document.data?.get("budget") as? String))?.toIntOrNull() ?: 0
+                            .document(selectedText.trim())
 
-                                        budget = (amount - spent).toString()
-                                        break
+                        categoryDocRef.get()
+                            .addOnSuccessListener { document ->
+                                if (document.exists()) {
+                                    val spent = document.getString("spent")
+                                    val budget = document.getString("budget")
+                                    if (spent != null && budget != null) {
+                                        remainingBudget = (budget.toDouble() - spent.toDouble()).toString()
+                                        showToast(context, remainingBudget)
+                                    } else {
+                                        showToast(context, "Error: Spent or budget field is missing in the document.")
                                     }
+                                } else {
+                                    showToast(context, "Document not found for the selected category.")
                                 }
+                            }
+                            .addOnFailureListener { exception ->
+                                showToast(context, "Error fetching document: ${exception.message}")
                             }
 
 
 
-                    if (transectionConfirm(selectedText, budget, context)) {
+                    if (transectionConfirm(selectedText.trim(), remainingBudget.trim(), context)) {
                         extransferDocRef.set(
                             mapOf(
                                 "amount" to amount,
@@ -322,14 +345,14 @@ fun IntransfereScreen(navController: NavHostController) {
                             )
                         )
                             .addOnSuccessListener {
-                                showToast(context, "Account information updated successfully")
+                                showToast(context, "transaction executed successfully")
                                 //startActivity(intent)
                             }
                             .addOnFailureListener { exception ->
-                                showToast(
+                                /*showToast(
                                     context,
                                     "Error updating account information: ${exception.message}"
-                                )
+                                )*/
                             }
                     }
                     else{
@@ -338,6 +361,39 @@ fun IntransfereScreen(navController: NavHostController) {
                     } else {
                         showToast(context, "Please enter a valid account number")
                     }
+
+                    // Get a reference to the "Users" collection
+                    val usersCollection = db.collection("Users")
+
+// Create a query to find the document where "firstName" matches "recipientFirstName"
+                    val query = usersCollection.whereEqualTo("firstName", recipientFirstName)
+
+// Execute the query and get the first matching document
+                    query.get()
+                        .addOnSuccessListener { documents ->
+                            if (!documents.isEmpty) {
+                                // Get the first matching document
+                                val document = documents.documents[0]
+
+                                // Update the "balance" field with the value of "recipientNewBalance"
+                                document.reference.update("balance", recipientNewBalance)
+                                    .addOnSuccessListener {
+                                        // Balance updated successfully
+                                        //showToast(context, "Balance updated successfully")
+                                    }
+                                    .addOnFailureListener { exception ->
+                                        // Error updating balance
+                                        //showToast(context, "Error updating balance: ${exception.message}")
+                                    }
+                            } else {
+                                // No document found with the specified "firstName"
+                                //showToast(context, "No user found with the specified first name")
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            // Error executing the query
+                            //showToast(context, "Error executing query: ${exception.message}")
+                        }
                 }
 
                            ///////////////////////////////////////////////
