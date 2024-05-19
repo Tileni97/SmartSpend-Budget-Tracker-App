@@ -20,6 +20,10 @@ import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -30,11 +34,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.smartspend.data.UserRepository
 import com.example.smartspend.navigation.Routes
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 @Composable
 fun TransferScreen(navController: NavHostController){
+
+
 
     Column (
         modifier = Modifier
@@ -127,6 +135,23 @@ fun TransferScreen(navController: NavHostController){
 
 @Composable
 fun NavBar(navController: NavHostController){
+    
+    // Mutable state variables for each fields
+    var userBalance by remember { mutableStateOf("") }
+
+    //Fetch user email from repository
+    var userEmail: String = UserRepository.getEmail()
+
+    // Initialize Firebase Firestore
+    val db = FirebaseFirestore.getInstance()
+
+    // Fetch balance
+    val userDocRef = db.collection("Users").document(userEmail)
+    userDocRef.get().addOnSuccessListener { document ->
+        var balance = document.data?.get("balance") as? String
+        userBalance = balance.toString() // Update userBalance with the fetched balance
+    }
+
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -181,7 +206,7 @@ fun NavBar(navController: NavHostController){
             Text(text = "Bank Account Balance", fontFamily = FontFamily.SansSerif,
                 color = Color.White
             )
-            Text(text = "15000", fontSize = 40.sp, fontWeight = FontWeight.W700,color = Color.White)
+            Text(text = "N$ $userBalance", fontSize = 40.sp, fontWeight = FontWeight.W700,color = Color.White)
         }
     }
 }

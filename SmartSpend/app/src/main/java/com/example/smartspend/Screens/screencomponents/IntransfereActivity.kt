@@ -73,10 +73,11 @@ fun IntransfereScreen(navController: NavHostController) {
     var accountNumber by remember { mutableStateOf("") }
     var reference by remember { mutableStateOf("") }
     //var reason by remember { mutableStateOf("") }
-    var userBalance by remember { mutableStateOf(0) }
+    var userBalance by remember { mutableStateOf("") }
     var recipientName by remember { mutableStateOf("") }
     var selectedText by remember { mutableStateOf(reasonElements[0]) }
     var newBalance by remember { mutableStateOf("") }
+    var budget by remember { mutableStateOf("") }
 
 
     //Fetch user email from repository
@@ -88,12 +89,10 @@ fun IntransfereScreen(navController: NavHostController) {
     // Fetch balance
     val userDocRef = db.collection("Users").document(userEmail)
     userDocRef.get().addOnSuccessListener { document ->
-        val balance = document.data?.get("balance")?.toString()?.toDoubleOrNull() ?: 0.0
-        userBalance = balance.toInt() // Update userBalance with the fetched balance
+        var balance = document.data?.get("balance") as? String
+        userBalance = balance.toString() // Update userBalance with the fetched balance
     }
 
-
-    var setbalance : String = userBalance.toString()
 
 
 // Fetch user data based on the entered account number
@@ -149,7 +148,7 @@ fun IntransfereScreen(navController: NavHostController) {
 
                     Spacer(modifier = Modifier.height(5.dp))
 
-                    Text(text = setbalance,
+                    Text(text = userBalance,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W700,
                         color = Color.White)
@@ -171,7 +170,7 @@ fun IntransfereScreen(navController: NavHostController) {
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.Transparent),
                     label = {Text(text = "Amount",color = Color(0xff009177))},
-                    placeholder = {Text(text = "1000")},
+                    placeholder = {Text(text = "0.00")},
                     leadingIcon = {
                         Icon(imageVector = Icons.Outlined.Money, contentDescription = "")
                     },
@@ -277,13 +276,37 @@ fun IntransfereScreen(navController: NavHostController) {
 
                     if (!recipientName.startsWith("Account number")) {
 
-                        newBalance = (setbalance.toDouble() - amount.toDouble()).toString()
+                        newBalance = (userBalance.toDouble() - amount.toDouble()).toString()
 
                     // Update the data in Firestore
                     val extransferDocRef = db.collection("transections").document(userEmail).collection("transections").document()
                     val userDocRef = db.collection("Users").document(userEmail)
 
-                    if (transectionConfirm(selectedText, amount, context)) {
+
+                        //calculate remaining budget for the selcted category
+                        val categoryDocRef = db.collection("Category").document(userEmail).collection("transections").document()
+
+
+                        db.collection("Categories")
+                            .document(UserRepository.getEmail())
+                            .collection("budget")
+                            .get()
+                            .addOnSuccessListener { result ->
+                                for (document in result){
+                                    if (document.data.get("cateName") == selectedText){
+                                        // Extract category details from the document
+                                        var spent = ((document.data?.get("spent") as? String))?.toIntOrNull() ?: 0
+                                        var amount = ((document.data?.get("budget") as? String))?.toIntOrNull() ?: 0
+
+                                        budget = (amount - spent).toString()
+                                        break
+                                    }
+                                }
+                            }
+
+
+
+                    if (transectionConfirm(selectedText, budget, context)) {
                         extransferDocRef.set(
                             mapOf(
                                 "amount" to amount,
