@@ -54,6 +54,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 @Composable
 fun AddBudgetActivity(){
 
+    var userEmail: String = UserRepository.getEmail()
+    val context = LocalContext.current
+
+    // Initialize Firebase Firestore
+    val db = FirebaseFirestore.getInstance()
+
     // Mutable state variables for each field
     var transport by remember { mutableStateOf("") }
     var food by remember { mutableStateOf("") }
@@ -61,8 +67,6 @@ fun AddBudgetActivity(){
     var education by remember { mutableStateOf("") }
     var accommodation by remember { mutableStateOf("") }
     var budget by remember { mutableStateOf("") }
-
-    val context = LocalContext.current
 
     // Derive the total budget amount from the text field values
     val totalBudget by remember {
@@ -81,12 +85,7 @@ fun AddBudgetActivity(){
 
 
     val currentUser = UserRepository.getUsers()
-    var userEmail: String = UserRepository.getEmail()
     var userFirstName: String? = null
-
-
-    // Initialize Firebase Firestore
-    val db = FirebaseFirestore.getInstance()
 
     Surface (
         modifier = Modifier.fillMaxSize(),
@@ -318,24 +317,20 @@ fun AddBudgetActivity(){
                     if (isValid){
 
                     // Update the data in Firestore
-                    val userDocRef = db.collection("Categories").document(userEmail)
-                    userDocRef.set(
-                        mapOf(
-                            "transport" to transport,
-                            "food" to food,
-                            "health" to health,
-                            "education" to education,
-                            "accommodation" to accommodation,
-                            "budget" to budget
-                        )
-                    )
-                    val userDocRef1 = db.collection("Users").document(userEmail)
-                    userDocRef1.update(
-                        mapOf(
-                            "budget" to budget
-                        )
-                    )
+                        db.collection("Categories").document(userEmail)
+                            .collection("budget").document("transport")
+                            .update(
+                                mapOf(
+                                    "budget" to transport,
+                                )
+                            )
 
+                        db.collection("Users").document(userEmail)
+                            .update(
+                             mapOf(
+                                "budget" to budget
+                            )
+                        )
 
                         .addOnSuccessListener {
                             showToast(context, "Account information updated successfully")
@@ -347,7 +342,48 @@ fun AddBudgetActivity(){
                                 "Error updating account information: ${exception.message}"
                             )
                         }
+
+                        db.collection("Categories").document(userEmail)
+                            .collection("budget").document("food")
+                            .update(
+                                mapOf(
+                                    "budget" to food,
+                                )
+                            )
+
+                        db.collection("Categories").document(userEmail)
+                            .collection("budget").document("health")
+                            .update(
+                                mapOf(
+                                    "budget" to health,
+                                    )
+                            )
+
+                        db.collection("Categories").document(userEmail)
+                                .collection("budget").document("education")
+                            .update(
+                                mapOf(
+                                    "budget" to education,
+                                )
+                            )
+
+
+                        db.collection("Categories").document(userEmail)
+                                .collection("budget").document("accommodation")
+                            .update(
+                                mapOf(
+                                    "budget" to accommodation,
+                                )
+                            )
+
+
+
+
+
+
+
                     }
+
 
                 },
                     modifier = Modifier

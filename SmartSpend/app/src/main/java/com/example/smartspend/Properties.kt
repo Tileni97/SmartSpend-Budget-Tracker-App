@@ -12,6 +12,7 @@ import com.example.smartspend.data.Notifications
 import com.example.smartspend.data.TransectionItem
 import com.example.smartspend.data.TransectionRepository
 import com.example.smartspend.data.dataBaseRepository
+import kotlin.random.Random
 
 // This composable function renders a notification row
 @Composable
@@ -66,27 +67,24 @@ fun setTransection(userEmail: String){
 fun setCategory(userEmail: String, context: Context){
 
     val db = dataBaseRepository.getDb()
+    var category = Categories()
     // Query the database to get the user's categories
     db.collection("Categories")
         .document(userEmail)
+        .collection("budget")
         .get()
         .addOnSuccessListener {
             if(it != null){
+                for (i in it){
+                    // Extract category details from the document
+                    category = Categories(name = i.data?.get("cateName") as? String, color = Color(
+                        Random(0).nextInt(256), Random(5).nextInt(256), Random(80).nextInt(256)
+                    ), amount = i.data?.get("budget") as? String, spend = i.data.get("spent") as? String)
 
-                // Extract category details from the document
-                var accommodation = it.data?.get("accommodation") as? String
-                var education = it.data?.get("education") as? String
-                var transport = it.data?.get("transport") as? String
-                var food = it.data?.get("food") as? String
-                var health = it.data?.get("health") as? String
+                    // Add the category to the repository
+                    CategoryRepository.addCategory(category)
 
-                // Add the categories to the repository
-                CategoryRepository.addCategory(Categories("accommodation", Color(225,7,8),accommodation?:"0"))
-                CategoryRepository.addCategory(Categories("education", Color(0,225,0),education?:"0"))
-                CategoryRepository.addCategory(Categories("transport",Color(0,0,225), transport?:"0"))
-                CategoryRepository.addCategory(Categories("food", Color(225,225,0),food?:"0"))
-                CategoryRepository.addCategory(Categories("health",Color(225,0,225), health?:"0"))
-
+                }
                // Toast.makeText(context, "$accommodation $education $transport $food $health", Toast.LENGTH_SHORT).show()
             }
         }
@@ -204,29 +202,81 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
 }
 
 // This function is confirming if the transaction amount is greater than the category amount
-fun transectionConfirm(userEmail: String, category: String, amount: Double): Boolean{
+fun transectionConfirm(userEmail: String, category: String, amount:String, context: Context): Boolean{
+
+    var budget = ""
+    var spent = ""
+    var remaining = 0
+
     var isError = false
-    var cate = 0.0
     val db = dataBaseRepository.getDb()
     // Query the database to get the user's categories
     db.collection("Categories")
         .document(userEmail)
+        .collection("budget")
+        .document(category)
         .get()
-        .addOnSuccessListener {
-            if(it != null){
-                // Extract category details from the document
-                cate = (it.data?.get(category) as? String).toString().toDouble()
+        .addOnSuccessListener {result ->
+
+                budget = (result.data?.get("budget") as? String).toString()
+                spent = (result.data?.get("spent") as? String).toString()
+
+        }
+        .addOnFailureListener {
+            println("Error getting documents: ${it.message}")
+        }
+
+
+    remaining = budget.toInt() - spent.toInt()
+
+    // Check if the transaction amount is greater than the category amount
+    isError = if (remaining < amount.toInt()){
+        true
+    }
+    else{
+        false
+    }
+    Toast.makeText(context, "$budget", Toast.LENGTH_SHORT).show()
+    return isError
+}
+
+fun cateUpdate(userEmail: String, category: String, amount: Int){
+    val db = dataBaseRepository.getDb()
+    var spent = 0
+    var remaining = 0
+
+    var docId = ""
+
+    db.collection("Categories")
+        .document(userEmail)
+        .collection("budget")
+        .get()
+        .addOnSuccessListener {result ->
+            for (document in result){
+                if (document.data.get("cateName") == category){
+                    // Extract category details from the document
+                    spent = (document.data?.get("spent") as? String).toString().toInt()
+                    docId = document.id
+                    break
+                }
             }
         }
         .addOnFailureListener {
             println("Error getting documents: ${it.message}")
         }
-    cate.toDouble()
-    if (cate < amount){
-        isError = true
-    }
-    else{
-        isError = false
-    }
-    return isError
+
+    remaining = spent - amount
+
+    db.collection("Categories")
+        .document(userEmail)
+        .collection("budget")
+        .document(docId)
+        .update("spent", remaining)
+
+    db.collection("Users")
+        .document(userEmail)
+        .update("spent", remaining)
+
 }
+
+

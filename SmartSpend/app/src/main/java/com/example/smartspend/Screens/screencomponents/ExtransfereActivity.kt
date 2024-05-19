@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.smartspend.cateUpdate
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.transectionConfirm
 import com.google.firebase.firestore.FirebaseFirestore
@@ -226,7 +227,10 @@ fun ExtransfereScreen(navController: NavHostController) {
                 val extransferDocRef = db.collection("transections").document(userEmail).collection("transections").document()
                 val userDocRef = db.collection("Users").document(userEmail)
 
-                if (transectionConfirm(userEmail, reason, amount.toDouble())) {
+
+
+                if (!transectionConfirm(userEmail, reason, amount, context)) {
+
                     extransferDocRef.set(
                         mapOf(
                             "amount" to amount,
@@ -239,6 +243,7 @@ fun ExtransfereScreen(navController: NavHostController) {
                             "date" to Date.from(Instant.now())
                         )
                     )
+                    cateUpdate(userEmail, reason, amount.toInt())
                     userDocRef.update(
                         mapOf(
                             "balance" to setbalance,

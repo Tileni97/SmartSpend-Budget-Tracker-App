@@ -146,25 +146,29 @@ fun PieChartWithLabels(chartDataList: MutableList<Categories>) {
                     val sweepAngle = (chartData.amount?.toFloat() ?: 0f) / 180f * 360f
                     val angleInRadians = (startAngle + sweepAngle / 2).degreeToAngle
 
-                    drawArc(
-                        color = chartData.color,
-                        startAngle = startAngle,
-                        sweepAngle = sweepAngle,
-                        useCenter = false,
-                        topLeft = Offset(strokeWidth / 2, strokeWidth / 2),
-                        size = Size(width - strokeWidth, width - strokeWidth),
-                        style = Stroke(strokeWidth)
-                    )
+                    chartData.color?.let {
+                        drawArc(
+                            color = it,
+                            startAngle = startAngle,
+                            sweepAngle = sweepAngle,
+                            useCenter = false,
+                            topLeft = Offset(strokeWidth / 2, strokeWidth / 2),
+                            size = Size(width - strokeWidth, width - strokeWidth),
+                            style = Stroke(strokeWidth)
+                        )
+                    }
 
                     val rectWidth = 20.dp.toPx()
-                    drawRect(
-                        color = chartData.color,
-                        size = Size(rectWidth, rectWidth),
-                        topLeft = Offset(
-                            (-rectWidth / 2 + center.x + (radius + strokeWidth) * cos(angleInRadians)).toFloat(),
-                            (-rectWidth / 2 + center.y + (radius + strokeWidth) * sin(angleInRadians)).toFloat()
+                    chartData.color?.let {
+                        drawRect(
+                            color = it,
+                            size = Size(rectWidth, rectWidth),
+                            topLeft = Offset(
+                                (-rectWidth / 2 + center.x + (radius + strokeWidth) * cos(angleInRadians)).toFloat(),
+                                (-rectWidth / 2 + center.y + (radius + strokeWidth) * sin(angleInRadians)).toFloat()
+                            )
                         )
-                    )
+                    }
 
                     drawContext.canvas.nativeCanvas.apply {
                         drawText(
@@ -195,12 +199,16 @@ fun PieChartWithLabels(chartDataList: MutableList<Categories>) {
                     modifier = Modifier.padding(horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(
-                        modifier = Modifier
+                    chartData.color?.let {
+                        Modifier
                             .width(16.dp)
                             .height(16.dp)
-                            .background(chartData.color)
-                    )
+                            .background(it)
+                    }?.let {
+                        Box(
+                            modifier = it
+                        )
+                    }
                     Spacer(modifier = Modifier.width(8.dp))
                     Row (
                         modifier =Modifier.fillMaxWidth(),
