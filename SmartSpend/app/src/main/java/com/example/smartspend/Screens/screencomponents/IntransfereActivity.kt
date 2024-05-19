@@ -235,7 +235,7 @@ fun IntransfereScreen(navController: NavHostController) {
                     val extransferDocRef = db.collection("transections").document(userEmail).collection("transections").document()
                     val userDocRef = db.collection("Users").document(userEmail)
 
-                    if (transectionConfirm(userEmail, reason, amount.toDouble())) {
+                    if (transectionConfirm(reason, amount, context)) {
                         extransferDocRef.set(
                             mapOf(
                                 "amount" to amount,

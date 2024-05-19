@@ -11,6 +11,7 @@ import com.example.smartspend.data.CategoryRepository
 import com.example.smartspend.data.Notifications
 import com.example.smartspend.data.TransectionItem
 import com.example.smartspend.data.TransectionRepository
+import com.example.smartspend.data.UserRepository
 import com.example.smartspend.data.dataBaseRepository
 import kotlin.random.Random
 
@@ -202,80 +203,37 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
 }
 
 // This function is confirming if the transaction amount is greater than the category amount
-fun transectionConfirm(userEmail: String, category: String, amount:String, context: Context): Boolean{
+fun transectionConfirm(category: String, budget:String, context: Context): Boolean{
 
-    var budget = ""
-    var spent = ""
-    var remaining = 0
-
-    var isError = false
+    var isError:Boolean = false
     val db = dataBaseRepository.getDb()
-    // Query the database to get the user's categories
-    db.collection("Categories")
-        .document(userEmail)
-        .collection("budget")
-        .document(category)
-        .get()
-        .addOnSuccessListener {result ->
-
-                budget = (result.data?.get("budget") as? String).toString()
-                spent = (result.data?.get("spent") as? String).toString()
-
-        }
-        .addOnFailureListener {
-            println("Error getting documents: ${it.message}")
-        }
-
-
-    remaining = budget.toInt() - spent.toInt()
-
-    // Check if the transaction amount is greater than the category amount
-    isError = if (remaining < amount.toInt()){
-        true
-    }
-    else{
-        false
-    }
-    Toast.makeText(context, "$budget", Toast.LENGTH_SHORT).show()
-    return isError
-}
-
-fun cateUpdate(userEmail: String, category: String, amount: Int){
-    val db = dataBaseRepository.getDb()
-    var spent = 0
-    var remaining = 0
-
-    var docId = ""
 
     db.collection("Categories")
-        .document(userEmail)
+        .document(UserRepository.getEmail())
         .collection("budget")
         .get()
-        .addOnSuccessListener {result ->
+        .addOnSuccessListener { result ->
             for (document in result){
                 if (document.data.get("cateName") == category){
                     // Extract category details from the document
-                    spent = (document.data?.get("spent") as? String).toString().toInt()
-                    docId = document.id
-                    break
+                    var spent = ((document.data?.get("spent") as? String))?.toIntOrNull() ?: 0
+                    var amount = ((document.data?.get("budget") as? String))?.toIntOrNull() ?: 0
+
+                    Toast.makeText(context, "$spent $amount", Toast.LENGTH_SHORT).show()
+
+                    isError = true
+
                 }
             }
         }
-        .addOnFailureListener {
-            println("Error getting documents: ${it.message}")
-        }
 
-    remaining = spent - amount
+    Toast.makeText(context, "$isError", Toast.LENGTH_SHORT).show()
 
-    db.collection("Categories")
-        .document(userEmail)
-        .collection("budget")
-        .document(docId)
-        .update("spent", remaining)
+    return isError
+}
 
-    db.collection("Users")
-        .document(userEmail)
-        .update("spent", remaining)
+fun cateUpdate(userEmail: String, category: String, amount: String){
+
 
 }
 

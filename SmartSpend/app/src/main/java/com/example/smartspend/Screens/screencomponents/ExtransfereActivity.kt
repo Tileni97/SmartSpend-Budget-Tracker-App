@@ -215,7 +215,7 @@ fun ExtransfereScreen(navController: NavHostController) {
         Button(onClick = {
             var isValid = true
 
-            var newBalance : String = ""
+            //var newBalance : String = ""
 
             if (amount.isBlank() || bankName.isBlank() || accountNumber.isBlank() || branchCode.isBlank() || reference.isBlank() || reason.isBlank()) {
                 showToast(context, "All fields are required")
@@ -229,7 +229,7 @@ fun ExtransfereScreen(navController: NavHostController) {
 
 
 
-                if (!transectionConfirm(userEmail, reason, amount, context)) {
+                if (!transectionConfirm( reason, amount, context)) {
 
                     extransferDocRef.set(
                         mapOf(
@@ -243,7 +243,7 @@ fun ExtransfereScreen(navController: NavHostController) {
                             "date" to Date.from(Instant.now())
                         )
                     )
-                    cateUpdate(userEmail, reason, amount.toInt())
+                   // cateUpdate(userEmail, reason, amount)
                     userDocRef.update(
                         mapOf(
                             "balance" to setbalance,
