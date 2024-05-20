@@ -75,6 +75,7 @@ fun IntransfereScreen(navController: NavHostController) {
     var reference by remember { mutableStateOf("") }
     var userBalance by remember { mutableStateOf("") }
     var recipientName by remember { mutableStateOf("") }
+    var recipientEmail by remember { mutableStateOf("") }
     var recipientBalance by remember { mutableStateOf("") }
     var recipientFirstName by remember { mutableStateOf("") }
     var selectedText by remember { mutableStateOf(reasonElements[0]) }
@@ -124,9 +125,11 @@ fun IntransfereScreen(navController: NavHostController) {
                         val firstName = document.getString("firstName") ?: ""
                         val lastName = document.getString("lastName") ?: ""
                         val balance = document.getString("balance") ?: ""
+                        val email = document.getString("username") ?: ""
                         recipientName = "$firstName $lastName".trim()
                         recipientBalance = balance
                         recipientFirstName = firstName
+                        recipientEmail = email
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -295,11 +298,13 @@ fun IntransfereScreen(navController: NavHostController) {
                     if (!recipientName.startsWith("Account number")) {
 
                         newBalance = (userBalance.toDouble() - amount.toDouble()).toString()
-                        recipientNewBalance = (recipientBalance.toDouble() - amount.toDouble()).toString()
+                        recipientNewBalance =
+                            (recipientBalance.toDouble() + amount.toDouble()).toString()
 
-                    // Update the data in Firestore
-                    val extransferDocRef = db.collection("transections").document(userEmail).collection("transections").document()
-                    val userDocRef = db.collection("Users").document(userEmail)
+                        // Update the data in Firestore
+                        val extransferDocRef = db.collection("transections").document(userEmail)
+                            .collection("transections").document()
+                        val userDocRef = db.collection("Users").document(userEmail)
 
 
                         //calculate remaining budget for the selected category
@@ -314,13 +319,199 @@ fun IntransfereScreen(navController: NavHostController) {
                                     val spent = document.getString("spent")
                                     val budget = document.getString("budget")
                                     if (spent != null && budget != null) {
-                                        remainingBudget = (budget.toDouble() - spent.toDouble()).toString()
+                                        remainingBudget =
+                                            (budget.toDouble() - spent.toDouble()).toString()
                                         showToast(context, remainingBudget)
+                                        if (remainingBudget.toDouble() > amount.toDouble()) {
+                                            val newSpent = spent.toDouble() + amount.toDouble()
+                                            db.collection("Categories").document(userEmail)
+                                                .collection("budget").document(selectedText.trim())
+                                                .update("spent", newSpent.toString())
+                                                .addOnSuccessListener {
+                                                    db.collection("transections")
+                                                        .document(userEmail)
+                                                        .collection("transections").document()
+                                                        .set(
+                                                            hashMapOf(
+                                                                "amount" to amount,
+                                                                "accountNumber" to accountNumber.toString(),
+                                                                "reference" to reference.toString(),
+                                                                "category" to selectedText.trim()
+                                                                    .toString(),
+                                                                "date" to Date.from(Instant.now()),
+                                                                "transType" to "expense"
+                                                            )
+                                                        )
+                                                        .addOnSuccessListener {
+                                                            db.collection("Users")
+                                                                .document(userEmail)
+                                                                .get()
+                                                                .addOnSuccessListener { document ->
+                                                                    val balance =
+                                                                        document.data?.get("balance") as? String
+                                                                    val spentBalance =
+                                                                        document.data?.get("spent") as? String
+                                                                    if (balance != null && spentBalance != null) {
+                                                                        val newSpentBalance =
+                                                                            spentBalance.toInt() + amount.toInt()
+                                                                        db.collection("Users")
+                                                                            .document(userEmail)
+                                                                            .update(
+                                                                                mapOf(
+                                                                                    "balance" to userBalance.toString(),
+                                                                                    "spent" to newSpentBalance.toString()
+                                                                                )
+                                                                            )
+                                                                            .addOnSuccessListener {
+                                                                                db.collection("transections")
+                                                                                    .document(
+                                                                                        recipientEmail
+                                                                                    )
+                                                                                    .collection("transections")
+                                                                                    .document()
+                                                                                    .set(
+                                                                                        hashMapOf(
+                                                                                            "amount" to amount,
+                                                                                            "accountNumber" to accountNumber.toString(),
+                                                                                            "reference" to reference.toString(),
+                                                                                            "category" to selectedText.trim()
+                                                                                                .toString(),
+                                                                                            "date" to Date.from(
+                                                                                                Instant.now()
+                                                                                            ),
+                                                                                            "transType" to "income"
+                                                                                        )
+                                                                                    )
+                                                                                    .addOnSuccessListener {
+                                                                                        db.collection(
+                                                                                            "Users"
+                                                                                        ).document(
+                                                                                            recipientEmail
+                                                                                        )
+                                                                                            .update(
+                                                                                                mapOf(
+                                                                                                    "balance" to recipientNewBalance.toString()
+                                                                                                )
+                                                                                            )
+                                                                                            .addOnSuccessListener {
+                                                                                                db.collection(
+                                                                                                    "Notifications"
+                                                                                                )
+                                                                                                    .document(
+                                                                                                        recipientEmail
+                                                                                                    )
+                                                                                                    .collection(
+                                                                                                        "notifications"
+                                                                                                    )
+                                                                                                    .document()
+                                                                                                    .set(
+                                                                                                        hashMapOf(
+                                                                                                            "amount" to amount,
+                                                                                                            "description" to "Your account has been credited with N$$amount \nFrom: ${UserRepository.getEmail()} \nFor: $selectedText.\n" +
+                                                                                                                    "Reference: $reference\n Date: ${
+                                                                                                                        Date.from(
+                                                                                                                            Instant.now()
+                                                                                                                        )
+                                                                                                                    }\n" +
+                                                                                                                    "your initial balance: N$$recipientBalance , your available balance: N$$recipientNewBalance",
+                                                                                                            "date" to Date.from(
+                                                                                                                Instant.now()
+                                                                                                            ),
+                                                                                                            "transType" to "income"
+                                                                                                        )
+                                                                                                    )
+                                                                                                    .addOnSuccessListener {
+                                                                                                        amount = ""
+                                                                                                        accountNumber = ""
+                                                                                                        reference = ""
+                                                                                                        selectedText = "select reason"
+                                                                                                        Toast.makeText(
+                                                                                                            context,
+                                                                                                            "You have successfully made a transaction of N$$amount to $recipientName",
+                                                                                                            Toast.LENGTH_SHORT
+                                                                                                        )
+                                                                                                            .show()
+                                                                                                        navController.popBackStack()
+                                                                                                    }
+                                                                                                    .addOnFailureListener {
+                                                                                                        Toast.makeText(
+                                                                                                            context,
+                                                                                                            "Error adding transaction",
+                                                                                                            Toast.LENGTH_SHORT
+                                                                                                        )
+                                                                                                            .show()
+                                                                                                    }
+                                                                                            }
+                                                                                            .addOnFailureListener {
+                                                                                                Toast.makeText(
+                                                                                                    context,
+                                                                                                    "Error updating recipient amount balance",
+                                                                                                    Toast.LENGTH_SHORT
+                                                                                                )
+                                                                                                    .show()
+                                                                                            }
+                                                                                    }
+                                                                                    .addOnFailureListener {
+                                                                                        Toast.makeText(
+                                                                                            context,
+                                                                                            "Error adding recipient transaction",
+                                                                                            Toast.LENGTH_SHORT
+                                                                                        ).show()
+                                                                                    }
+                                                                            }
+                                                                            .addOnFailureListener {
+                                                                                Toast.makeText(
+                                                                                    context,
+                                                                                    "Error updating spent amount",
+                                                                                    Toast.LENGTH_SHORT
+                                                                                ).show()
+                                                                            }
+                                                                    } else {
+                                                                        Toast.makeText(
+                                                                            context,
+                                                                            "Error retrieving balance",
+                                                                            Toast.LENGTH_SHORT
+                                                                        ).show()
+                                                                    }
+                                                                }
+                                                                .addOnFailureListener {
+                                                                    Toast.makeText(
+                                                                        context,
+                                                                        "Error adding sender transaction",
+                                                                        Toast.LENGTH_SHORT
+                                                                    ).show()
+                                                                }
+                                                        }
+                                                        .addOnFailureListener {
+                                                            showToast(
+                                                                context,
+                                                                "Error adding document: ${it.message}"
+                                                            )
+                                                        }
+                                                }
+                                                .addOnFailureListener {
+                                                    showToast(
+                                                        context,
+                                                        "Error updating document: ${it.message}"
+                                                    )
+                                                }
+                                        } else {
+                                            showToast(
+                                                context,
+                                                "Insufficient funds to make this transaction, please increase your category budget!"
+                                            )
+                                        }
                                     } else {
-                                        showToast(context, "Error: Spent or budget field is missing in the document.")
+                                        showToast(
+                                            context,
+                                            "Error: Spent or budget field is missing in the document."
+                                        )
                                     }
                                 } else {
-                                    showToast(context, "Document not found for the selected category.")
+                                    showToast(
+                                        context,
+                                        "Document not found for the selected category."
+                                    )
                                 }
                             }
                             .addOnFailureListener { exception ->
@@ -328,75 +519,15 @@ fun IntransfereScreen(navController: NavHostController) {
                             }
 
 
-
-                    if (transectionConfirm(selectedText.trim(), remainingBudget.trim(), context)) {
-                        extransferDocRef.set(
-                            mapOf(
-                                "amount" to amount,
-                                "reference" to reference,
-                                "category" to selectedText,
-                                "transType" to "expense",
-                                "date" to Date.from(Instant.now())
-                            )
-                        )
-                        userDocRef.update(
-                            mapOf(
-                                "balance" to newBalance
-                            )
-                        )
-                            .addOnSuccessListener {
-                                showToast(context, "transaction executed successfully")
-                                //startActivity(intent)
-                            }
-                            .addOnFailureListener { exception ->
-                                /*showToast(
-                                    context,
-                                    "Error updating account information: ${exception.message}"
-                                )*/
-                            }
                     }
                     else{
-                        Toast.makeText(context, "Insufficient funds to make this transaction, please increase your category budget!", Toast.LENGTH_SHORT).show()
-                    }
-                    } else {
                         showToast(context, "Please enter a valid account number")
                     }
 
-                    // Get a reference to the "Users" collection
-                    val usersCollection = db.collection("Users")
-
-// Create a query to find the document where "firstName" matches "recipientFirstName"
-                    val query = usersCollection.whereEqualTo("firstName", recipientFirstName)
-
-// Execute the query and get the first matching document
-                    query.get()
-                        .addOnSuccessListener { documents ->
-                            if (!documents.isEmpty) {
-                                // Get the first matching document
-                                val document = documents.documents[0]
-
-                                // Update the "balance" field with the value of "recipientNewBalance"
-                                document.reference.update("balance", recipientNewBalance)
-                                    .addOnSuccessListener {
-                                        // Balance updated successfully
-                                        //showToast(context, "Balance updated successfully")
-                                    }
-                                    .addOnFailureListener { exception ->
-                                        // Error updating balance
-                                        //showToast(context, "Error updating balance: ${exception.message}")
-                                    }
-                            } else {
-                                // No document found with the specified "firstName"
-                                //showToast(context, "No user found with the specified first name")
-                            }
-                        }
-                        .addOnFailureListener { exception ->
-                            // Error executing the query
-                            //showToast(context, "Error executing query: ${exception.message}")
-                        }
                 }
-
-                           ///////////////////////////////////////////////
+                else{
+                    showToast(context, "All fields are required")
+                }
             },
                 modifier = Modifier
                     .fillMaxWidth()

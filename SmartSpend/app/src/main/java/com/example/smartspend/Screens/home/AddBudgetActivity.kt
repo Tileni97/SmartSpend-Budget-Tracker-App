@@ -369,7 +369,7 @@ fun AddBudgetActivity(){
 
 
                         db.collection("Categories").document(userEmail)
-                                .collection("budget").document("accommodation")
+                                .collection("budget").document("accomodation")
                             .update(
                                 mapOf(
                                     "budget" to accommodation,
