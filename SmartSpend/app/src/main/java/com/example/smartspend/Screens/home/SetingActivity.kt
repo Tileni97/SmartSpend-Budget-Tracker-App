@@ -1,8 +1,5 @@
 package com.example.smartspend.Screens.home
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,10 +17,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,9 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
 import com.example.smartspend.data.Notifications
-import com.example.smartspend.data.TransectionItem
 import com.example.smartspend.notificationRow
 
 @Composable
@@ -125,7 +118,7 @@ fun NotificaionTopBar(navController: NavHostController){
                     .clickable {}
 
             ){
-                Icon(imageVector = Icons.Outlined.HelpOutline, contentDescription = "",tint = Color.White)
+                Icon(imageVector = Icons.Outlined.Info, contentDescription = "",tint = Color.White)
             }
         }
     }
