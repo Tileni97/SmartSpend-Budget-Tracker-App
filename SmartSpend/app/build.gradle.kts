@@ -127,4 +127,7 @@ dependencies {
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
 
+    implementation (platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation ("com.google.firebase:firebase-messaging-ktx")
+
 }
