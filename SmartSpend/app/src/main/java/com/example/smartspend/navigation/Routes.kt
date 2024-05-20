@@ -13,7 +13,7 @@ sealed class Routes (val routes:String){
     data object Transactions : Routes("transactions")
     data object Extransfere : Routes("external")
     data object Intransfere : Routes("internal")
-    data object AccountSetUp : Routes("accountSetUp")
+    data object HelpScreen : Routes("helpScreen")
     data object BudgetSetUp : Routes("budgetSetUp")
 
 }

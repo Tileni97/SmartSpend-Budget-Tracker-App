@@ -80,6 +80,9 @@ fun HomeScreen(navController: NavController){
             composable(Routes.Analysis.routes){
                 AnalysisActivity(navControllerOne)
             }
+            composable(Routes.HomeScreen.routes){
+                HomeScreen(navControllerOne)
+            }
         }
     }
 }
