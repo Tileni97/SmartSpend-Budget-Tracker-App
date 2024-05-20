@@ -421,17 +421,36 @@ fun IntransfereScreen(navController: NavHostController) {
                                                                                                         )
                                                                                                     )
                                                                                                     .addOnSuccessListener {
-                                                                                                        amount = ""
-                                                                                                        accountNumber = ""
-                                                                                                        reference = ""
-                                                                                                        selectedText = "select reason"
-                                                                                                        Toast.makeText(
-                                                                                                            context,
-                                                                                                            "You have successfully made a transaction of N$$amount to $recipientName",
-                                                                                                            Toast.LENGTH_SHORT
-                                                                                                        )
-                                                                                                            .show()
-                                                                                                        navController.popBackStack()
+                                                                                                        db.collection("Notifications").document(userEmail).collection("notifications").document()
+                                                                                                            .set(
+                                                                                                                hashMapOf(
+                                                                                                                    "amount" to amount,
+                                                                                                                    "description" to "You have successfully transferred N$$amount \n To: ${recipientName} \nFor: $selectedText.\n" +
+                                                                                                                            "Reference: $reference\n Date: ${
+                                                                                                                                Date.from(
+                                                                                                                                    Instant.now()
+                                                                                                                                )
+                                                                                                                            }\n" +
+                                                                                                                            "your initial balance: N$$userBalance , your new balance: N$$newBalance",
+                                                                                                                    "date" to Date.from(
+                                                                                                                        Instant.now()
+                                                                                                                    ),
+                                                                                                                    "transType" to "expense"
+                                                                                                                )
+                                                                                                            )
+                                                                                                            .addOnSuccessListener {
+                                                                                                                showToast(
+                                                                                                                    context,
+                                                                                                                    "Transaction successful!"
+                                                                                                                )
+                                                                                                                navController.popBackStack()
+                                                                                                            }
+                                                                                                            .addOnFailureListener {
+                                                                                                                showToast(
+                                                                                                                    context,
+                                                                                                                    "Error adding transaction"
+                                                                                                                )
+                                                                                                            }
                                                                                                     }
                                                                                                     .addOnFailureListener {
                                                                                                         Toast.makeText(

@@ -51,6 +51,9 @@ fun NavGraph(navController: NavHostController){
         composable(Routes.Analysis.routes){
             AnalysisActivity(navController)
         }
+        composable(Routes.HomeScreen.routes){
+            HomeScreen(navController)
+        }
     }
 
 }

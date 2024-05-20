@@ -269,6 +269,7 @@ fun ExtransfereScreen(navController: NavHostController) {
                                                             if (balance != null && spentBalance != null) {
                                                                 val newSpentBalance =
                                                                     spentBalance.toInt() + amount.toInt()
+                                                                val newBalance = balance.toInt() - amount.toInt()
                                                                 db.collection("Users")
                                                                     .document(userEmail)
                                                                     .update(
@@ -278,12 +279,23 @@ fun ExtransfereScreen(navController: NavHostController) {
                                                                         )
                                                                     )
                                                                     .addOnSuccessListener {
-                                                                        Toast.makeText(
-                                                                            context,
-                                                                            "Transaction Successful",
-                                                                            Toast.LENGTH_SHORT
-                                                                        ).show()
-                                                                        navController.popBackStack()
+                                                                        db.collection("Notifications").document(userEmail).collection("notifications").document()
+                                                                            .set(
+                                                                                mapOf(
+                                                                                    "amount" to amount,
+                                                                                    "description" to "You have successfully transferred N$$amount \n To: $accountNumber \nFor: $reason.\n" +
+                                                                                            "Reference: $reference\n Date: ${
+                                                                                                Date.from(
+                                                                                                    Instant.now()
+                                                                                                )
+                                                                                            }\n" +
+                                                                                            "your initial balance: N$$userBalance , your new balance: N$$newBalance",
+                                                                                    "date" to Date.from(
+                                                                                        Instant.now()
+                                                                                    ),
+                                                                                    "transType" to "expense"
+                                                                                )
+                                                                            )
                                                                     }
                                                                     .addOnFailureListener {
                                                                         Toast.makeText(
