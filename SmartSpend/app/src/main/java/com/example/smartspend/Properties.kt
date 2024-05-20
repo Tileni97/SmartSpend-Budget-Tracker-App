@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.example.notesapp.util.formatDate
 import com.example.smartspend.data.AnalysisRepository
 import com.example.smartspend.data.Categories
 import com.example.smartspend.data.CategoryRepository
@@ -17,6 +18,7 @@ import com.example.smartspend.data.TransectionItem
 import com.example.smartspend.data.TransectionRepository
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.data.dataBaseRepository
+import java.util.Date
 import kotlin.random.Random
 
 // This composable function renders a notification row
@@ -53,7 +55,7 @@ fun setTransection(userEmail: String){
                     var amount = document.data?.get("amount") as? String
                     var type = document.data?.get("transType") as? String
                     var docId = document.id
-                    var entryDate = document.data?.get("date") as? String
+                    var entryDate = document.data?.get("date") as? Date
 
                     // Create a new TransectionItem object with the extracted data
                     newTrans = TransectionItem(category, amount, type, docId,entryDate)
@@ -122,7 +124,7 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
 
         var amount: String = null.toString()
 
-        if (trans.category == "accommodation" || trans.category == "Accommodation") {
+        if (trans.category == "accomodation" || trans.category == "Accomodation") {
             amount = trans.amount.toString()
             totalAccommodation += amount.toDouble()
         }
@@ -152,7 +154,7 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
 
         var amount: String = null.toString()
 
-        if (category.name.equals("accommodation") || category.name.equals("Accommodation")){
+        if (category.name.equals("accomodation") || category.name.equals("Accomodation")){
             amount = category.amount.toString()
             accommodation = amount.toDouble()
         }
@@ -195,7 +197,7 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
     AnalysisRepository.setOverAllPercentage(overallPercentage.toString())
 
 // Add the category percentages to the repository
-    analysis.add(Categories("accommodation",Color(225,7,8), accommodationPercentage.toString()))
+    analysis.add(Categories("accomodation",Color(225,7,8), accommodationPercentage.toString()))
     analysis.add(Categories("education",Color(0,225,0), educationPercentage.toString()))
     analysis.add(Categories("transport",Color(0,0,225), transportPercentage.toString()))
     analysis.add(Categories("food",Color(225,225,0), foodPercentage.toString()))
@@ -245,55 +247,3 @@ fun transectionConfirm(category: String, budget:String, context: Context): Boole
     return isError
 
 }
-
-fun updateCategory(category: String, amount: String): String{
-
-    var categry by mutableStateOf("")
-    var spending by mutableStateOf(0)
-    var money by mutableStateOf(0)
-
-    money = amount.toInt()
-
-    val db = dataBaseRepository.getDb()
-
-
-    db.collection("Categories")
-        .document(UserRepository.getEmail())
-        .collection("budget")
-        .get()
-        .addOnSuccessListener {
-            for (document in it){
-                if (document.data.get("cateName") == category){
-                    // Extract category details from the document
-                    val spent = ((document.data?.get("spent") as? String))?.toIntOrNull() ?: 0
-                    categry = category
-                    spending = spent
-                    break
-                }
-            }
-        }
-        .addOnFailureListener {
-            println("Error getting documents: ${it.message}")
-        }
-
-    spending += money
-
-    db.collection("Categories")
-        .document(UserRepository.getEmail())
-        .collection("budget").document(category)
-        .update(
-            mapOf(
-                "spent" to spending.toString()
-            )
-        )
-        .addOnSuccessListener {
-            println("DocumentSnapshot successfully updated!")
-        }
-        .addOnFailureListener { e ->
-            println("Error updating document: ${e.message}")
-        }
-
-    return spending.toString()
-}
-
-

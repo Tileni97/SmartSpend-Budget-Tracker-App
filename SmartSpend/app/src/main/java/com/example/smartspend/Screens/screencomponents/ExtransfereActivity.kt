@@ -55,7 +55,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.transectionConfirm
-import com.example.smartspend.updateCategory
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.Instant
@@ -224,84 +223,129 @@ fun ExtransfereScreen(navController: NavHostController) {
             }
 
             if (isValid) {
-                val date = Date.from(Instant.now())
-                val dateString = date.toString()
-                db.collection("Categories").document(userEmail)
-                    .collection("budget").document(reason)
-                    .get()
-                    .addOnSuccessListener { documentSnapshot ->
-                        val budget = documentSnapshot.data?.get("budget") as? String
-                        val spent = documentSnapshot.data?.get("spent") as? String
-                        if (spent != null && budget != null) {
-                            val remainingBudget = budget.toInt() - spent.toInt()
-                            if (amount.toInt() < remainingBudget) {
-                                val newSpent = spent.toInt() + amount.toInt()
-                                Toast.makeText(context, "Transfer Successful $newSpent", Toast.LENGTH_SHORT).show()
-                                db.collection("Categories").document(userEmail)
-                                    .collection("budget").document(reason)
-                                    .update("spent", newSpent.toString())
-                                    .addOnSuccessListener {
-                                        db.collection("transections").document(userEmail)
-                                            .collection("transection").document()
-                                            .set(
-                                                hashMapOf(
-                                                    "amount" to amount,
-                                                    "bankName" to bankName,
-                                                    "accountNumber" to accountNumber,
-                                                    "branchCode" to branchCode,
-                                                    "reference" to reference,
-                                                    "category" to reason,
-                                                    "date" to Date.from(Instant.now()),
-                                                    "transType" to "expense"
+                if (reason == "Select reason"){
+                    showToast(context, "Please select a reason")
+                }
+                else{
+                    val date = Date.from(Instant.now())
+                    val dateString = date.toString()
+                    db.collection("Categories").document(userEmail)
+                        .collection("budget").document(reason)
+                        .get()
+                        .addOnSuccessListener { documentSnapshot ->
+                            val budget = documentSnapshot.data?.get("budget") as? String
+                            val spent = documentSnapshot.data?.get("spent") as? String
+                            if (spent != null && budget != null) {
+                                val remainingBudget = budget.toInt() - spent.toInt()
+                                if (amount.toInt() < remainingBudget) {
+                                    val newSpent = spent.toInt() + amount.toInt()
+                                    // Toast.makeText(context, "Transfer Successful $newSpent", Toast.LENGTH_SHORT).show()
+                                    db.collection("Categories").document(userEmail)
+                                        .collection("budget").document(reason)
+                                        .update("spent", newSpent.toString())
+                                        .addOnSuccessListener {
+                                            db.collection("transections").document(userEmail)
+                                                .collection("transections").document()
+                                                .set(
+                                                    hashMapOf(
+                                                        "amount" to amount,
+                                                        "bankName" to bankName,
+                                                        "accountNumber" to accountNumber,
+                                                        "branchCode" to branchCode,
+                                                        "reference" to reference,
+                                                        "category" to reason,
+                                                        "date" to Date.from(Instant.now()),
+                                                        "transType" to "expense"
+                                                    )
                                                 )
-                                            )
-                                            .addOnSuccessListener {
-                                                db.collection("Users").document(userEmail)
-                                                    .get()
-                                                    .addOnSuccessListener { document ->
-                                                        val balance = document.data?.get("balance") as? String
-                                                        val spentBalance = document.data?.get("spent") as? String
-                                                        if(balance != null && spentBalance != null){
-                                                            val newSpentBalance = spentBalance.toInt() - amount.toInt()
-                                                            db.collection("Users").document(userEmail)
-                                                                .update(
-                                                                    mapOf(
-                                                                        "balance" to setbalance.toString(),
-                                                                        "spent" to newSpentBalance.toString()
+                                                .addOnSuccessListener {
+                                                    db.collection("Users").document(userEmail)
+                                                        .get()
+                                                        .addOnSuccessListener { document ->
+                                                            val balance =
+                                                                document.data?.get("balance") as? String
+                                                            val spentBalance =
+                                                                document.data?.get("spent") as? String
+                                                            if (balance != null && spentBalance != null) {
+                                                                val newSpentBalance =
+                                                                    spentBalance.toInt() + amount.toInt()
+                                                                db.collection("Users")
+                                                                    .document(userEmail)
+                                                                    .update(
+                                                                        mapOf(
+                                                                            "balance" to setbalance.toString(),
+                                                                            "spent" to newSpentBalance.toString()
+                                                                        )
                                                                     )
-                                                                )
-                                                                .addOnSuccessListener {
-                                                                    Toast.makeText(context, "Transaction Successful", Toast.LENGTH_SHORT).show()
-                                                                }
-                                                                .addOnFailureListener {
-                                                                    Toast.makeText(context, "Error updating spent amount", Toast.LENGTH_SHORT).show()
-                                                                }
+                                                                    .addOnSuccessListener {
+                                                                        Toast.makeText(
+                                                                            context,
+                                                                            "Transaction Successful",
+                                                                            Toast.LENGTH_SHORT
+                                                                        ).show()
+                                                                        navController.popBackStack()
+                                                                    }
+                                                                    .addOnFailureListener {
+                                                                        Toast.makeText(
+                                                                            context,
+                                                                            "Error updating spent amount",
+                                                                            Toast.LENGTH_SHORT
+                                                                        ).show()
+                                                                    }
+                                                            } else {
+                                                                Toast.makeText(
+                                                                    context,
+                                                                    "Error retrieving balance",
+                                                                    Toast.LENGTH_SHORT
+                                                                ).show()
+                                                            }
                                                         }
-                                                        else{
-                                                            Toast.makeText(context, "Error retrieving balance", Toast.LENGTH_SHORT).show()
+                                                        .addOnFailureListener {
+                                                            Toast.makeText(
+                                                                context,
+                                                                "Error adding transection",
+                                                                Toast.LENGTH_SHORT
+                                                            ).show()
                                                         }
-                                                    }
-                                                    .addOnFailureListener {
-                                                        Toast.makeText(context, "Error adding transection", Toast.LENGTH_SHORT).show()
-                                                    }
-                                            }
-                                            .addOnFailureListener {
-                                                Toast.makeText(context, "Error adding transection", Toast.LENGTH_SHORT).show()
-                                            }
-                                    }
-                                    .addOnFailureListener {
-                                        Toast.makeText(context, "Error updating spent amount", Toast.LENGTH_SHORT).show()
-                                    }
+                                                }
+                                                .addOnFailureListener {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Error adding transection",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                        }
+                                        .addOnFailureListener {
+                                            Toast.makeText(
+                                                context,
+                                                "Error updating spent amount",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Insufficient Balance $budget $spent",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             } else {
-                                Toast.makeText(context, "Insufficient Balance $budget $spent", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Error retrieving budget $budget and spent $spent values",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
-                        } else {
-                            Toast.makeText(context, "Error retrieving budget $budget and spent $spent values", Toast.LENGTH_SHORT).show()
                         }
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(context, "Error retrieving document $reason", Toast.LENGTH_SHORT).show()
-                    }
+                        .addOnFailureListener {
+                            Toast.makeText(
+                                context,
+                                "Error retrieving document $reason",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                }
             }
         },
             modifier = Modifier
@@ -323,7 +367,7 @@ fun ExtransfereScreen(navController: NavHostController) {
 @Composable
 fun Demo_ExposedDropdownMenuBox():String {
     val context = LocalContext.current
-    val reason = arrayOf("transport", "accomodation", "food", "health",
+    val reason = arrayOf("Select reason","transport", "accomodation", "food", "health",
         "education")
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(reason[0]) }
