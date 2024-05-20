@@ -1,6 +1,16 @@
 package com.example.smartspend.messaging
 
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.media.RingtoneManager
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import com.example.smartspend.MainActivity
+import com.example.smartspend.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -10,7 +20,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         if (remoteMessage.data.isNotEmpty()) {
             handleDataMessage(remoteMessage.data)
         } else {
-          //  handleNotificationMessage(remoteMessage.notification)
+          handleNotificationMessage(remoteMessage.notification)
         }
     }
 
@@ -19,7 +29,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // ...
     }
 
-   /*
+
     private fun handleNotificationMessage(notification: RemoteMessage.Notification?) {
         if (notification != null) {
             val title = notification.title
@@ -57,5 +67,17 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
 
         notificationManager.notify(0, notificationBuilder.build())
-    }*/
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "notification_channel_id"
+            val channelName = "Notification Channel"
+            val channelDescription = "Channel for your app notifications"
+            val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT)
+            channel.description = channelDescription
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 }
