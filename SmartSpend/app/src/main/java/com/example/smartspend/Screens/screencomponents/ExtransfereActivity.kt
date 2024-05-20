@@ -56,6 +56,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.transectionConfirm
 import com.example.smartspend.updateCategory
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.Instant
 import java.util.Date
@@ -83,8 +84,10 @@ fun ExtransfereScreen(navController: NavHostController) {
 
     // Initialize Firebase Firestore
     val db = FirebaseFirestore.getInstance()
+
     //Fetch balance
     val userDocRef = db.collection("Users").document(userEmail)
+
     val document = userDocRef.get().addOnSuccessListener { document ->
         var balance = document.data?.get("balance") as? String
         if (balance != null) {
@@ -215,90 +218,90 @@ fun ExtransfereScreen(navController: NavHostController) {
         Button(onClick = {
             var isValid = true
 
-            //var newBalance : String = ""
-
             if (amount.isBlank() || bankName.isBlank() || accountNumber.isBlank() || branchCode.isBlank() || reference.isBlank() || reason.isBlank()) {
                 showToast(context, "All fields are required")
                 isValid = false
             }
 
             if (isValid) {
-
-                // Update the data in Firestore
-                val extransferDocRef = db.collection("transections").document(userEmail).collection("transections").document()
-                val userDocRef = db.collection("Users").document(userEmail)
-
+                val date = Date.from(Instant.now())
+                val dateString = date.toString()
                 db.collection("Categories").document(userEmail)
-                    .collection("budget")
+                    .collection("budget").document(reason)
                     .get()
-                    .addOnSuccessListener { result ->
-                        for (document in result) {
-                            if (document.data["category"] == reason) {
-                                val budgt = document.data["budget"] as? String
-                                val spent = document.data["spent"] as? String
-
-                                val remaining = budgt.toString().toInt() - spent.toString().toInt()
-
-                                if (remaining < amount.toInt()){
-                                    Toast.makeText(context, "Insufficient funds to make this transaction, please increase your category spending !!!", Toast.LENGTH_SHORT).show()
-                                }
-                                else{
-                                    userDocRef.update(
-                                        mapOf(
-                                            "balance" to setbalance,
-                                            "spent" to spent.toString().toInt() + amount.toInt()
-                                        )
-                                    )
-                                }
+                    .addOnSuccessListener { documentSnapshot ->
+                        val budget = documentSnapshot.data?.get("budget") as? String
+                        val spent = documentSnapshot.data?.get("spent") as? String
+                        if (spent != null && budget != null) {
+                            val remainingBudget = budget.toInt() - spent.toInt()
+                            if (amount.toInt() < remainingBudget) {
+                                val newSpent = spent.toInt() + amount.toInt()
+                                Toast.makeText(context, "Transfer Successful $newSpent", Toast.LENGTH_SHORT).show()
+                                db.collection("Categories").document(userEmail)
+                                    .collection("budget").document(reason)
+                                    .update("spent", newSpent.toString())
+                                    .addOnSuccessListener {
+                                        db.collection("transections").document(userEmail)
+                                            .collection("transection").document()
+                                            .set(
+                                                hashMapOf(
+                                                    "amount" to amount,
+                                                    "bankName" to bankName,
+                                                    "accountNumber" to accountNumber,
+                                                    "branchCode" to branchCode,
+                                                    "reference" to reference,
+                                                    "category" to reason,
+                                                    "date" to Date.from(Instant.now()),
+                                                    "transType" to "expense"
+                                                )
+                                            )
+                                            .addOnSuccessListener {
+                                                db.collection("Users").document(userEmail)
+                                                    .get()
+                                                    .addOnSuccessListener { document ->
+                                                        val balance = document.data?.get("balance") as? String
+                                                        val spentBalance = document.data?.get("spent") as? String
+                                                        if(balance != null && spentBalance != null){
+                                                            val newSpentBalance = spentBalance.toInt() - amount.toInt()
+                                                            db.collection("Users").document(userEmail)
+                                                                .update(
+                                                                    mapOf(
+                                                                        "balance" to setbalance.toString(),
+                                                                        "spent" to newSpentBalance.toString()
+                                                                    )
+                                                                )
+                                                                .addOnSuccessListener {
+                                                                    Toast.makeText(context, "Transaction Successful", Toast.LENGTH_SHORT).show()
+                                                                }
+                                                                .addOnFailureListener {
+                                                                    Toast.makeText(context, "Error updating spent amount", Toast.LENGTH_SHORT).show()
+                                                                }
+                                                        }
+                                                        else{
+                                                            Toast.makeText(context, "Error retrieving balance", Toast.LENGTH_SHORT).show()
+                                                        }
+                                                    }
+                                                    .addOnFailureListener {
+                                                        Toast.makeText(context, "Error adding transection", Toast.LENGTH_SHORT).show()
+                                                    }
+                                            }
+                                            .addOnFailureListener {
+                                                Toast.makeText(context, "Error adding transection", Toast.LENGTH_SHORT).show()
+                                            }
+                                    }
+                                    .addOnFailureListener {
+                                        Toast.makeText(context, "Error updating spent amount", Toast.LENGTH_SHORT).show()
+                                    }
+                            } else {
+                                Toast.makeText(context, "Insufficient Balance $budget $spent", Toast.LENGTH_SHORT).show()
                             }
+                        } else {
+                            Toast.makeText(context, "Error retrieving budget $budget and spent $spent values", Toast.LENGTH_SHORT).show()
                         }
                     }
                     .addOnFailureListener {
-
+                        Toast.makeText(context, "Error retrieving document $reason", Toast.LENGTH_SHORT).show()
                     }
-
-                db.collection("Categories").document(userEmail)
-                    .collection("budget")
-                    .get()
-
-
-                if (!transectionConfirm( reason, amount, context)) {
-
-                    extransferDocRef.set(
-                        mapOf(
-                            "amount" to amount,
-                            "bankName" to bankName,
-                            "accountNumber" to accountNumber,
-                            "branchCode" to branchCode,
-                            "reference" to reference,
-                            "category" to reason,
-                            "transType" to "expense",
-                            "date" to Date.from(Instant.now())
-                        )
-                    )
-                    val spending:Int = (updateCategory(reason, amount)).toInt()
-
-                    // Update the balance in the user's document
-                    userDocRef.update(
-                        mapOf(
-                            "balance" to setbalance,
-                            "spent" to spending
-                        )
-                    )
-                        .addOnSuccessListener {
-                            showToast(context, "Account information updated successfully")
-                            //startActivity(intent)
-                        }
-                        .addOnFailureListener { exception ->
-                            showToast(
-                                context,
-                                "Error updating account information: ${exception.message}"
-                            )
-                        }
-                }
-                else{
-                    Toast.makeText(context, "Insufficient funds to make this transaction, please increase your category spending !!!", Toast.LENGTH_SHORT).show()
-                }
             }
         },
             modifier = Modifier
