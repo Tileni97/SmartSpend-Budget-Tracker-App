@@ -353,11 +353,12 @@ fun IntransfereScreen(navController: NavHostController) {
                                                                     if (balance != null && spentBalance != null) {
                                                                         val newSpentBalance =
                                                                             spentBalance.toInt() + amount.toInt()
+
                                                                         db.collection("Users")
                                                                             .document(userEmail)
                                                                             .update(
                                                                                 mapOf(
-                                                                                    "balance" to userBalance.toString(),
+                                                                                    "balance" to newBalance,
                                                                                     "spent" to newSpentBalance.toString()
                                                                                 )
                                                                             )
