@@ -111,85 +111,13 @@ class MainActivity : ComponentActivity() {
         // Request exemption from battery optimizations
         requestBatteryOptimizationExemption()
 
-
-        // Listen for new notifications in Firestore
-        listenForNotifications()
     }
-
-
-
-    private fun storeTokenInFirestore(token: String) {
-        // Get the logged-in user's email or ID
-        val userEmail = UserRepository.getEmail()
-
-        // Store the token in Firestore
-        val userRef = db.collection("Users").document(userEmail)
-        userRef.update("fcmToken", token.trim())
-            .addOnSuccessListener { Log.d(TAG, "FCM token stored in Firestore")
-            showToast(this, "FCM token stored in Firestore: $token")
-            }
-            .addOnFailureListener { e -> Log.w(TAG, "Error storing FCM token", e)
-            showToast(this, "Error storing FCM token")
-            }
-    }
-
-    private fun listenForNotifications() {
-        val userEmail = UserRepository.getEmail()
-        val notificationsRef = db.collection("Notifications").document(userEmail).collection("notifications")
-
-        notificationsRef.addSnapshotListener { snapshots, error ->
-            if (error != null) {
-                Log.w(TAG, "Error listening for notifications", error)
-                return@addSnapshotListener
-            }
-
-            for (documentChange in snapshots?.documentChanges ?: emptyList()) {
-                if (documentChange.type == DocumentChange.Type.ADDED) {
-                    val notification = documentChange.document.toObject(Notification::class.java)
-                    notification?.let {
-                        sendNotification(it.description.toString())
-                    }
-                }
-            }
-        }
-    }
-
-    private fun sendNotification(description: String) {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-
-        val channelId = "notification_channel"
-        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.icon)
-            .setContentTitle("New Notification")
-            .setContentText(description)
-            .setAutoCancel(true)
-            .setSound(defaultSoundUri)
-            .setContentIntent(pendingIntent)
-
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        // For Android Oreo and higher versions
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, "Notification Channel", NotificationManager.IMPORTANCE_DEFAULT)
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        notificationManager.notify(0, notificationBuilder.build())
-    }
-
 
     private fun requestBatteryOptimizationExemption() {
         val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
         intent.data = Uri.parse("package:${packageName}")
         startActivity(intent)
     }
-
-    data class Notification(
-        val description: String? = null
-    )
 
     @Composable
     private fun SetBarColor(color: Color) {
