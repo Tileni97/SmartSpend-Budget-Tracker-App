@@ -74,7 +74,7 @@ fun PayScreen(navController: NavHostController){
     var userBalance by remember { mutableStateOf("") }
 
     val reason = arrayOf("Select reason", "accomodation", "health",
-        "education")
+        "education", "transport")
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(reason[0]) }
 
@@ -231,7 +231,7 @@ fun PayScreen(navController: NavHostController){
                             fontWeight = FontWeight.W400,)
                     },
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+                    //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
                 Spacer(modifier = Modifier.height(15.dp))
                 Box(
