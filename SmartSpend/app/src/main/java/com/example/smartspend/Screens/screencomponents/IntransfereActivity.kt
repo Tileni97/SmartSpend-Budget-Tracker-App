@@ -296,9 +296,9 @@ fun IntransfereScreen(navController: NavHostController) {
 
                     if (!recipientName.startsWith("Account number")) {
 
-                        newBalance = (userBalance.toDouble() - amount.toDouble()).toString()
+                        newBalance = (userBalance.toInt() - amount.toInt()).toString()
                         recipientNewBalance =
-                            (recipientBalance.toDouble() + amount.toDouble()).toString()
+                            (recipientBalance.toInt() + amount.toInt()).toString()
 
                         // Update the data in Firestore
                         val extransferDocRef = db.collection("transections").document(userEmail)
@@ -319,10 +319,10 @@ fun IntransfereScreen(navController: NavHostController) {
                                     val budget = document.getString("budget")
                                     if (spent != null && budget != null) {
                                         remainingBudget =
-                                            (budget.toDouble() - spent.toDouble()).toString()
+                                            (budget.toInt() - spent.toInt()).toString()
                                         showToast(context, remainingBudget)
-                                        if (remainingBudget.toDouble() > amount.toDouble()) {
-                                            val newSpent = spent.toDouble() + amount.toDouble()
+                                        if (remainingBudget.toInt() > amount.toInt()) {
+                                            val newSpent = spent.toInt() + amount.toInt()
                                             db.collection("Categories").document(userEmail)
                                                 .collection("budget").document(selectedText.trim())
                                                 .update("spent", newSpent.toString())
