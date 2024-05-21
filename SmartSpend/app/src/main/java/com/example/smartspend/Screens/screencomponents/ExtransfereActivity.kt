@@ -294,6 +294,21 @@ fun ExtransfereScreen(navController: NavHostController) {
                                                                                     "transType" to "expense"
                                                                                 )
                                                                             )
+                                                                            .addOnSuccessListener {
+                                                                                Toast.makeText(
+                                                                                    context,
+                                                                                    "Transfer Successful",
+                                                                                    Toast.LENGTH_SHORT
+                                                                                ).show()
+                                                                                navController.popBackStack()
+                                                                            }
+                                                                            .addOnFailureListener {
+                                                                                Toast.makeText(
+                                                                                    context,
+                                                                                    "Error adding transection",
+                                                                                    Toast.LENGTH_SHORT
+                                                                                ).show()
+                                                                            }
                                                                     }
                                                                     .addOnFailureListener {
                                                                         Toast.makeText(

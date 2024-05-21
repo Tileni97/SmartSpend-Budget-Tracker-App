@@ -14,6 +14,6 @@ sealed class Routes (val routes:String){
     data object Extransfere : Routes("external")
     data object Intransfere : Routes("internal")
     data object HelpScreen : Routes("helpScreen")
-    data object BudgetSetUp : Routes("budgetSetUp")
+    data object BuyScreen : Routes("buyscreen")
 
 }

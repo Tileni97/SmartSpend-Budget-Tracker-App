@@ -32,6 +32,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,27 +71,35 @@ fun TransactionScreen(navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally // Center the content horizontally
     ) {
         Spacer(modifier = Modifier.
-                    size(320.dp)) // Add vertical spacing of 15dp
+                    size(210.dp)) // Add vertical spacing of 15dp
 
         // Title text with styling
         Text(
-            text = "Manage your finances \nANYTIME, ANYWHERE",
+            text = "Manage your finances ANYTIME, ANYWHERE",
             style = MaterialTheme.typography.headlineLarge.copy(
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = Color(219, 132, 11)
             ),
-            fontSize = 24.sp
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(4.dp, 0.dp)
+                .clip(RoundedCornerShape(size = 10.dp))
+                .background(Color.Cyan)
         )
-        Spacer(modifier = Modifier.height(16.dp)) // Vertical spacing
+        Spacer(modifier = Modifier.height(26.dp)) // Vertical spacing
         // Subtitle text with styling
         Text(
             text = "Secure your financial future with our trusted budgeting services",
             style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+                fontWeight = FontWeight.ExtraBold,
+                color = Color.White
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(10.dp)
         )
-        Spacer(modifier = Modifier.height(32.dp)) // Vertical spacing
+        Spacer(modifier = Modifier.height(50.dp)) // Vertical spacing
 
 
         // Row of buttons with styling
@@ -164,7 +173,7 @@ fun TransactionScreen(navController: NavHostController) {
                     .background(color = MaterialTheme.colorScheme.inverseOnSurface)
                     .padding(5.dp)
                     .width(90.dp)
-                    .clickable { }
+                    .clickable { navController.navigate(Routes.BuyScreen.routes) }
                     .shadow(
                         elevation = 10.dp,
                         spotColor = MaterialTheme.colorScheme.onBackground,
