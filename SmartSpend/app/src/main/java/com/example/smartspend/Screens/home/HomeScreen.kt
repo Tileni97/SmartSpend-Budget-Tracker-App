@@ -32,7 +32,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.smartspend.Screens.screencomponents.BuyScreen
 import com.example.smartspend.Screens.screencomponents.ExtransfereScreen
+import com.example.smartspend.Screens.screencomponents.HelpScreen
 import com.example.smartspend.Screens.screencomponents.IntransfereScreen
 import com.example.smartspend.Screens.screencomponents.PayScreen
 import com.example.smartspend.Screens.screencomponents.TransferScreen
@@ -82,6 +84,12 @@ fun HomeScreen(navController: NavController){
             }
             composable(Routes.HomeScreen.routes){
                 HomeScreen(navControllerOne)
+            }
+            composable(Routes.BuyScreen.routes){
+                BuyScreen(navControllerOne)
+            }
+            composable(Routes.HelpScreen.routes){
+                HelpScreen(navControllerOne)
             }
         }
     }
