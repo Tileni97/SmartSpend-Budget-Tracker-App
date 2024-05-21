@@ -40,11 +40,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.R
 import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
+import com.example.smartspend.data.Categories
+import com.example.smartspend.data.CategoryRepository
 import com.example.smartspend.navigation.Routes
 
 // Main composable function for the Transaction screen
 @Composable
 fun TransactionScreen(navController: NavHostController) {
+
     // Box composable with rounded corner shape, background color, and fixed height
     Box(
         modifier = Modifier
@@ -77,7 +80,7 @@ fun TransactionScreen(navController: NavHostController) {
         Box (
             modifier = Modifier
                 .clip(RoundedCornerShape(size = 10.dp))
-                .background(color =  Color.White),
+                .background(color = Color.White),
         ){
             Text(
                 text = "Manage your finances \nANYTIME, ANYWHERE",
@@ -97,10 +100,10 @@ fun TransactionScreen(navController: NavHostController) {
         Text(
             text = "Secure your financial future with our \ntrusted budgeting services",
             style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.ExtraBold,
-                color = MaterialTheme.colorScheme.inverseOnSurface
+                fontWeight = FontWeight.ExtraBold
             ),
             textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.inverseOnSurface,
             modifier = Modifier
                 .padding(10.dp)
         )
@@ -194,6 +197,12 @@ fun TransactionScreen(navController: NavHostController) {
                         fontSize = 15.sp,fontFamily = FontFamily.SansSerif
                     )
                 }
+            }
+        }
+        Spacer(modifier = Modifier.height(30.dp)) // Vertical spacing
+
+        Column {
+            Row {
             }
         }
     }
