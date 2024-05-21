@@ -13,6 +13,7 @@ fun LoginValidation(password:String,username:String,context: Context):Boolean{
         Toast.makeText(context,"Please Enter password",Toast.LENGTH_SHORT).show()
         isvalid = false
     }
+
     else{
         isvalid = true
     }

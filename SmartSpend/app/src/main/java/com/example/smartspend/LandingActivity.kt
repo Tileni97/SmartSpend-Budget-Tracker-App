@@ -104,6 +104,7 @@ class LandingActivity : ComponentActivity() {
 @Composable
 fun welcoming() {
     Column(
+
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

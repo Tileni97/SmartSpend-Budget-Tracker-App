@@ -36,6 +36,7 @@ fun ResetPasswordScreen(
     modifier: Modifier = Modifier,
     onBackPressed: () -> Unit,
     viewModel: AuthViewModel
+
 ) {
     var email by remember { mutableStateOf("") }
     val resetPasswordState by viewModel.resetPasswordState.collectAsState()

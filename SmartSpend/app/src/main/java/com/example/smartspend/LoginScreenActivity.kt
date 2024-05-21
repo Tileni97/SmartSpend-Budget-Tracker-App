@@ -316,6 +316,7 @@ class LoginScreenActivity : ComponentActivity() {
                                         style = SpanStyle(
                                             color = Color.Yellow,
                                             textDecoration = TextDecoration.Underline
+
                                         ),
                                         start = 0,
                                         end = "Reset Password".length

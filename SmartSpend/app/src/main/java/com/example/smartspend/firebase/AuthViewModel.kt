@@ -58,6 +58,7 @@ class AuthViewModel(private val context: Context) : ViewModel() {
         data class Error(val message: String) : LoginState()
     }
 
+
     /**
      * Factory for creating an instance of AuthViewModel with application context.
      */

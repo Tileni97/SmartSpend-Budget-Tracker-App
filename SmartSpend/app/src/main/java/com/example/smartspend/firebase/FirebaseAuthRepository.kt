@@ -30,4 +30,5 @@ class FirebaseAuthRepository {
     fun resetPassword(email: String): Task<Void> {
         return FirebaseAuth.getInstance().sendPasswordResetEmail(email)
     }
+
 }
