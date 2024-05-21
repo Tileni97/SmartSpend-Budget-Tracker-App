@@ -15,12 +15,14 @@ import kotlinx.coroutines.launch
  */
 class AuthViewModel(private val context: Context) : ViewModel() {
 
+
     private val repository = FirebaseAuthRepository()
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Initial)
     val loginState: StateFlow<LoginState> = _loginState
 
     private val _resetPasswordState = MutableStateFlow<ResetPasswordState>(ResetPasswordState.Initial)
     val resetPasswordState: StateFlow<ResetPasswordState> = _resetPasswordState
+
 
     /**
      * Signs in the user with the given email and password.
@@ -102,6 +104,9 @@ class AuthViewModel(private val context: Context) : ViewModel() {
         object Success : ResetPasswordState()
         data class Error(val message: String) : ResetPasswordState()
     }
+
+
+
 }
 
 /**
@@ -117,4 +122,6 @@ private fun isNetworkAvailable(context: Context): Boolean {
         actNw.hasTransport(android.net.NetworkCapabilities.TRANSPORT_CELLULAR) -> true
         else -> false
     }
+
+
 }

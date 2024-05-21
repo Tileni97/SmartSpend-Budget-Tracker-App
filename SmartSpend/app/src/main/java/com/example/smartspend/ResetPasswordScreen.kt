@@ -1,5 +1,7 @@
 package com.example.smartspend
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,8 +38,8 @@ import com.example.smartspend.firebase.AuthViewModel
 fun ResetPasswordScreen(
     modifier: Modifier = Modifier,
     onBackPressed: () -> Unit,
-    viewModel: AuthViewModel
-
+    viewModel: AuthViewModel,
+    context: Context = LocalContext.current
 ) {
     var email by remember { mutableStateOf("") }
     val resetPasswordState by viewModel.resetPasswordState.collectAsState()
@@ -74,7 +77,11 @@ fun ResetPasswordScreen(
 
             Button(
                 onClick = {
-                    viewModel.resetPassword(email)
+                    if (email.isBlank()) {
+                        Toast.makeText(context, "Please enter email", Toast.LENGTH_SHORT).show()
+                    } else {
+                        viewModel.resetPassword(email)
+                    }
                 },
                 modifier = Modifier
                     .clip(RoundedCornerShape(15.dp))
@@ -99,7 +106,7 @@ fun ResetPasswordScreen(
                 }
                 is AuthViewModel.ResetPasswordState.Success -> {
                     Text(
-                        text = "Password reset email sent successfully",
+                        text = "Password reset email sent successfully, check your email inbox and navigate back to login with your new password",
                         color = Color.Green
                     )
                 }
