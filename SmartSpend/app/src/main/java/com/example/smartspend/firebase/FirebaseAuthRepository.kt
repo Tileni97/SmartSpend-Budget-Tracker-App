@@ -1,5 +1,6 @@
 package com.example.smartspend.firebase
 
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
@@ -24,5 +25,9 @@ class FirebaseAuthRepository {
         } catch (e: Exception) {
             null
         }
+    }
+
+    fun resetPassword(email: String): Task<Void> {
+        return FirebaseAuth.getInstance().sendPasswordResetEmail(email)
     }
 }

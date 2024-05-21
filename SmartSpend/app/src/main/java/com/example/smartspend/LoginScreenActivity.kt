@@ -3,12 +3,15 @@ package com.example.smartspend
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -50,32 +53,25 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartspend.Screens.home.HomeActivity
 import com.example.smartspend.data.UserData
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.firebase.AuthViewModel
-import com.example.smartspend.messaging.FirebaseManager
 import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.messaging.messaging
 import kotlinx.coroutines.delay
 
 class LoginScreenActivity : ComponentActivity() {
-
-
-    private val firebaseManager: FirebaseManager by lazy {
-        FirebaseManager(this)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,8 +91,16 @@ class LoginScreenActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color(0xff009177)
                 ) {
-                    val viewModel: AuthViewModel = viewModel()
-                    val passwordVisibility = remember { mutableStateOf(false) } // State to control password visibility
+                    // Create an instance of the AuthViewModel using the Factory
+                    val viewModel: AuthViewModel by viewModels {
+                        AuthViewModel.Factory(applicationContext)
+                    }
+
+                    // State variable to track whether the reset password screen should be shown
+                    var showResetPasswordScreen by remember { mutableStateOf(false) }
+
+                    val passwordVisibility =
+                        remember { mutableStateOf(false) } // State to control password visibility
                     var username by remember { mutableStateOf("") }
                     var password by remember { mutableStateOf("") }
 
@@ -104,6 +108,13 @@ class LoginScreenActivity : ComponentActivity() {
                     val context = LocalContext.current
 
                     val focusManager: FocusManager = LocalFocusManager.current
+
+                    if (showResetPasswordScreen) {
+                        ResetPasswordScreen(
+                            onBackPressed = { showResetPasswordScreen = false },
+                            viewModel = viewModel
+                        )
+                    } else {
 
                     Column(
                         modifier = Modifier
@@ -117,7 +128,7 @@ class LoginScreenActivity : ComponentActivity() {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
                                 text = "S",
-                                color =Color.White,
+                                color = Color.White,
                                 fontSize = 100.sp,
                                 fontWeight = FontWeight.ExtraBold,
                             )
@@ -173,7 +184,10 @@ class LoginScreenActivity : ComponentActivity() {
                                         passwordVisibility.value = !passwordVisibility.value
                                     }
                                 ) {
-                                    Icon(imageVector = image, contentDescription = "Toggle Password Visibility")
+                                    Icon(
+                                        imageVector = image,
+                                        contentDescription = "Toggle Password Visibility"
+                                    )
                                 }
                             },
                             modifier = Modifier.fillMaxWidth()
@@ -183,20 +197,15 @@ class LoginScreenActivity : ComponentActivity() {
 
                         Button(
                             onClick = {
-                                if(LoginValidation(password, username, context)){
+                                if (LoginValidation(password, username, context)) {
                                     viewModel.signIn(username, password)
-                                }
-                                else{
+                                } else {
 
                                 }
 
 
                                 // Hide the keyboard
                                 focusManager.clearFocus()
-
-
-
-
 
 
                             },
@@ -216,7 +225,8 @@ class LoginScreenActivity : ComponentActivity() {
                             }
 
                             is AuthViewModel.LoginState.Error -> {
-                                val errorMessage = (loginState as AuthViewModel.LoginState.Error).message
+                                val errorMessage =
+                                    (loginState as AuthViewModel.LoginState.Error).message
                                 Text(
                                     text = errorMessage,
                                     color = Color.Red
@@ -245,7 +255,8 @@ class LoginScreenActivity : ComponentActivity() {
                                     .addOnSuccessListener { document ->
                                         if (document != null) {
 
-                                            val firstName = document.data?.get("firstName") as? String
+                                            val firstName =
+                                                document.data?.get("firstName") as? String
                                             val userModel = UserData(firstName)
 
                                             currentUser.firstName = firstName
@@ -256,58 +267,25 @@ class LoginScreenActivity : ComponentActivity() {
                                             UserRepository.addUser(currentUser)
 
                                             //Check if the user has account information
-                                            val accountNumber = document.data?.get("accountNumber") as? String
-                                            val cardNumber = document.data?.get("cardNumber") as? String
+                                            val accountNumber =
+                                                document.data?.get("accountNumber") as? String
+                                            val cardNumber =
+                                                document.data?.get("cardNumber") as? String
                                             val expMonth = document.data?.get("expMonth") as? String
                                             val expYear = document.data?.get("expYear") as? String
                                             val cvv = document.data?.get("cvv") as? String
 
-                                            if ((accountNumber != null && cardNumber != null && expMonth != null && expYear != null && cvv != null)&&(accountNumber != "" && cardNumber != "" && expMonth != "" && expYear != "" && cvv != "")) {
+                                            if ((accountNumber != null && cardNumber != null && expMonth != null && expYear != null && cvv != null) && (accountNumber != "" && cardNumber != "" && expMonth != "" && expYear != "" && cvv != "")) {
                                                 try {
                                                     setTransection(user.email.toString())
-                                                }
-                                                catch (e:Exception){
+                                                } catch (e: Exception) {
 
                                                 }
                                                 // User has account information, navigate to DashboardActivity
                                                 startActivity(intentHomeActivity)
-
-
-                                                // Initialize Firebase Messaging Service
-                                                Firebase.messaging.token.addOnCompleteListener(
-                                                    OnCompleteListener { task ->
-                                                    if (!task.isSuccessful) {
-                                                        Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                                                        return@OnCompleteListener
-                                                    }
-
-                                                    // Get the token
-                                                    val token = task.result
-
-                                                    // Store the token in Firestore for the logged-in user
-                                                    firebaseManager.storeTokenInFirestore(token, user.email.toString())
-                                                })
-
-
                                             } else {
                                                 // User doesn't have account information, navigate to AccountSetActivity
                                                 startActivity(intentAccountSetup)
-
-                                                // Initialize Firebase Messaging Service
-                                                Firebase.messaging.token.addOnCompleteListener(OnCompleteListener { task ->
-                                                    if (!task.isSuccessful) {
-                                                        Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                                                        return@OnCompleteListener
-                                                    }
-
-                                                    // Get the token
-                                                    val token = task.result
-
-                                                    // Store the token in Firestore for the logged-in user
-                                                    firebaseManager.storeTokenInFirestore(token, user.email.toString())
-                                                })
-
-
                                             }
 
 
@@ -318,7 +296,6 @@ class LoginScreenActivity : ComponentActivity() {
                                     .addOnFailureListener { exception ->
                                         Log.d(TAG, "get failed with ", exception)
                                     }
-
 
 
                             }
@@ -333,12 +310,23 @@ class LoginScreenActivity : ComponentActivity() {
                         Row {
                             Text("Forgot Password? ", color = Color.White)
                             Text(
-                                "Reset Password",
-                                color = Color.White,
-                                modifier = Modifier.clickable(onClick = { /* Handle reset password click */ })
+                                text = buildAnnotatedString {
+                                    append("Reset Password")
+                                    addStyle(
+                                        style = SpanStyle(
+                                            color = Color.Yellow,
+                                            textDecoration = TextDecoration.Underline
+                                        ),
+                                        start = 0,
+                                        end = "Reset Password".length
+                                    )
+                                },
+                                modifier = Modifier.clickable(onClick = { showResetPasswordScreen = true })
                             )
                         }
                     }
+
+                }
 
                 }
             }
@@ -353,6 +341,19 @@ class LoginScreenActivity : ComponentActivity() {
             )
         }
     }
+
+    fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val nw = connectivityManager.activeNetwork ?: return false
+        val actNw = connectivityManager.getNetworkCapabilities(nw) ?: return false
+        return when {
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            else -> false
+        }
+    }
+
 }
 
 private suspend fun showToast(context: Context, message: String) {
