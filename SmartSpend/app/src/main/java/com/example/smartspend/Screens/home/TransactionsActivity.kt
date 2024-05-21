@@ -50,7 +50,7 @@ fun TransactionScreen(navController: NavHostController) {
         modifier = Modifier
             .fillMaxWidth() // Fill the maximum available width
             .clip(RoundedCornerShape(bottomEnd = 100.dp)) // Apply rounded corner shape to the bottom-end corner
-            .height(400.dp) // Set a fixed height of 400dp
+            .height(300.dp) // Set a fixed height of 400dp
             .background(color = Color(0xff009177)) // Set the background color to yellow
     ) {
         // Image composable inside the Box, filling the maximum size and cropping to fit
@@ -71,35 +71,40 @@ fun TransactionScreen(navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally // Center the content horizontally
     ) {
         Spacer(modifier = Modifier.
-                    size(210.dp)) // Add vertical spacing of 15dp
+                    size(200.dp)) // Add vertical spacing of 15dp
 
         // Title text with styling
-        Text(
-            text = "Manage your finances ANYTIME, ANYWHERE",
-            style = MaterialTheme.typography.headlineLarge.copy(
-                fontWeight = FontWeight.Bold,
-                color = Color(219, 132, 11)
-            ),
-            fontSize = 24.sp,
-            textAlign = TextAlign.Center,
+        Box (
             modifier = Modifier
-                .padding(4.dp, 0.dp)
                 .clip(RoundedCornerShape(size = 10.dp))
-                .background(Color.Cyan)
-        )
-        Spacer(modifier = Modifier.height(26.dp)) // Vertical spacing
+                .background(color =  Color.White),
+        ){
+            Text(
+                text = "Manage your finances \nANYTIME, ANYWHERE",
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = Color(219, 132, 11)
+                ),
+                fontSize = 24.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .padding(10.dp, 0.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(36.dp)) // Vertical spacing
         // Subtitle text with styling
         Text(
-            text = "Secure your financial future with our trusted budgeting services",
+            text = "Secure your financial future with our \ntrusted budgeting services",
             style = MaterialTheme.typography.bodyLarge.copy(
                 fontWeight = FontWeight.ExtraBold,
-                color = Color.White
+                color = MaterialTheme.colorScheme.inverseOnSurface
             ),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(10.dp)
         )
-        Spacer(modifier = Modifier.height(50.dp)) // Vertical spacing
+        Spacer(modifier = Modifier.height(30.dp)) // Vertical spacing
 
 
         // Row of buttons with styling
@@ -116,7 +121,7 @@ fun TransactionScreen(navController: NavHostController) {
                     .width(90.dp)
                     .clickable {
 
-                            navController.navigate(Routes.TransferScreen.routes)
+                        navController.navigate(Routes.TransferScreen.routes)
 
                     }
                     .shadow(
@@ -146,7 +151,7 @@ fun TransactionScreen(navController: NavHostController) {
                     .width(90.dp)
                     .clickable {
 
-                            navController.navigate(Routes.PayScreen.routes)
+                        navController.navigate(Routes.PayScreen.routes)
 
                     }
                     .shadow(

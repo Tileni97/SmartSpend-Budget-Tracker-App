@@ -7,6 +7,8 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,6 +17,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +25,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,8 +69,40 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color(0xff009177)
                 ) {
-
-                    FlashAndNavigate()
+                    if (isNetworkAvailable(this)){
+                        FlashAndNavigate()
+                        //finish()
+                    }
+                    else {
+                        Column (
+                            verticalArrangement = Arrangement.SpaceAround,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ){
+                            Text(
+                                text = "No Internet Connection",
+                                color = Color.White,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Image(
+                                painter = painterResource(id = R.drawable.noconnection),
+                                contentDescription = "Card 18",
+                                modifier = Modifier
+                                    .requiredWidth(200.dp)
+                            )
+                            Button(onClick = {
+                                if(isNetworkAvailable(this@MainActivity)){
+                                    startActivity(Intent(this@MainActivity, MainActivity::class.java))
+                                }
+                                else {
+                                    Toast.makeText(this@MainActivity, "Please make sure you have an active internet connection before trying again", Toast.LENGTH_SHORT).show()
+                                }
+                            }) {
+                                Text(text = "Retry")
+                            }
+                        }
+                    }
+                    
 
                 }
             }
@@ -177,7 +215,17 @@ class MainActivity : ComponentActivity() {
 }
 
 // ... (rest of the code remains the same)
-
+fun isNetworkAvailable(context: Context): Boolean {
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val nw = connectivityManager.activeNetwork ?: return false
+    val actNw = connectivityManager.getNetworkCapabilities(nw) ?: return false
+    return when {
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+        actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+        else -> false
+    }
+}
 
 @Composable
 fun Landing() {

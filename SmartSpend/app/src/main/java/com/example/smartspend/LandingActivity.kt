@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.firebase.auth.FirebaseAuth
 
 /**
  * LandingActivity to display a welcome screen with a button to proceed to Login.
@@ -130,4 +131,13 @@ fun GreetingPreview2() {
     SmartSpendTheme {
         welcoming()
     }
+}
+
+fun isLogin(): Boolean {
+    var isLogin = false
+    val email = FirebaseAuth.getInstance().currentUser?.email
+    if (email != null) {
+        isLogin = true
+    }
+    return isLogin
 }
