@@ -20,14 +20,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +43,7 @@ import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
 
@@ -54,6 +54,7 @@ class MainActivity : ComponentActivity() {
 
 
         super.onCreate(savedInstanceState)
+
         setContent {
             SmartSpendTheme {
                 SetBarColor(color = Color(0xff009177))
@@ -63,26 +64,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = Color(0xff009177)
                 ) {
-                    //startActivity(intent)
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Landing()
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                                .padding(30.dp, 0.dp),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Button(onClick = {
-                                startActivity(intent)
-                            },
-                            ) {
-                                Text(text = "Continue...")
-                            }
-                        }
-                    }
+
+                    FlashAndNavigate()
+
                 }
             }
         }
@@ -179,6 +163,18 @@ class MainActivity : ComponentActivity() {
             )
         }
     }
+
+    @Composable
+    private fun FlashAndNavigate() {
+        val intent = Intent(this, LandingActivity::class.java)
+        LaunchedEffect(Unit) {
+            delay(2000) // Delay for 500 milliseconds (adjust as needed)
+            startActivity(intent)
+            //finish()
+        }
+        Landing()
+    }
+
 }
 
 // ... (rest of the code remains the same)
