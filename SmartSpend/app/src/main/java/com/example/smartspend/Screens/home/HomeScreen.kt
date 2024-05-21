@@ -68,7 +68,7 @@ fun HomeScreen(navController: NavController){
                 TransferScreen(navControllerOne)
             }
             composable(Routes.PayScreen.routes){
-                PayScreen()
+                PayScreen(navControllerOne)
             }
             composable(Routes.Extransfere.routes){
                 ExtransfereScreen(navControllerOne)
