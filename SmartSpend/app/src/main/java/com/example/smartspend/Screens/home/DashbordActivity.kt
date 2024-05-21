@@ -52,14 +52,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.notesapp.util.formatDate
 import com.example.smartspend.R
-import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
 import com.example.smartspend.data.TransectionItem
 import com.example.smartspend.data.TransectionRepository
 import com.example.smartspend.data.UserData
@@ -72,7 +69,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 
 @Composable
-fun DashBordActivity(navController: NavHostController) {
+fun DashBordActivity(
+    navController: NavHostController
+) {
+
     var user: UserData = UserData(username = "shikongov02@gmail.com", firstName = "Shikongo", lastName = "Giideon", phone = "+264814272721", accountType = "standard", address = "Tuba Street", balance = 20000, budget = 1500, spent = 1100, cardNumber = "5343875934363775", expMonth = 4, expYear = 24, cvv = 254, AccountNumber = "2424789349735768")
 
     var userEmail: String = UserRepository.getEmail()
@@ -211,7 +211,8 @@ fun DashBordActivity(navController: NavHostController) {
                     modifier = Modifier
                         .clip(RoundedCornerShape(size = 20.dp))
                         .padding(10.dp)
-                        .clickable { }
+                        .clickable {
+                        }
                 ){
                     Icon(imageVector = Icons.Rounded.Logout, contentDescription = "", tint = Color.White)
                 }
@@ -1049,12 +1050,12 @@ fun FirebaseFetch() {
         }
 
 }
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun DashBordActivityPreview() {
     SmartSpendTheme {
         val navControllerOne = rememberNavController()
-        DashBordActivity(navControllerOne)
+        DashBordActivity(navControllerOne, AuthViewModel)
     }
-}
+}*/
