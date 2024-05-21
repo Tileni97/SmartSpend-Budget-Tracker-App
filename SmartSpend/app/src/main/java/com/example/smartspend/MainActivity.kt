@@ -7,9 +7,12 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -39,18 +42,17 @@ import androidx.core.app.NotificationCompat
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.messaging.messaging
 
 class MainActivity : ComponentActivity() {
 
     // Initialize Firebase Firestore
-    private val db = FirebaseFirestore.getInstance()
+    val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
         setContent {
             SmartSpendTheme {
@@ -85,23 +87,15 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // Initialize Firebase Messaging Service
-        Firebase.messaging.token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
+        // Request exemption from battery optimizations
+        requestBatteryOptimizationExemption()
 
-            // Get the token
-            val token = task.result
-
-            // Store the token in Firestore for the logged-in user
-            storeTokenInFirestore(token)
-        })
 
         // Listen for new notifications in Firestore
         listenForNotifications()
     }
+
+
 
     private fun storeTokenInFirestore(token: String) {
         // Get the logged-in user's email or ID
@@ -109,9 +103,13 @@ class MainActivity : ComponentActivity() {
 
         // Store the token in Firestore
         val userRef = db.collection("Users").document(userEmail)
-        userRef.update("fcmToken", token)
-            .addOnSuccessListener { Log.d(TAG, "FCM token stored in Firestore") }
-            .addOnFailureListener { e -> Log.w(TAG, "Error storing FCM token", e) }
+        userRef.update("fcmToken", token.trim())
+            .addOnSuccessListener { Log.d(TAG, "FCM token stored in Firestore")
+            showToast(this, "FCM token stored in Firestore: $token")
+            }
+            .addOnFailureListener { e -> Log.w(TAG, "Error storing FCM token", e)
+            showToast(this, "Error storing FCM token")
+            }
     }
 
     private fun listenForNotifications() {
@@ -159,6 +157,13 @@ class MainActivity : ComponentActivity() {
         }
 
         notificationManager.notify(0, notificationBuilder.build())
+    }
+
+
+    private fun requestBatteryOptimizationExemption() {
+        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+        intent.data = Uri.parse("package:${packageName}")
+        startActivity(intent)
     }
 
     data class Notification(
@@ -229,4 +234,8 @@ fun LandingPreview() {
     SmartSpendTheme {
         Landing()
     }
+}
+
+private fun showToast(context: Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }

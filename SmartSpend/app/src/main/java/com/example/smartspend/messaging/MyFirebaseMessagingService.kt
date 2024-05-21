@@ -24,6 +24,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
+
+    override fun onCreate() {
+        super.onCreate()
+        createNotificationChannel()
+    }
+
+
     private fun handleDataMessage(data: Map<String, String>) {
         // Handle data payload
         // ...
@@ -71,9 +78,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelId = "notification_channel_id"
-            val channelName = "Notification Channel"
-            val channelDescription = "Channel for your app notifications"
+            val channelId = "smartspend_notification_channel"
+            val channelName = "SmartSpend Notifications"
+            val channelDescription = "Notifications for SmartSpend app"
             val channel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT)
             channel.description = channelDescription
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

@@ -58,16 +58,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.smartspend.Screens.home.HomeActivity
-import com.example.smartspend.data.TransectionRepository
 import com.example.smartspend.data.UserData
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.firebase.AuthViewModel
+import com.example.smartspend.messaging.FirebaseManager
 import com.example.smartspend.ui.theme.SmartSpendTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.messaging
 import kotlinx.coroutines.delay
 
 class LoginScreenActivity : ComponentActivity() {
+
+
+    private val firebaseManager: FirebaseManager by lazy {
+        FirebaseManager(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -184,6 +193,12 @@ class LoginScreenActivity : ComponentActivity() {
 
                                 // Hide the keyboard
                                 focusManager.clearFocus()
+
+
+
+
+
+
                             },
                             modifier = Modifier
                                 .clip(RoundedCornerShape(15.dp))
@@ -257,9 +272,42 @@ class LoginScreenActivity : ComponentActivity() {
                                                 // User has account information, navigate to DashboardActivity
                                                 startActivity(intentHomeActivity)
 
+
+                                                // Initialize Firebase Messaging Service
+                                                Firebase.messaging.token.addOnCompleteListener(
+                                                    OnCompleteListener { task ->
+                                                    if (!task.isSuccessful) {
+                                                        Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                                                        return@OnCompleteListener
+                                                    }
+
+                                                    // Get the token
+                                                    val token = task.result
+
+                                                    // Store the token in Firestore for the logged-in user
+                                                    firebaseManager.storeTokenInFirestore(token, user.email.toString())
+                                                })
+
+
                                             } else {
                                                 // User doesn't have account information, navigate to AccountSetActivity
                                                 startActivity(intentAccountSetup)
+
+                                                // Initialize Firebase Messaging Service
+                                                Firebase.messaging.token.addOnCompleteListener(OnCompleteListener { task ->
+                                                    if (!task.isSuccessful) {
+                                                        Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                                                        return@OnCompleteListener
+                                                    }
+
+                                                    // Get the token
+                                                    val token = task.result
+
+                                                    // Store the token in Firestore for the logged-in user
+                                                    firebaseManager.storeTokenInFirestore(token, user.email.toString())
+                                                })
+
+
                                             }
 
 
@@ -270,6 +318,8 @@ class LoginScreenActivity : ComponentActivity() {
                                     .addOnFailureListener { exception ->
                                         Log.d(TAG, "get failed with ", exception)
                                     }
+
+
 
                             }
 
