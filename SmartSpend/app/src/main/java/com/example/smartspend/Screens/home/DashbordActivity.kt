@@ -912,7 +912,12 @@ fun TransectionRow(
                         )
                     }
                     Row {
-                        Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
+                        //Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
+                        Text(text = "N$",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Bold
+                            )
                         Spacer(modifier = Modifier.size(5.dp))
                         Text(text = trans.amount.toString()?:"NO Amount",
                             style = MaterialTheme.typography.titleLarge,
@@ -962,7 +967,12 @@ fun TransectionRow(
                     }
 
                     Row {
-                        Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
+                        //Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
+                        Text(text = "N$",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                         Spacer(modifier = Modifier.size(5.dp))
                         Text(text = trans.amount.toString()?:"NO Amount",
                             style = MaterialTheme.typography.titleLarge,
