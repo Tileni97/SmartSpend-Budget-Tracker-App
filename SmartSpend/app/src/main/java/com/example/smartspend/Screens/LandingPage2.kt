@@ -43,7 +43,7 @@ fun Onboarding2(modifier: Modifier = Modifier) {
                 )
         }
         Text(
-            
+
             text = "Manage Your Money with SmartSpend",
             color = Color.White,
             style = TextStyle(fontSize = 35.sp),
