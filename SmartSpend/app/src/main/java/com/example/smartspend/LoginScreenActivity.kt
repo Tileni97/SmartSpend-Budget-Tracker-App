@@ -282,6 +282,7 @@ class LoginScreenActivity : ComponentActivity() {
 
                                                 }
                                                 // User has account information, navigate to DashboardActivity
+                                                Intent.FLAG_ACTIVITY_CLEAR_TASK
                                                 startActivity(intentHomeActivity)
                                             } else {
                                                 // User doesn't have account information, navigate to AccountSetActivity

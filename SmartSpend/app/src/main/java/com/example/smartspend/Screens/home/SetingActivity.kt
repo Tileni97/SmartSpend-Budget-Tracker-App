@@ -32,27 +32,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.smartspend.data.NotificationRepository
 import com.example.smartspend.data.Notifications
+import com.example.smartspend.data.UserRepository
+import com.example.smartspend.getNotification
 import com.example.smartspend.notificationRow
+import com.example.smartspend.setNotification
 
 @Composable
 fun SettingScreen(navController: NavHostController){
 
     // Notificaions array list
-    var notifications = listOf<Notifications>(
-        Notifications(title = "Budget limit reached", description = "You have reached your budget limit of $1000 pleas adjust your budget inorder to make more transactions", userId = "shikongov02@gmail.com"),
-        Notifications(title = "Budget limit reached", description = "You have reached your budget limit of $1000 pleas adjust your budget inorder to make more transactions", userId = "shikongov02@gmail.com"),
-        Notifications(title = "Budget limit reached", description = "You have reached your budget limit of $1000 pleas adjust your budget inorder to make more transactions", userId = "shikongov02@gmail.com"),
-        Notifications(title = "Budget limit reached", description = "You have reached your budget limit of $1000 pleas adjust your budget inorder to make more transactions", userId = "shikongov02@gmail.com"),
-        Notifications(title = "Budget limit reached", description = "You have reached your budget limit of $1000 pleas adjust your budget inorder to make more transactions",  userId = "shikongov02@gmail.com"),
-        Notifications(title = "Budget limit reached", description = "You have reached your budget limit of $1000 pleas adjust your budget inorder to make more transactions",  userId = "shikongov02@gmail.com"),
-        Notifications(title = "Budget limit reached", description = "You have reached your budget limit of $1000 pleas adjust your budget inorder to make more transactions",  userId = "shikongov02@gmail.com"),
-        Notifications(title = "Budget limit reached", description = "You have reached your budget limit of $1000 pleas adjust your budget inorder to make more transactions",  userId = "shikongov02@gmail.com"),
-        Notifications(title = "Budget limit reached", description = "You have reached your budget limit of $1000 pleas adjust your budget inorder to make more transactions",  userId = "shikongov02@gmail.com"),
-        Notifications(title = "Budget limit reached", description = "You have reached your budget limit of $1000 pleas adjust your budget inorder to make more transactions",  userId = "shikongov02@gmail.com"),
-        Notifications(title = "Budget limit reached", description = "You have reached your budget limit of $1000 pleas adjust your budget inorder to make more transactions",  userId = "shikongov02@gmail.com"),
-
-    )
+   setNotification(UserRepository.getEmail())
+    val notifications = getNotification(NotificationRepository.getAllNotification()).toMutableList()
 
     Column (
         modifier = Modifier.fillMaxSize(),

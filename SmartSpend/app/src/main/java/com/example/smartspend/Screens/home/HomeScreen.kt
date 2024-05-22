@@ -1,5 +1,6 @@
 package com.example.smartspend.Screens.home
 
+import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -47,6 +49,7 @@ fun HomeScreen(navController: NavController){
 
     Scaffold (bottomBar = { MyBottomBar(navControllerOne)}){
             innerPadding ->
+
         NavHost(navController = navControllerOne, startDestination = Routes.Dashbord.routes,
             modifier = Modifier.padding(innerPadding)
         ) {
@@ -204,4 +207,30 @@ fun MyBottomBar(navControllerOne: NavHostController) {
 @Composable
 fun HomeScreenPreview(){
     HomeScreen(rememberNavController())
+}
+
+@Composable
+@RememberBackDispatcher
+private fun rememberBackDispatcher(
+    onBackPressed: OnBackPressedCallback
+): BackDispatcher {
+    val backDispatcher = BackDispatcher(onBackPressed)
+
+    DisposableEffect(backDispatcher) {
+        onDispose {
+            backDispatcher.remove()
+        }
+    }
+
+    return backDispatcher
+}
+
+annotation class RememberBackDispatcher
+
+private class BackDispatcher(
+    private val onBackPressedCallback: OnBackPressedCallback
+) {
+    fun remove() {
+        onBackPressedCallback.remove()
+    }
 }

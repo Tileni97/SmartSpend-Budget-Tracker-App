@@ -50,6 +50,7 @@ import com.example.smartspend.data.Categories
 import com.example.smartspend.data.CategoryRepository
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.data.dataBaseRepository
+import com.example.smartspend.getCategory
 import com.example.smartspend.navigation.Routes
 import com.example.smartspend.setCategory
 import kotlin.random.Random
@@ -58,8 +59,9 @@ import kotlin.random.Random
 @Composable
 fun TransactionScreen(navController: NavHostController) {
     val context = LocalContext.current
-    setCategory(userEmail = UserRepository.getEmail(), context)
-    val category = CategoryRepository.getAllCategories()
+    val userEmail = UserRepository.getEmail()
+    setCategory(userEmail, context)
+    val category = getCategory(CategoryRepository.getAllCategories())
 
 
     Surface (
