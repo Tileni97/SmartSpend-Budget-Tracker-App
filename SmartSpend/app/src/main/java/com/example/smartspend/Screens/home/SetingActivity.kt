@@ -33,9 +33,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.data.NotificationRepository
-import com.example.smartspend.data.Notifications
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.getNotification
+import com.example.smartspend.navigation.Routes
 import com.example.smartspend.notificationRow
 import com.example.smartspend.setNotification
 
@@ -107,7 +107,7 @@ fun NotificaionTopBar(navController: NavHostController){
                     .clip(RoundedCornerShape(size = 5.dp))
                     //.background(color = MaterialTheme.colorScheme.inverseOnSurface)
                     .padding(5.dp)
-                    .clickable {}
+                    .clickable {navController.navigate(Routes.HelpScreen.routes)}
 
             ){
                 Icon(imageVector = Icons.Outlined.Info, contentDescription = "",tint = Color.White)

@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.data.UserRepository
+import com.example.smartspend.navigation.Routes
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.Instant
 import java.util.Date
@@ -298,77 +299,77 @@ fun ExtransfereScreen(navController: NavHostController) {
                                                                                 Toast.makeText(
                                                                                     context,
                                                                                     "Transfer Successful",
-                                                                                    Toast.LENGTH_SHORT
+                                                                                    Toast.LENGTH_LONG
                                                                                 ).show()
                                                                                 navController.popBackStack()
                                                                             }
                                                                             .addOnFailureListener {
-                                                                                Toast.makeText(
+                                                                                /*Toast.makeText(
                                                                                     context,
                                                                                     "Error adding transection",
                                                                                     Toast.LENGTH_SHORT
-                                                                                ).show()
+                                                                                ).show()*/
                                                                             }
                                                                     }
                                                                     .addOnFailureListener {
-                                                                        Toast.makeText(
+                                                                        /*Toast.makeText(
                                                                             context,
                                                                             "Error updating spent amount",
                                                                             Toast.LENGTH_SHORT
-                                                                        ).show()
+                                                                        ).show()*/
                                                                     }
                                                             } else {
-                                                                Toast.makeText(
+                                                                /*Toast.makeText(
                                                                     context,
                                                                     "Error retrieving balance",
                                                                     Toast.LENGTH_SHORT
-                                                                ).show()
+                                                                ).show()*/
                                                             }
                                                         }
                                                         .addOnFailureListener {
-                                                            Toast.makeText(
+                                                            /*Toast.makeText(
                                                                 context,
                                                                 "Error adding transection",
                                                                 Toast.LENGTH_SHORT
-                                                            ).show()
+                                                            ).show()*/
                                                         }
                                                 }
                                                 .addOnFailureListener {
-                                                    Toast.makeText(
+                                                    /*Toast.makeText(
                                                         context,
                                                         "Error adding transection",
                                                         Toast.LENGTH_SHORT
-                                                    ).show()
+                                                    ).show()*/
                                                 }
                                         }
                                         .addOnFailureListener {
-                                            Toast.makeText(
+                                            /*Toast.makeText(
                                                 context,
                                                 "Error updating spent amount",
                                                 Toast.LENGTH_SHORT
-                                            ).show()
+                                            ).show()*/
                                         }
                                 } else {
                                     Toast.makeText(
                                         context,
-                                        "Insufficient Balance $budget $spent",
-                                        Toast.LENGTH_SHORT
+                                        "Insufficient Budget Balance, remaining budget on $reason is $remainingBudget",
+                                        Toast.LENGTH_LONG
                                     ).show()
                                 }
                             } else {
-                                Toast.makeText(
+                                /*Toast.makeText(
                                     context,
                                     "Error retrieving budget $budget and spent $spent values",
                                     Toast.LENGTH_SHORT
-                                ).show()
+                                ).show()*/
                             }
                         }
                         .addOnFailureListener {
-                            Toast.makeText(
+                            /*Toast.makeText(
                                 context,
                                 "Error retrieving document $reason",
                                 Toast.LENGTH_SHORT
-                            ).show()
+                            ).show()*/
                         }
                 }
             }
@@ -435,7 +436,7 @@ fun Demo_ExposedDropdownMenuBox():String {
                         onClick = {
                             selectedText = item
                             expanded = false
-                            Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
                         }
                     )
                 }
@@ -486,7 +487,7 @@ fun ExtNavBar(name:String, navController: NavHostController){
                     .clip(RoundedCornerShape(size = 5.dp))
                     //.background(color = MaterialTheme.colorScheme.inverseOnSurface)
                     .padding(5.dp)
-                    .clickable {}
+                    .clickable {navController.navigate(Routes.HelpScreen.routes)}
 
             ){
                 Icon(imageVector = Icons.Outlined.Info, contentDescription = "",tint = Color.White)
@@ -503,5 +504,5 @@ fun ExtransfereScreenPreview() {
 }
 
 private fun showToast(context: Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
 }

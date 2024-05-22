@@ -18,7 +18,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountTree
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Money
 import androidx.compose.material.icons.rounded.AttachFile
 import androidx.compose.material3.Button
@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.data.UserRepository
+import com.example.smartspend.navigation.Routes
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.Instant
 import java.util.Date
@@ -132,7 +133,7 @@ fun IntransfereScreen(navController: NavHostController) {
                     }
                 }
                 .addOnFailureListener { exception ->
-                    showToast(context, "Error fetching user data: ${exception.message}")
+                    //showToast(context, "Error fetching user data: ${exception.message}")
                 }
         } else {
             recipientName = ""
@@ -263,7 +264,7 @@ fun IntransfereScreen(navController: NavHostController) {
                                     onClick = {
                                         selectedText = item
                                         expanded = false
-                                        Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                                        //Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
                                     }
                                 )
                             }
@@ -320,7 +321,7 @@ fun IntransfereScreen(navController: NavHostController) {
                                     if (spent != null && budget != null) {
                                         remainingBudget =
                                             (budget.toInt() - spent.toInt()).toString()
-                                        showToast(context, remainingBudget)
+                                        //showToast(context, remainingBudget)
                                         if (remainingBudget.toInt() > amount.toInt()) {
                                             val newSpent = spent.toInt() + amount.toInt()
                                             db.collection("Categories").document(userEmail)
@@ -446,95 +447,95 @@ fun IntransfereScreen(navController: NavHostController) {
                                                                                                                 navController.popBackStack()
                                                                                                             }
                                                                                                             .addOnFailureListener {
-                                                                                                                showToast(
+                                                                                                                /*showToast(
                                                                                                                     context,
                                                                                                                     "Error adding transaction"
-                                                                                                                )
+                                                                                                                )*/
                                                                                                             }
                                                                                                     }
                                                                                                     .addOnFailureListener {
-                                                                                                        Toast.makeText(
+                                                                                                        /*Toast.makeText(
                                                                                                             context,
                                                                                                             "Error adding transaction",
                                                                                                             Toast.LENGTH_SHORT
                                                                                                         )
-                                                                                                            .show()
+                                                                                                            .show()*/
                                                                                                     }
                                                                                             }
                                                                                             .addOnFailureListener {
-                                                                                                Toast.makeText(
+                                                                                                /*Toast.makeText(
                                                                                                     context,
                                                                                                     "Error updating recipient amount balance",
                                                                                                     Toast.LENGTH_SHORT
                                                                                                 )
-                                                                                                    .show()
+                                                                                                    .show()*/
                                                                                             }
                                                                                     }
                                                                                     .addOnFailureListener {
-                                                                                        Toast.makeText(
+                                                                                        /*Toast.makeText(
                                                                                             context,
                                                                                             "Error adding recipient transaction",
                                                                                             Toast.LENGTH_SHORT
-                                                                                        ).show()
+                                                                                        ).show()*/
                                                                                     }
                                                                             }
                                                                             .addOnFailureListener {
-                                                                                Toast.makeText(
+                                                                                /*Toast.makeText(
                                                                                     context,
                                                                                     "Error updating spent amount",
                                                                                     Toast.LENGTH_SHORT
-                                                                                ).show()
+                                                                                ).show()*/
                                                                             }
                                                                     } else {
-                                                                        Toast.makeText(
+                                                                        /*Toast.makeText(
                                                                             context,
                                                                             "Error retrieving balance",
                                                                             Toast.LENGTH_SHORT
-                                                                        ).show()
+                                                                        ).show()*/
                                                                     }
                                                                 }
                                                                 .addOnFailureListener {
-                                                                    Toast.makeText(
+                                                                    /*Toast.makeText(
                                                                         context,
                                                                         "Error adding sender transaction",
                                                                         Toast.LENGTH_SHORT
-                                                                    ).show()
+                                                                    ).show()*/
                                                                 }
                                                         }
                                                         .addOnFailureListener {
-                                                            showToast(
+                                                           /*showToast(
                                                                 context,
                                                                 "Error adding document: ${it.message}"
-                                                            )
+                                                            )*/
                                                         }
                                                 }
                                                 .addOnFailureListener {
-                                                    showToast(
+                                                    /*showToast(
                                                         context,
                                                         "Error updating document: ${it.message}"
-                                                    )
+                                                    )*/
                                                 }
                                         } else {
                                             showToast(
                                                 context,
-                                                "Insufficient funds to make this transaction, please increase your category budget!"
+                                                "Insufficient Budget Balance, remaining budget on $selectedText is $remainingBudget"
                                             )
                                         }
                                     } else {
-                                        showToast(
+                                        /*showToast(
                                             context,
                                             "Error: Spent or budget field is missing in the document."
-                                        )
+                                        )*/
                                     }
                                 } else {
-                                    showToast(
+                                    /*showToast(
                                         context,
                                         "Document not found for the selected category."
-                                    )
+                                    )*/
                                 }
                             }
                             .addOnFailureListener { exception ->
-                                showToast(context, "Error fetching document: ${exception.message}")
+                               // showToast(context, "Error fetching document: ${exception.message}")
                             }
 
 
@@ -607,10 +608,10 @@ fun InNavBar(name:String, navController: NavHostController){
                     .clip(RoundedCornerShape(size = 5.dp))
                     //.background(color = MaterialTheme.colorScheme.inverseOnSurface)
                     .padding(5.dp)
-                    .clickable {}
+                    .clickable {navController.navigate(Routes.HelpScreen.routes)}
 
             ){
-                Icon(imageVector = Icons.Outlined.HelpOutline, contentDescription = "",tint = Color.White)
+                Icon(imageVector = Icons.Outlined.Info, contentDescription = "",tint = Color.White)
             }
         }
     }
@@ -627,5 +628,5 @@ fun IntransfereScreenPreview() {
 }
 
 private fun showToast(context: Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
 }

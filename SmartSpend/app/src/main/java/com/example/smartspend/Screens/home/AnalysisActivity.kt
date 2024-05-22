@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -45,6 +45,7 @@ import com.example.smartspend.data.Categories
 import com.example.smartspend.data.CategoryRepository
 import com.example.smartspend.data.TransectionRepository
 import com.example.smartspend.data.UserRepository
+import com.example.smartspend.navigation.Routes
 import com.example.smartspend.setAnalysis
 import com.example.smartspend.setCategory
 import kotlin.math.cos
@@ -236,7 +237,8 @@ fun PieChartWithLabels(chartDataList: MutableList<Categories>) {
 fun AnalysisTopBar(navController: NavHostController){
     Column (
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .background(color = Color(0xff009177)),
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
         Row (
@@ -244,7 +246,7 @@ fun AnalysisTopBar(navController: NavHostController){
                 .fillMaxWidth()
                 .padding(10.dp, 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ){
             Box (
                 modifier = Modifier
@@ -253,7 +255,7 @@ fun AnalysisTopBar(navController: NavHostController){
                     .clickable { navController.popBackStack() }
 
             ){
-                Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = "", tint = MaterialTheme.colorScheme.onBackground)
+                Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = "", tint = Color.White)
             }
             Row (
                 horizontalArrangement = Arrangement.Center,
@@ -271,10 +273,10 @@ fun AnalysisTopBar(navController: NavHostController){
                     .clip(RoundedCornerShape(size = 5.dp))
                     //.background(color = MaterialTheme.colorScheme.inverseOnSurface)
                     .padding(5.dp)
-                    .clickable {}
+                    .clickable {navController.navigate(Routes.HelpScreen.routes)}
 
             ){
-                Icon(imageVector = Icons.Outlined.HelpOutline, contentDescription = "",tint = Color.White)
+                Icon(imageVector = Icons.Outlined.Info, contentDescription = "",tint = Color.White)
             }
         }
     }

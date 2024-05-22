@@ -16,7 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountBalance
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -190,10 +190,10 @@ fun NavBar(navController: NavHostController){
                     .clip(RoundedCornerShape(size = 5.dp))
                     //.background(color = MaterialTheme.colorScheme.inverseOnSurface)
                     .padding(5.dp)
-                    .clickable {}
+                    .clickable {navController.navigate(Routes.HelpScreen.routes)}
 
             ){
-                Icon(imageVector = Icons.Outlined.HelpOutline, contentDescription = "",tint = Color.White)
+                Icon(imageVector = Icons.Outlined.Info, contentDescription = "",tint = Color.White)
             }
         }
         Column (
