@@ -227,7 +227,7 @@ fun TransactionScreen(navController: NavHostController) {
                     Box (modifier = Modifier.width(150.dp)){
                         Text(text = "Categories", fontWeight = FontWeight.Bold)
                     }
-                    Box (modifier = Modifier.width(120.dp)){
+                    Box (modifier = Modifier.width(100.dp)){
                         Text(text = "Amount", fontWeight = FontWeight.Bold)
                     }
                     Box (modifier = Modifier.width(100.dp)){
@@ -246,7 +246,7 @@ fun TransactionScreen(navController: NavHostController) {
                         Box (modifier = Modifier.width(150.dp)){
                             Text(text = "${result.name}", fontWeight = FontWeight.Bold, color = Color(0xff009177))
                         }
-                        Box (modifier = Modifier.width(120.dp)){
+                        Box (modifier = Modifier.width(100.dp)){
                             Text(text = "N$ ${result.amount}", fontWeight = FontWeight.Bold)
                             Text(text = "N$", fontWeight = FontWeight.Bold, color = Color.Green)
                         }
