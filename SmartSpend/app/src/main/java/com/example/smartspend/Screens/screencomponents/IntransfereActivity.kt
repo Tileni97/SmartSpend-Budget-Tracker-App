@@ -82,6 +82,7 @@ fun IntransfereScreen(navController: NavHostController) {
     var newBalance by remember { mutableStateOf("") }
     var recipientNewBalance by remember { mutableStateOf("") }
     var remainingBudget by remember { mutableStateOf("") }
+    var loggedInAccNo by remember { mutableStateOf("") }
 
 
     //Fetch user email from repository
@@ -94,7 +95,10 @@ fun IntransfereScreen(navController: NavHostController) {
     val userDocRef = db.collection("Users").document(userEmail)
     userDocRef.get().addOnSuccessListener { document ->
         var balance = document.data?.get("balance") as? String
+        var accountNo = document.data?.get("accountNumber") as? String
         userBalance = balance.toString() // Update userBalance with the fetched balance
+        loggedInAccNo = accountNo.toString()
+
     }
 
     // Derive the total budget amount from the text field values
@@ -120,7 +124,11 @@ fun IntransfereScreen(navController: NavHostController) {
                 .addOnSuccessListener { querySnapshot ->
                     if (querySnapshot.isEmpty) {
                         recipientName = "Account number does not match any valid account number"
-                    } else {
+                    }
+                    else if(!querySnapshot.isEmpty && accountNumber == loggedInAccNo){
+                        recipientName = "You cannot transfer to yourself"
+                    }
+                    else {
                         val document = querySnapshot.documents.first()
                         val firstName = document.getString("firstName") ?: ""
                         val lastName = document.getString("lastName") ?: ""
@@ -279,7 +287,7 @@ fun IntransfereScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = recipientName,
-                color = if (recipientName.startsWith("Account number")) Color.Red else Color.Green,
+                color = if (recipientName.startsWith("Account number") || recipientName.startsWith("You cannot")) Color.Red else Color.Green,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             Spacer(modifier = Modifier.height(50.dp))
@@ -295,7 +303,7 @@ fun IntransfereScreen(navController: NavHostController) {
 
                 if (isValid) {
 
-                    if (!recipientName.startsWith("Account number")) {
+                    if (!recipientName.startsWith("Account number") || !recipientName.startsWith("You cannot")) {
 
                         newBalance = (userBalance.toInt() - amount.toInt()).toString()
                         recipientNewBalance =
@@ -338,7 +346,9 @@ fun IntransfereScreen(navController: NavHostController) {
                                                                 "reference" to reference.toString(),
                                                                 "category" to selectedText.trim()
                                                                     .toString(),
-                                                                "date" to Date.from(Instant.now()),
+                                                                "date" to "${Date.from(
+                                                                    Instant.now()
+                                                                )}",
                                                                 "transType" to "expense"
                                                             )
                                                         )
@@ -377,9 +387,9 @@ fun IntransfereScreen(navController: NavHostController) {
                                                                                             "reference" to reference.toString(),
                                                                                             "category" to selectedText.trim()
                                                                                                 .toString(),
-                                                                                            "date" to Date.from(
+                                                                                            "date" to "${Date.from(
                                                                                                 Instant.now()
-                                                                                            ),
+                                                                                            )}",
                                                                                             "transType" to "income"
                                                                                         )
                                                                                     )
@@ -415,9 +425,9 @@ fun IntransfereScreen(navController: NavHostController) {
                                                                                                                         )
                                                                                                                     }\n" +
                                                                                                                     "your initial balance: N$$recipientBalance , your available balance: N$$recipientNewBalance",
-                                                                                                            "date" to Date.from(
+                                                                                                            "date" to "${Date.from(
                                                                                                                 Instant.now()
-                                                                                                            ),
+                                                                                                            )}",
                                                                                                             "transType" to "income"
                                                                                                         )
                                                                                                     )
@@ -433,9 +443,9 @@ fun IntransfereScreen(navController: NavHostController) {
                                                                                                                                 )
                                                                                                                             }\n" +
                                                                                                                             "your initial balance: N$$userBalance , your new balance: N$$newBalance",
-                                                                                                                    "date" to Date.from(
+                                                                                                                    "date" to "${Date.from(
                                                                                                                         Instant.now()
-                                                                                                                    ),
+                                                                                                                    )}",
                                                                                                                     "transType" to "expense"
                                                                                                                 )
                                                                                                             )
@@ -557,7 +567,9 @@ fun IntransfereScreen(navController: NavHostController) {
                     containerColor = Color(0xff009177),
                     contentColor = Color.White
                 ),
-                enabled = !recipientName.startsWith("Account number") // Disable button if account number is invalid
+                enabled = recipientName.isNotEmpty() &&
+                        !recipientName.startsWith("Account number") &&
+                        !recipientName.startsWith("You cannot")// Disable button if account number is invalid
             ) {
                 Text(text = "Transfer", fontWeight = FontWeight.W700)
 

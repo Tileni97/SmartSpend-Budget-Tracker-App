@@ -253,7 +253,9 @@ fun ExtransfereScreen(navController: NavHostController) {
                                                         "branchCode" to branchCode,
                                                         "reference" to reference,
                                                         "category" to reason,
-                                                        "date" to Date.from(Instant.now()),
+                                                        "date" to "${Date.from(
+                                                            Instant.now()
+                                                        )}",
                                                         "transType" to "expense"
                                                     )
                                                 )
@@ -289,9 +291,9 @@ fun ExtransfereScreen(navController: NavHostController) {
                                                                                                 )
                                                                                             }\n" +
                                                                                             "your initial balance: N$$userBalance , your new balance: N$$newBalance",
-                                                                                    "date" to Date.from(
+                                                                                    "date" to "${Date.from(
                                                                                         Instant.now()
-                                                                                    ),
+                                                                                    )}",
                                                                                     "transType" to "expense"
                                                                                 )
                                                                             )
