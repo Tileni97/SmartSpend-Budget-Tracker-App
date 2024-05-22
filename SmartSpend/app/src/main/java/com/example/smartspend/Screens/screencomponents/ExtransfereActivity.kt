@@ -19,7 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountTree
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Code
-import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Money
 import androidx.compose.material.icons.rounded.AccountBalance
 import androidx.compose.material.icons.rounded.AttachFile
@@ -489,7 +489,7 @@ fun ExtNavBar(name:String, navController: NavHostController){
                     .clickable {}
 
             ){
-                Icon(imageVector = Icons.Outlined.HelpOutline, contentDescription = "",tint = Color.White)
+                Icon(imageVector = Icons.Outlined.Info, contentDescription = "",tint = Color.White)
             }
         }
     }

@@ -27,7 +27,7 @@ import androidx.compose.material.icons.outlined.ArrowDownward
 import androidx.compose.material.icons.outlined.ArrowOutward
 import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.AttachMoney
-import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.SyncAlt
 import androidx.compose.material.icons.outlined.TransitEnterexit
 import androidx.compose.material.icons.rounded.Logout
@@ -211,7 +211,7 @@ fun DashBordActivity(
                     modifier = Modifier
                         .clip(RoundedCornerShape(size = 20.dp))
                         .padding(10.dp)
-                        .clickable {
+                        .clickable {/////////////////handle logout ndanyengwa filu filu haha
                         }
                 ){
                     Icon(imageVector = Icons.Rounded.Logout, contentDescription = "", tint = Color.White)
@@ -287,7 +287,7 @@ fun DashBordActivity(
                     .background(color = MaterialTheme.colorScheme.inverseOnSurface)
                     .padding(5.dp)
                     .width(90.dp)
-                    .clickable { }
+                    .clickable { navController.navigate(Routes.HelpScreen.routes) }
                     .shadow(
                         elevation = 10.dp,
                         spotColor = MaterialTheme.colorScheme.onBackground,
@@ -296,8 +296,8 @@ fun DashBordActivity(
                     )
             ){
                 Row {
-                    Icon(imageVector = Icons.Outlined.Settings, contentDescription = "")
-                    Text(text = "Manage",
+                    Icon(imageVector = Icons.Outlined.Info, contentDescription = "")
+                    Text(text = "About",
                         fontWeight = FontWeight.W400,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 15.sp,fontFamily = FontFamily.SansSerif
@@ -912,7 +912,12 @@ fun TransectionRow(
                         )
                     }
                     Row {
-                        Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
+                        //Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
+                        Text(text = "N$",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Bold
+                            )
                         Spacer(modifier = Modifier.size(5.dp))
                         Text(text = trans.amount.toString()?:"NO Amount",
                             style = MaterialTheme.typography.titleLarge,
@@ -962,7 +967,12 @@ fun TransectionRow(
                     }
 
                     Row {
-                        Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
+                        //Icon(imageVector = Icons.Outlined.AttachMoney, contentDescription = "")
+                        Text(text = "N$",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                         Spacer(modifier = Modifier.size(5.dp))
                         Text(text = trans.amount.toString()?:"NO Amount",
                             style = MaterialTheme.typography.titleLarge,

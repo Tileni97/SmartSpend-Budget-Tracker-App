@@ -39,7 +39,7 @@ fun NavGraph(navController: NavHostController){
             TransferScreen(navController)
         }
         composable(Routes.PayScreen.routes){
-            PayScreen()
+            PayScreen(navController)
         }
         composable(Routes.Extransfere.routes){
             ExtransfereScreen(navController)
