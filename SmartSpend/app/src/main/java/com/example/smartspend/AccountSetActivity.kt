@@ -25,7 +25,10 @@ import androidx.compose.material.icons.outlined.Business
 import androidx.compose.material.icons.rounded.AddCard
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -44,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -106,7 +110,13 @@ class AccountSetActivity : ComponentActivity() {
                             userFirstName = user.firstName
                         }
 
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(size = 100.dp))
+                                .padding(10.dp)
+                                .background(color = Color(0xff009177)),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             Text(
                                 text = "S",
                                 color =Color.White,
@@ -159,7 +169,7 @@ class AccountSetActivity : ComponentActivity() {
                                     colors = TextFieldDefaults.textFieldColors(
                                         containerColor = Color.Transparent
                                     ),
-                                    label = { Text(text = "Account Number") },
+                                    label = { Text(text = "Account Number", color = Color(0xff009177)) },
                                     placeholder = { Text(text = "4848653456755435") },
                                     leadingIcon = {
                                         Icon(
@@ -176,7 +186,7 @@ class AccountSetActivity : ComponentActivity() {
                                     colors = TextFieldDefaults.textFieldColors(
                                         containerColor = Color.Transparent
                                     ),
-                                    label = { Text(text = "Card Number") },
+                                    label = { Text(text = "Card Number", color = Color(0xff009177)) },
                                     placeholder = { Text(text = "64274623874246824") },
                                     leadingIcon = {
                                         Icon(
@@ -197,39 +207,21 @@ class AccountSetActivity : ComponentActivity() {
                                             .width(120.dp)
                                             .padding(5.dp, 0.dp),
                                     ) {
-                                        TextField(
-                                            value = expMonth, onValueChange = {expMonth = it},
-                                            colors = TextFieldDefaults.textFieldColors(
-                                                containerColor = Color.Transparent
-                                            ),
-                                            label = { Text(text = "Exp Mon", fontSize = 15.sp) },
-                                            placeholder = { Text(text = "3") },
-                                            singleLine = true,
-                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                                        )
+                                        expMonth = ExpMonth()
                                     }
                                     Box(
                                         modifier = Modifier
                                             .width(120.dp)
                                             .padding(5.dp, 0.dp),
                                     ) {
-                                        TextField(
-                                            value = expYear, onValueChange = {expYear = it},
-                                            colors = TextFieldDefaults.textFieldColors(
-                                                containerColor = Color.Transparent
-                                            ),
-                                            label = { Text(text = "Exp Year") },
-                                            placeholder = { Text(text = "3") },
-                                            singleLine = true,
-                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                                        )
+                                        expYear = ExpYear()
                                     }
                                     TextField(
                                         value = cvv, onValueChange = {cvv = it},
                                         colors = TextFieldDefaults.textFieldColors(
                                             containerColor = Color.Transparent
                                         ),
-                                        label = { Text(text = "CVV") },
+                                        label = { Text(text = "CVV", color = Color(0xff009177)) },
                                         placeholder = { Text(text = "472") },
                                         singleLine = true,
                                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -250,25 +242,43 @@ class AccountSetActivity : ComponentActivity() {
                                         isValid = false
                                     }
 
-                                    if (cardNumber.isBlank()) {
-                                        showToast(this@AccountSetActivity, "Please enter Card Number")
+                                    else if (accountNumber.length != 11) {
+                                        showToast(this@AccountSetActivity, "Account Number must be 11 digits")
                                         isValid = false
                                     }
 
-                                    if (expMonth.isBlank()) {
+                                    else if (cardNumber.isBlank()) {
+                                        showToast(this@AccountSetActivity, "Please enter Card Number")
+                                        isValid = false
+                                    }
+                                    else if (cardNumber.length != 16) {
+                                        showToast(this@AccountSetActivity, "Card Number must be 16 digits")
+                                        isValid = false
+                                    }
+
+                                    else if (expMonth.isBlank()) {
                                         showToast(this@AccountSetActivity, "Please enter Exp Month")
                                         isValid = false
                                     }
 
-                                    if (expYear.isBlank()) {
+                                    else if (expYear.isBlank()) {
                                         showToast(this@AccountSetActivity, "Please enter Exp Year")
                                         isValid = false
                                     }
 
-                                    if (cvv.isBlank()) {
+                                    else if (cvv.isBlank()) {
                                         showToast(this@AccountSetActivity, "Please enter CVV")
                                         isValid = false
                                     }
+
+                                    else if (cvv.length > 3) {
+                                        showToast(this@AccountSetActivity, "cvv cannot be more than 3 digits")
+                                        isValid = false
+                                    }
+                                    else{
+
+                                    }
+
                                     if (isValid) {
                                         // Update the data in Firestore
                                         val userDocRef = db.collection("Users").document(userEmail)
@@ -322,6 +332,120 @@ private fun SetBarColor(color: Color) {
             color = color
         )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ExpMonth():String {
+    val context = LocalContext.current
+    val reason = arrayOf("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(reason[0]) }
+
+    //Fetch User Email
+    var userEmail: String = UserRepository.getEmail()
+
+    // Initialize Firebase Firestore
+    val db = FirebaseFirestore.getInstance()
+
+    Box(
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            },
+        ) {
+            Text(
+                text = "Exp Month",
+                color = Color(0xff009177)
+            )
+            TextField(
+                value = selectedText,
+                onValueChange = {selectedText = it},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.menuAnchor(),
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent)
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
+                reason.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedText = item
+                            expanded = false
+                            Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    return selectedText.toString()
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ExpYear():String {
+    val context = LocalContext.current
+    val reason = arrayOf("24", "25", "26", "27", "28", "29", "30", "31")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf(reason[0]) }
+
+    //Fetch User Email
+    var userEmail: String = UserRepository.getEmail()
+
+    // Initialize Firebase Firestore
+    val db = FirebaseFirestore.getInstance()
+
+    Box(
+    ) {
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            },
+        ) {
+            Text(
+                text = "Exp Year",
+                color = Color(0xff009177)
+            )
+            TextField(
+                value = selectedText,
+                onValueChange = {selectedText = it},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.menuAnchor(),
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent)
+            )
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
+                reason.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedText = item
+                            expanded = false
+                            Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    return selectedText.toString()
 }
 
 private fun showToast(context: Context, message: String) {

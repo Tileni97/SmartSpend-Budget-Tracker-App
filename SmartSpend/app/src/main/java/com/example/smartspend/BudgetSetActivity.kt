@@ -334,7 +334,7 @@ class BudgetSetActivity : ComponentActivity() {
                                 // Update the data in Firestore
                                 val categoriesDocRef =
                                     db.collection("Categories").document(userEmail)
-                                categoriesDocRef.set(
+                                categoriesDocRef.update(
                                     mapOf(
                                         "transport" to transport,
                                         "food" to food,
