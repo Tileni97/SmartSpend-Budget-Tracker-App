@@ -264,7 +264,7 @@ fun BuyScreen(navController: NavHostController){
                                     onClick = {
                                         selectedText = item
                                         expanded = false
-                                        Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                                        //Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
                                     }
                                 )
                             }
@@ -357,7 +357,7 @@ fun BuyScreen(navController: NavHostController){
                                                                                         Toast.makeText(
                                                                                             context,
                                                                                             "Transfer Successful",
-                                                                                            Toast.LENGTH_SHORT
+                                                                                            Toast.LENGTH_LONG
                                                                                         ).show()
                                                                                         navController.popBackStack()
                                                                                     }
@@ -411,7 +411,7 @@ fun BuyScreen(navController: NavHostController){
                                             Toast.makeText(
                                                 context,
                                                 "Insufficient Budget Balance, remaining budget on $selectedText is $remainingBudget",
-                                                Toast.LENGTH_SHORT
+                                                Toast.LENGTH_LONG
                                             ).show()
                                         }
                                     } else {
@@ -508,5 +508,5 @@ fun BuyScreenPreview() {
     PayScreen(navControllerOne)
 }
 private fun showToast(context: Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
 }
