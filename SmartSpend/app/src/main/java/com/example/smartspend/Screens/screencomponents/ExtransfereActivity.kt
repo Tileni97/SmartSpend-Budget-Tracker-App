@@ -136,12 +136,12 @@ fun ExtransfereScreen(navController: NavHostController) {
                 var size:Int = (setbalance.length)-1
                 var count:Int = 0
                 var newBalance: String = ""
-                for( balance in userBalance){
+                for( balance in setbalance){
                     if (count< 3){
-                        newBalance += userBalance[size]
+                        newBalance += setbalance[size]
                     }
                     else if(count ==3){
-                        newBalance = newBalance + " "+userBalance[size]
+                        newBalance = newBalance + " "+setbalance[size]
                         count = 0
                     }
                     else {
