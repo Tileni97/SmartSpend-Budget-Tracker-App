@@ -50,6 +50,8 @@ class AuthViewModel(private val context: Context) : ViewModel() {
         }
     }
 
+
+
     /**
      * Sealed class to represent the different states of the login process.
      */
