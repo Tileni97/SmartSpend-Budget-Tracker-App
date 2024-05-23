@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,20 +29,15 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.notesapp.util.formatDate
 import com.example.smartspend.data.AnalysisRepository
 import com.example.smartspend.data.Categories
 import com.example.smartspend.data.CategoryRepository
 import com.example.smartspend.data.NotificationData
 import com.example.smartspend.data.NotificationRepository
-import com.example.smartspend.data.Notifications
 import com.example.smartspend.data.TransectionItem
 import com.example.smartspend.data.TransectionRepository
-import com.example.smartspend.data.UserRepository
 import com.example.smartspend.data.dataBaseRepository
-import java.util.Date
 import kotlin.random.Random
-
 
 
 fun setNotification(userEmail: String){
@@ -262,7 +256,7 @@ fun setTransection(userEmail: String){
                     var amount = document.data?.get("amount") as? String
                     var type = document.data?.get("transType") as? String
                     var docId = document.id
-                    var entryDate = document.data?.get("date") as? Date
+                    var entryDate = document.data?.get("date")as? String
 
                     // Create a new TransectionItem object with the extracted data
                     newTrans = TransectionItem(category, amount, type, docId,entryDate)
