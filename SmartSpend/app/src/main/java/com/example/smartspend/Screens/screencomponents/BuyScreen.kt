@@ -311,7 +311,9 @@ fun BuyScreen(navController: NavHostController){
                                                                 "amount" to amount,
                                                                 "reference" to reference,
                                                                 "category" to selectedText,
-                                                                "date" to Date.from(Instant.now()),
+                                                                "date" to "${Date.from(
+                                                                    Instant.now()
+                                                                )}",
                                                                 "transType" to "expense"
                                                             )
                                                         )
@@ -347,9 +349,9 @@ fun BuyScreen(navController: NavHostController){
                                                                                                         )
                                                                                                     }\n" +
                                                                                                     "your initial balance: N$ $userBalance , your new balance: N$$newBalance",
-                                                                                            "date" to Date.from(
+                                                                                            "date" to "${Date.from(
                                                                                                 Instant.now()
-                                                                                            ),
+                                                                                            )}",
                                                                                             "transType" to "expense"
                                                                                         )
                                                                                     )
