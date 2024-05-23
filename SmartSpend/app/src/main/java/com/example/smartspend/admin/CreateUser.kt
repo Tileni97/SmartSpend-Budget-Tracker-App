@@ -1,5 +1,6 @@
 package com.example.smartspend.admin
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,26 +30,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ExperimentalComposeRuntimeApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.smartspend.data.UserRepository
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import java.time.Instant
 import java.util.Date
 
@@ -67,6 +61,8 @@ fun CreateUser(){
     var cvv by remember { mutableStateOf("") }
     var ExpMonth by remember { mutableStateOf("") }
     var ExpYear by remember { mutableStateOf("") }
+
+    var context = LocalContext.current
 
     Surface (
         modifier = Modifier.fillMaxSize(),
@@ -172,7 +168,7 @@ fun CreateUser(){
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.Transparent),
                     label = {Text(text = "Card Number",color = Color(0xff009177))},
-                    placeholder = {Text(text = "0.00")},
+                    placeholder = {Text(text = "35645736564")},
                     leadingIcon = {
                         Icon(imageVector = Icons.Outlined.AccountTree, contentDescription = "")
                     },
@@ -208,13 +204,13 @@ fun CreateUser(){
                             .padding(5.dp, 0.dp),
                         contentAlignment = Alignment.Center
                     ){
-                        TextField(value = lastName, onValueChange = {lastName = it},
+                        TextField(value = cvv, onValueChange = {cvv = it},
                             colors = TextFieldDefaults.textFieldColors(
                                 containerColor = Color.Transparent),
                             label = {Text(text = "Cvv",color = Color(0xff009177))},
                             placeholder = {Text(text = "321")},
                             singleLine = true,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
                     }
                 }
@@ -235,16 +231,45 @@ fun CreateUser(){
                                 "budget" to "0",
                                 "spent" to "0",
                                 "branchCode" to "0",
-                                "cvv" to "0",
-                                "expMonth" to "0",
-                                "expYear" to "0",
+                                "cvv" to "",
+                                "expMonth" to "",
+                                "expYear" to "",
                                 "entryDate" to "${Date.from(Instant.now())}",
                                 "username" to registeredUser.toString(),
-                                "cardNumber" to "0",
+                                "cardNumber" to "",
                                 "accountType" to "Cheque"
 
                             )
                         )
+                        .addOnSuccessListener {
+                            db.collection("Cards").document(registeredUser)
+                                .set(
+                                    hashMapOf(
+                                        "cardNumber" to cardNumber,
+                                        "cvv" to cvv,
+                                        "expMonth" to ExpMonth,
+                                        "expYear" to ExpYear,
+                                        "accountNumber" to accountNumber
+                                    )
+                                )
+                                .addOnSuccessListener {
+                                    showToast(context, "User Created")
+                                    firstName = ""
+                                    lastName = ""
+                                    accountNumber = ""
+                                    amount = ""
+                                    address = ""
+                                    phoneNumber = ""
+                                    cardNumber = ""
+                                    cvv = ""
+                                    ExpMonth = ""
+                                    ExpYear = ""
+
+                                }
+                        }
+                        .addOnFailureListener {
+                            showToast(context, "Failed to Create User")
+                        }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -373,6 +398,10 @@ fun ExpYear():String {
     }
 
     return selectedText.toString()
+}
+
+private fun showToast(context: Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
 }
 
 @Preview(showBackground = true)

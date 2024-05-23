@@ -1,11 +1,12 @@
 package com.example.smartspend.data
 
 import android.annotation.SuppressLint
-import com.google.firebase.firestore.auth.User
 
 object UserRepository {
     private val users = mutableSetOf<UserData>()
     private var email:String = mutableSetOf("").toString()
+    private var registeredemail:String = ""
+    private var isLogin:String = ""
 
     @SuppressLint("RestrictedApi")
     fun getUsers(): MutableSet<UserData> {
@@ -21,10 +22,17 @@ object UserRepository {
         return email
     }
     fun setRegisteredUser(email: String){
-        this.email = email
+        this.registeredemail = email
     }
     fun getRegisteredUser(): String{
-        return email
+        return registeredemail
+    }
+
+    fun setLogin(email: String){
+        this.isLogin = email
+    }
+    fun isLogin(): String{
+        return isLogin
     }
 
 
