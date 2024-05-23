@@ -63,6 +63,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.smartspend.Screens.home.HomeActivity
+import com.example.smartspend.admin.AdminDashbordActivity
 import com.example.smartspend.data.UserData
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.firebase.AuthViewModel
@@ -81,7 +82,7 @@ class LoginScreenActivity : ComponentActivity() {
                 SetBarColor(color = Color(0xff009177))
                 val intentAccountSetup = Intent(this, AccountSetActivity::class.java)
                 val intentHomeActivity = Intent(this, HomeActivity::class.java)
-
+                val intentAdmin = Intent(this, AdminDashbordActivity::class.java)
 
                 // Initialize the UserData object
                 var currentUser:UserData = UserData()
@@ -275,21 +276,25 @@ class LoginScreenActivity : ComponentActivity() {
                                             val expYear = document.data?.get("expYear") as? String
                                             val cvv = document.data?.get("cvv") as? String
 
-                                            if ((accountNumber != null && cardNumber != null && expMonth != null && expYear != null && cvv != null) && (accountNumber != "" && cardNumber != "" && expMonth != "" && expYear != "" && cvv != "")) {
-                                                try {
-                                                    setTransection(user.email.toString())
-                                                } catch (e: Exception) {
-
-                                                }
-                                                // User has account information, navigate to DashboardActivity
-                                                Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                                startActivity(intentHomeActivity)
-                                            } else {
-                                                // User doesn't have account information, navigate to AccountSetActivity
-                                                startActivity(intentAccountSetup)
+                                            if (username == "admin@smartspend.com"){
+                                                startActivity(intentAdmin)
                                             }
+                                            else {
+                                                if ((accountNumber != null && cardNumber != null && expMonth != null && expYear != null && cvv != null) && (accountNumber != "" && cardNumber != "" && expMonth != "" && expYear != "" && cvv != "")) {
 
+                                                    try {
+                                                        setTransection(user.email.toString())
+                                                    } catch (e: Exception) {
 
+                                                    }
+                                                    // User has account information, navigate to DashboardActivity
+                                                    Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                                    startActivity(intentHomeActivity)
+                                                } else {
+                                                    // User doesn't have account information, navigate to AccountSetActivity
+                                                    startActivity(intentAccountSetup)
+                                                }
+                                            }
                                         } else {
                                             Log.d(TAG, "No such document")
                                         }

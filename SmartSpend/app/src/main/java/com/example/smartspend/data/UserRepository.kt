@@ -20,6 +20,12 @@ object UserRepository {
     fun getEmail(): String{
         return email
     }
+    fun setRegisteredUser(email: String){
+        this.email = email
+    }
+    fun getRegisteredUser(): String{
+        return email
+    }
 
 
 }

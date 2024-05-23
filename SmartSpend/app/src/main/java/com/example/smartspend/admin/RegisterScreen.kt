@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import com.example.smartspend.data.UserRepository
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -102,8 +103,9 @@ class RegisterViewModel : ViewModel() {
                 _isLoading.value = false
 
                 if (task.isSuccessful) {
-                    // Registration successful
-                    // You can navigate to the next screen or perform additional actions
+                    // Set registered user data it to repository
+                    UserRepository.setRegisteredUser(email.value.toString())
+
                 } else {
                     // Registration failed
                     // Handle the error
