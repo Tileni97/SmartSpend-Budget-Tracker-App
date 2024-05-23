@@ -4,6 +4,8 @@ sealed class Routes (val routes:String){
 
     data object Dashbord : Routes("dashbord")
     data object Setting : Routes("setting")
+    data object ProfileDetail : Routes("profileDetail")
+    data object AccountDetails : Routes("accountDetails")
     data object Profile : Routes("profile")
     data object HomeScreen : Routes("homeScreen")
     data object TransferScreen : Routes("transfer")
