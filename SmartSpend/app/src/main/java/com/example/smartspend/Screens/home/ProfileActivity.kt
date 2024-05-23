@@ -1,19 +1,26 @@
 package com.example.smartspend.Screens.home
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,167 +29,418 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.smartspend.R
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
+import com.example.smartspend.data.UserRepository
+import com.example.smartspend.data.dataBaseRepository
+import com.example.smartspend.navigation.Routes
 
 // Main composable function for the Profile screen
 @Composable
-fun ProfileScreen() {
-    Surface(
+fun ProfileScreen(navController: NavHostController) {
+    var userFirstName by remember { mutableStateOf("") }
+    var userLastName by remember { mutableStateOf("") }
+    var userPhone by remember { mutableStateOf("") }
+    var userAccountType by remember { mutableStateOf("") }
+    var userAddress by remember { mutableStateOf("") }
+    var userAccountNumber by remember { mutableStateOf("") }
+    var userBranchCode by remember { mutableStateOf("") }
+    var userEntryDate by remember { mutableStateOf("") }
+    var showUpdateFields by remember { mutableStateOf(false) }
+    var updatedAddress by remember { mutableStateOf("") }
+    var updatedPhone by remember { mutableStateOf("") }
+    var showResetConfirmation by remember { mutableStateOf(false) }
+
+    val userEmail: String = UserRepository.getEmail()
+    val context = LocalContext.current
+
+    val db = dataBaseRepository.getDb()
+    val userDocRef = db.collection("Users").document(userEmail)
+
+    // Fetch user details from Firestore
+    userDocRef.get().addOnSuccessListener { document ->
+        var firstName = document.data?.get("firstName") as? String
+        var lastName = (document.data?.get("lastName") as? String)
+        var phone = document.data?.get("phone") as? String
+        var accountType = document.data?.get("accountType") as? String
+        var address = document.data?.get("address") as? String
+        var account = document.data?.get("accountNumber") as? String
+        var branch = document.data?.get("branchCode") as? String
+        var since = document.data?.get("entryDate") as? String
+
+        userFirstName = firstName.toString()
+        userLastName = lastName.toString()
+        userPhone = phone.toString()
+        userAccountType = accountType.toString()
+        userAddress = address.toString()
+        userAccountNumber = account.toString()
+        userBranchCode = branch.toString()
+        userEntryDate = since.toString()
+    }
+
+    Column(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
+
+
+        ProfileScreenTopBar(navController)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "${userFirstName} ${userLastName}",
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp
+            )
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = userAddress,
+            style = TextStyle(
+                fontSize = 16.sp
+            )
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = userEmail,
+            style = TextStyle(
+                fontSize = 16.sp
+            )
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = userPhone,
+            style = TextStyle(
+                fontSize = 16.sp
+            )
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Account Type: ${userAccountType}",
+            style = TextStyle(
+                fontSize = 16.sp
+            )
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Account Number: ${userAccountNumber}",
+            style = TextStyle(
+                fontSize = 16.sp
+            )
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Branch Code: ${userBranchCode}",
+            style = TextStyle(
+                fontSize = 16.sp
+            )
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Since: ${userEntryDate}",
+            style = TextStyle(
+                fontSize = 16.sp
+            )
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Update User Details",
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Title text
-            Text(
-                text = "Update your info",
-                style = MaterialTheme.typography.headlineLarge
+                .clickable {
+                    showUpdateFields = true
+                    updatedAddress = userAddress
+                    updatedPhone = userPhone
+                }
+                .padding(8.dp),
+            color = Color(0xff009177),
+            style = TextStyle(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                textDecoration = TextDecoration.Underline
+            )
+        )
+
+        if (showUpdateFields) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = updatedAddress,
+                onValueChange = { updatedAddress = it },
+                label = {
+                    Text(
+                        text = "Residential Address",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.W400,
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = "Erf 123, Hoba Street, Windhoek",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.W400,
+                    )
+                },
+                singleLine = true
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // List of avatar drawable resources
-            val avatars = listOf(
-                R.drawable.avatar1,
-                R.drawable.avatar2,
-                R.drawable.avatar3
+            OutlinedTextField(
+                value = updatedPhone,
+                onValueChange = { updatedPhone = it },
+                label = {
+                    Text(
+                        text = "Phone Number",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.W400,
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = "081 123 4567",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.W400,
+                    )
+                },
+                singleLine = true
             )
 
-            // State variables to track selected avatar and avatar list visibility
-            var selectedAvatarIndex by remember { mutableStateOf(0) }
-            var showAvatarList by remember { mutableStateOf(false) }
+            Spacer(modifier = Modifier.height(16.dp))
 
-            // Display the selected avatar
-            Image(
-                painter = painterResource(avatars[selectedAvatarIndex]),
-                contentDescription = "Avatar",
-                modifier = Modifier.size(300.dp)
-            )
+            Button(
+                onClick = {
+                    // Check if text fields are empty
+                    if (updatedAddress.isBlank() || updatedPhone.isBlank()) {
+                        Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // Update user details in Firestore
+                        userDocRef.update(
+                            mapOf(
+                                "address" to updatedAddress,
+                                "phone" to updatedPhone
+                            )
+                        )
+                            .addOnSuccessListener {
+                                // Fetch updated user details
+                                userDocRef.get().addOnSuccessListener { document ->
+                                    val updatedAddress = document.data?.get("address") as? String
+                                    val updatedPhone = document.data?.get("phone") as? String
 
-            // Edit avatar icon
-            Icon(
-                imageVector = Icons.Filled.Edit,
-                contentDescription = "Edit Avatar",
-                modifier = Modifier
-                    .size(30.dp)
-                    .clickable { showAvatarList = true }
-                    .padding(bottom = 16.dp)
-            )
+                                    // Update the displayed values
+                                    userAddress = updatedAddress.toString()
+                                    userPhone = updatedPhone.toString()
 
-            // Show avatar list when showAvatarList is true
-            if (showAvatarList) {
-                AvatarList(
-                    avatars = avatars,
-                    selectedAvatarIndex = selectedAvatarIndex,
-                    onAvatarSelected = { index ->
-                        selectedAvatarIndex = index
-                        showAvatarList = false
+                                    // Show success toast
+                                    Toast.makeText(context, "Details Successfully Updated", Toast.LENGTH_LONG).show()
+                                }
+                            }
+
+                        showUpdateFields = false
                     }
+                },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(15.dp))
+                    .width(200.dp)
+                    .background(color = Color(0xff009177)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xff009177),
+                    contentColor = Color.White
+                )
+            ) {
+                Text(
+                    text = "Update",
+                    color = Color.White
                 )
             }
 
-            // User details input fields
-            UserDetailsFields()
 
-            // Update button
+        }
+
+
+        Spacer(modifier = Modifier.height(480.dp))
+
+        Text(
+            text = "RESET BUDGETS AND SPENDINGS",
+            modifier = Modifier
+                .clickable {
+                    showResetConfirmation = true
+                }
+                .padding(8.dp),
+            color = Color(0xff009177),
+            style = TextStyle(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                textDecoration = TextDecoration.Underline
+            )
+        )
+
+        if (showResetConfirmation) {
+            Spacer(modifier = Modifier.height(16.dp))
+
             Button(
-                onClick = { /* Handle update */ },
-                modifier = Modifier.fillMaxWidth()
+                onClick = {
+                    // Remove all sub-documents from "transactions" > "userEmail" > "transactions"
+                    db.collection("transections")
+                        .document(userEmail)
+                        .collection("transections")
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            for (document in documents) {
+                                document.reference.delete()
+                            }
+                        }
+
+                    // Update "budget" and "spent" fields to "0" from "Categories" > "userEmail" > "budget"
+                    val categoriesRef = db.collection("Categories").document(userEmail).collection("budget").document("accomodation")
+                    val categoriesRef1 = db.collection("Categories").document(userEmail).collection("budget").document("education")
+                    val categoriesRef2 = db.collection("Categories").document(userEmail).collection("budget").document("food")
+                    val categoriesRef3 = db.collection("Categories").document(userEmail).collection("budget").document("health")
+                    val categoriesRef4 = db.collection("Categories").document(userEmail).collection("budget").document("transport")
+                    categoriesRef.update(
+                        mapOf(
+                            "budget" to "0",
+                            "spent" to "0",
+                        )
+
+                    )
+                    categoriesRef1.update(
+                        mapOf(
+                            "budget" to "0",
+                            "spent" to "0",
+                        )
+
+                    )
+                    categoriesRef2.update(
+                        mapOf(
+                            "budget" to "0",
+                            "spent" to "0",
+                        )
+
+                    )
+                    categoriesRef3.update(
+                        mapOf(
+                            "budget" to "0",
+                            "spent" to "0",
+                        )
+
+                    )
+                    categoriesRef4.update(
+                        mapOf(
+                            "budget" to "0",
+                            "spent" to "0",
+                        )
+
+                    )
+
+
+
+                    // Update "budget" and "spent" fields to "0" from "Users" > "userEmail"
+                    userDocRef.update(
+                        mapOf(
+                            "budget" to "0",
+                            "spent" to "0"
+                        )
+                    )
+
+                    // Show success toast
+                    Toast.makeText(context, "Users Budgets Reset Successfully", Toast.LENGTH_LONG).show()
+
+                    showResetConfirmation = false
+                },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(15.dp))
+                    .width(200.dp)
+                    .background(color = Color(0xff009177)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xff009177),
+                    contentColor = Color.White
+                )
             ) {
-                Text("Update")
+                Text(
+                    text = "Confirm",
+                    color = Color.White
+                )
+            }
+        }
+
+    }
+}
+
+@Composable
+fun ProfileScreenTopBar(navController: NavHostController){
+    Column (
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = Color(0xff009177)),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ){
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp, 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Box (
+                modifier = Modifier
+                    .clip(RoundedCornerShape(size = 5.dp))
+                    .padding(5.dp)
+                    .clickable { navController.popBackStack() }
+
+            ){
+                Icon(imageVector = Icons.Outlined.ArrowBack, contentDescription = "", tint = Color.White)
+            }
+            Row (
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(text = "Profile",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.W700,
+                    fontFamily = FontFamily.SansSerif,
+                    color = Color.White
+                )
+            }
+            Box (
+                modifier = Modifier
+                    .clip(RoundedCornerShape(size = 5.dp))
+                    .padding(5.dp)
+                    .clickable {navController.navigate(Routes.HelpScreen.routes)}
+
+            ){
+                Icon(imageVector = Icons.Outlined.Info, contentDescription = "",tint = Color.White)
             }
         }
     }
-}
-
-// Composable function to display the list of avatars
-@Composable
-fun AvatarList(
-    avatars: List<Int>,
-    selectedAvatarIndex: Int,
-    onAvatarSelected: (Int) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .width(200.dp) // Limit the width of the row
-            .horizontalScroll(rememberScrollState()) // Enable horizontal scrolling
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        // Loop through the list of avatars and display each one
-        for (i in avatars.indices) {
-            Avatar(
-                painter = painterResource(avatars[i]),
-                isSelected = i == selectedAvatarIndex,
-                onClick = { onAvatarSelected(i) }
-            )
-        }
-    }
-}
-
-// Composable function for displaying an avatar
-@Composable
-fun Avatar(
-    painter: Painter,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    Image(
-        painter = painter,
-        contentDescription = "Avatar",
-        modifier = Modifier
-            .size(80.dp) // Adjust the size of the avatar
-            .clickable(onClick = onClick)
-            .border(
-                width = if (isSelected) 4.dp else 0.dp, // Add a border for the selected avatar
-                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
-                shape = CircleShape
-            )
-    )
-}
-
-// Composable function for user details input fields
-@Composable
-fun UserDetailsFields() {
-    OutlinedTextField(
-        value = "User's Name", // Example placeholder
-        onValueChange = { /* Handle name change */ },
-        label = { Text("Name") },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    OutlinedTextField(
-        value = "User's Address", // Example placeholder
-        onValueChange = { /* Handle address change */ },
-        label = { Text("Address") },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    OutlinedTextField(
-        value = "User's Phone", // Example placeholder
-        onValueChange = { /* Handle phone change */ },
-        label = { Text("Phone") },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    Spacer(modifier = Modifier.height(16.dp))
 }
 
 // Preview for Profile screen
@@ -190,6 +448,7 @@ fun UserDetailsFields() {
 @Composable
 fun ProfileScreenPreview() {
     SmartSpendTheme {
-        ProfileScreen()
+        val navController = rememberNavController()
+        ProfileScreen(navController)
     }
 }

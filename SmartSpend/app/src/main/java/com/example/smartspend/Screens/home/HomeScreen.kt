@@ -62,7 +62,7 @@ fun HomeScreen(navController: NavController){
             }
 
             composable(Routes.Profile.routes){
-                ProfileScreen()
+                ProfileScreen(navControllerOne)
             }
             composable(Routes.Setting.routes){
                 SettingScreen(navControllerOne)
