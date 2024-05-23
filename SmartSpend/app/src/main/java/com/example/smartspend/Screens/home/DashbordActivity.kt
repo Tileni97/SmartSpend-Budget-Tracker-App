@@ -217,9 +217,33 @@ fun DashBordActivity(
                     Icon(imageVector = Icons.Rounded.Logout, contentDescription = "", tint = Color.White)
                 }
             }
+            var size:Int = (userBalance.length)-1
+            var count:Int = 0
+            var newBalance: String = ""
+            for( balance in userBalance){
+                if (count< 3){
+                    newBalance += userBalance[size]
+                }
+                else if(count ==3){
+                    newBalance = newBalance + " "+userBalance[size]
+                    count = 0
+                }
+                else {
+
+                }
+                count++
+                size--
+            }
+
+            var newsize:Int = (newBalance.length)-1
+            var newProperBalance: String = ""
+            for( balance in newBalance){
+                newProperBalance += newBalance[newsize]
+                newsize--
+            }
 
             Text(
-                text = "N$ $userBalance ",
+                text = "N$ $newProperBalance",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
                 fontFamily = FontFamily.SansSerif,
@@ -455,9 +479,11 @@ fun DashTopBar(user: UserData){
                                     .rotate(degrees = 180f) // Rotated 180 degrees to correct orientation
                             )
                         }
+
                         var size: Any = user.cardNumber?.length ?:
                         Spacer(modifier = Modifier.size(10.dp))
-                        Text(userCardNumber,
+                        Text(
+                            text = "XXXX XXXX XXXX " + (userCardNumber.takeLast(4)),
                             fontSize = 15.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color =Color(255, 191, 0)
@@ -547,7 +573,7 @@ fun DashTopBar(user: UserData){
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ){
-                            Text(text = "0" + userExpMonth + "/" + userExpYear,color =Color.White)
+                            Text(text = "" + userExpMonth + "/" + userExpYear,color =Color.White)
                         }
                         Row (
                             modifier = Modifier

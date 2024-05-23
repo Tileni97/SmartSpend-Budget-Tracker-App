@@ -326,46 +326,89 @@ class BudgetSetActivity : ComponentActivity() {
 
                                 if (transport.isBlank() || food.isBlank() || health.isBlank() || education.isBlank() || accommodation.isBlank()) {
                                     isValid = false
-                                    showToast(this@BudgetSetActivity, "Please fill in all fields")
+                                    showToast(
+                                        this@BudgetSetActivity,
+                                        "Please fill in all fields"
+                                    )
                                 }
 
                                 if (isValid){
 
-                                // Update the data in Firestore
-                                val categoriesDocRef =
+                                    // Update the data in Firestore
                                     db.collection("Categories").document(userEmail)
-                                categoriesDocRef.update(
-                                    mapOf(
-                                        "transport" to transport,
-                                        "food" to food,
-                                        "health" to health,
-                                        "education" to education,
-                                        "accommodation" to accommodation,
-                                        "budget" to budget
-                                    )
-                                )
-                                val userDocRef = db.collection("Users").document(userEmail)
-                                userDocRef.update(
-                                    mapOf(
-                                        "budget" to budget
-                                    )
-                                )
+                                        .collection("budget").document("transport")
+                                        .set(
+                                            mapOf(
+                                                "cateName" to "Transport",
+                                                "budget" to transport,
+                                                "spent" to "0"
+                                            )
+                                        )
 
 
-                                    .addOnSuccessListener {
-                                        showToast(
-                                            this@BudgetSetActivity,
-                                            "Account information updated successfully"
+
+                                    db.collection("Categories").document(userEmail)
+                                        .collection("budget").document("food")
+                                        .set(
+                                            mapOf(
+                                                "cateName" to "Food",
+                                                "budget" to food,
+                                                "spent" to "0"
+                                            )
                                         )
-                                        startActivity(intent)
-                                    }
-                                    .addOnFailureListener { exception ->
-                                        showToast(
-                                            this@BudgetSetActivity,
-                                            "Error updating account information: ${exception.message}"
+
+                                    db.collection("Categories").document(userEmail)
+                                        .collection("budget").document("health")
+                                        .set(
+                                            mapOf(
+                                                "cateName" to "Health",
+                                                "budget" to health,
+                                                "spent" to "0"
+                                            )
                                         )
-                                    }
-                            }
+
+                                    db.collection("Categories").document(userEmail)
+                                        .collection("budget").document("education")
+                                        .set(
+                                            mapOf(
+                                                "cateName" to "Education",
+                                                "budget" to education,
+                                                "spent" to "0"
+                                            )
+                                        )
+
+
+                                    db.collection("Categories").document(userEmail)
+                                        .collection("budget").document("accomodation")
+                                        .set(
+                                            mapOf(
+                                                "cateName" to "Accomodation",
+                                                "budget" to accommodation,
+                                                "spent" to "0"
+                                            )
+                                        )
+
+                                    db.collection("Users").document(userEmail)
+                                        .update(
+                                            mapOf(
+                                                "budget" to budget
+                                            )
+                                        )
+
+                                        .addOnSuccessListener {
+                                            showToast(
+                                                this@BudgetSetActivity,
+                                                "Account information updated successfully"
+                                            )
+                                            startActivity(intent)
+                                        }
+                                        .addOnFailureListener { exception ->
+                                            showToast(
+                                                this@BudgetSetActivity,
+                                                "Error updating account information: ${exception.message}"
+                                            )
+                                        }
+                                }
 
                             },
                                 modifier = Modifier

@@ -375,16 +375,7 @@ fun AddBudgetActivity(){
                                     "budget" to accommodation,
                                 )
                             )
-
-
-
-
-
-
-
                     }
-
-
                 },
                     modifier = Modifier
                         .clip(RoundedCornerShape(15.dp))

@@ -280,23 +280,48 @@ class AccountSetActivity : ComponentActivity() {
                                     }
 
                                     if (isValid) {
-                                        // Update the data in Firestore
-                                        val userDocRef = db.collection("Users").document(userEmail)
-                                        userDocRef.set(
-                                            mapOf(
-                                                "accountNumber" to accountNumber,
-                                                "cardNumber" to cardNumber,
-                                                "expMonth" to expMonth,
-                                                "expYear" to expYear,
-                                                "cvv" to cvv
-                                            )
-                                        )
-                                            .addOnSuccessListener {
-                                                showToast(this@AccountSetActivity, "Account information updated successfully")
-                                                startActivity(intent)
-                                            }
-                                            .addOnFailureListener { exception ->
-                                                showToast(this@AccountSetActivity, "Error updating account information: ${exception.message}")
+                                        var userAccountNumber = ""
+                                        var userCardNumber = ""
+                                        var userExpMonth = ""
+                                        var userExpYear = ""
+                                        var userCVV = ""
+
+
+                                        // Fetch user card data
+                                        db.collection("Cards").document(userEmail)
+                                            .get()
+                                            .addOnSuccessListener { documentSnapshot ->
+                                                if (documentSnapshot.exists()) {
+                                                    userAccountNumber = documentSnapshot.getString("accountNumber") ?: ""
+                                                    userCardNumber = documentSnapshot.getString("cardNumber") ?: ""
+                                                    userExpMonth = documentSnapshot.getString("expMonth") ?: ""
+                                                    userExpYear = documentSnapshot.getString("expYear") ?: ""
+                                                    userCVV = documentSnapshot.getString("cvv") ?: ""
+
+                                                    if (userAccountNumber.equals(accountNumber) && userExpMonth.equals(expMonth) && userExpYear.equals(expYear) && userCVV.equals(cvv)){
+                                                        // Update the data in Firestore
+                                                        val userDocRef = db.collection("Users").document(userEmail)
+                                                        userDocRef.update(
+                                                            mapOf(
+                                                                "accountNumber" to accountNumber,
+                                                                "cardNumber" to cardNumber,
+                                                                "expMonth" to expMonth,
+                                                                "expYear" to expYear,
+                                                                "cvv" to cvv
+                                                            )
+                                                        )
+                                                            .addOnSuccessListener {
+                                                                showToast(this@AccountSetActivity, "Account information updated successfully")
+                                                                startActivity(intent)
+                                                            }
+                                                            .addOnFailureListener { exception ->
+                                                                showToast(this@AccountSetActivity, "Error updating account information: ${exception.message}")
+                                                            }
+                                                    }
+                                                    else{
+                                                        showToast(this@AccountSetActivity, "Please enter a valid account number and card details")
+                                                    }
+                                                }
                                             }
                                     }
                                 },
