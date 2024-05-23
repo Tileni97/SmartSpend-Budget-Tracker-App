@@ -127,16 +127,40 @@ fun BuyScreen(navController: NavHostController){
             ){
 
                 Text(
-                    text = "Balance",
+                    text = "Account Balance",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.W700,
                     fontFamily = FontFamily.SansSerif,
                     color = Color.Yellow
                 )
                 Spacer(modifier = Modifier.height(10.dp))
+                var size:Int = (setbalance.length)-1
+                var count:Int = 0
+                var newBalance: String = ""
+                for( balance in userBalance){
+                    if (count< 3){
+                        newBalance += userBalance[size]
+                    }
+                    else if(count ==3){
+                        newBalance = newBalance + " "+userBalance[size]
+                        count = 0
+                    }
+                    else {
+
+                    }
+                    count++
+                    size--
+                }
+
+                var newsize:Int = (newBalance.length)-1
+                var newProperBalance: String = ""
+                for( balance in newBalance){
+                    newProperBalance += newBalance[newsize]
+                    newsize--
+                }
                 Text(
-                    text = "N$ $setbalance",
-                    fontSize = 50.sp,
+                    text = "N$ $newProperBalance",
+                    fontSize = 30.sp,
                     fontWeight = FontWeight.W700,
                     fontFamily = FontFamily.SansSerif,
                     color = Color.Yellow

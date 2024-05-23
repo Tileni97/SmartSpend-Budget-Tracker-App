@@ -206,7 +206,31 @@ fun NavBar(navController: NavHostController){
             Text(text = "Bank Account Balance", fontFamily = FontFamily.SansSerif,
                 color = Color.White
             )
-            Text(text = "N$ $userBalance", fontSize = 40.sp, fontWeight = FontWeight.W700,color = Color.White)
+            var size:Int = (userBalance.length)-1
+            var count:Int = 0
+            var newBalance: String = ""
+            for( balance in userBalance){
+                if (count< 3){
+                    newBalance += userBalance[size]
+                }
+                else if(count ==3){
+                    newBalance = newBalance + " "+userBalance[size]
+                    count = 0
+                }
+                else {
+
+                }
+                count++
+                size--
+            }
+
+            var newsize:Int = (newBalance.length)-1
+            var newProperBalance: String = ""
+            for( balance in newBalance){
+                newProperBalance += newBalance[newsize]
+                newsize--
+            }
+            Text(text = "N$ $newProperBalance", fontSize = 40.sp, fontWeight = FontWeight.W700,color = Color.White)
         }
     }
 }
