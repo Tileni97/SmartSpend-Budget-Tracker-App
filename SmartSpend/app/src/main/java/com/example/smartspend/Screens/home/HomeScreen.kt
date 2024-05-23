@@ -80,7 +80,7 @@ fun HomeScreen(navController: NavController){
                 IntransfereScreen(navControllerOne)
             }
             composable(Routes.AddBudget.routes){
-                AddBudgetActivity()
+                AddBudgetActivity(navControllerOne)
             }
             composable(Routes.Analysis.routes){
                 AnalysisActivity(navControllerOne)

@@ -42,6 +42,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
+import com.example.smartspend.data.CategoryRepository
+import com.example.smartspend.data.TransectionRepository
 import com.example.smartspend.data.UserRepository
 import com.example.smartspend.data.dataBaseRepository
 import com.example.smartspend.navigation.Routes
@@ -375,6 +377,9 @@ fun ProfileScreen(navController: NavHostController) {
                     Toast.makeText(context, "Users Budgets Reset Successfully", Toast.LENGTH_LONG).show()
 
                     showResetConfirmation = false
+                    TransectionRepository.clearTransection()
+                    CategoryRepository.clearCategories()
+
                 },
                 modifier = Modifier
                     .clip(RoundedCornerShape(15.dp))

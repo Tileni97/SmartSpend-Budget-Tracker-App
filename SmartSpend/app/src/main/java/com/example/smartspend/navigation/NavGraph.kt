@@ -48,7 +48,7 @@ fun NavGraph(navController: NavHostController){
             IntransfereScreen(navController)
         }
         composable(Routes.AddBudget.routes){
-            AddBudgetActivity()
+            AddBudgetActivity(navController)
         }
         composable(Routes.Analysis.routes){
             AnalysisActivity(navController)
