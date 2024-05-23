@@ -48,11 +48,17 @@ import com.example.smartspend.data.UserRepository
 import com.example.smartspend.navigation.Routes
 import com.example.smartspend.setAnalysis
 import com.example.smartspend.setCategory
+import com.example.smartspend.setTransection
 import kotlin.math.cos
 import kotlin.math.sin
 
 @Composable
 fun AnalysisActivity(navController: NavHostController) {
+
+    var userEmail: String = UserRepository.getEmail()
+
+    setTransection(userEmail)
+
     val context = LocalContext.current
 
     setCategory(UserRepository.getEmail(),context)

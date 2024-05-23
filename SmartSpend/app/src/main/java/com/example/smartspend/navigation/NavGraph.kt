@@ -27,7 +27,7 @@ fun NavGraph(navController: NavHostController){
             HomeScreen(navController)
         }
         composable(Routes.Profile.routes){
-            ProfileScreen()
+            ProfileScreen(navController)
         }
         composable(Routes.Setting.routes){
             SettingScreen(navController)
@@ -48,7 +48,7 @@ fun NavGraph(navController: NavHostController){
             IntransfereScreen(navController)
         }
         composable(Routes.AddBudget.routes){
-            AddBudgetActivity()
+            AddBudgetActivity(navController)
         }
         composable(Routes.Analysis.routes){
             AnalysisActivity(navController)

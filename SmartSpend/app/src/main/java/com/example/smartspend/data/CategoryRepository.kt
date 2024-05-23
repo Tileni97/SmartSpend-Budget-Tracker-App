@@ -15,6 +15,10 @@ object CategoryRepository {
         return categories.find { it.name == name }
     }
 
+    fun clearCategories() {
+        categories.clear()
+    }
+
     fun updateCategory(name: String, newCategory: Categories) {
 
         categories.forEach{

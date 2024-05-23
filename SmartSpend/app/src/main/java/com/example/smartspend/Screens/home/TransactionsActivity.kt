@@ -1,6 +1,5 @@
 package com.example.smartspend.Screens.home
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,10 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountBalanceWallet
@@ -46,14 +42,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.smartspend.R
 import com.example.smartspend.Screens.home.ui.theme.SmartSpendTheme
-import com.example.smartspend.data.Categories
 import com.example.smartspend.data.CategoryRepository
 import com.example.smartspend.data.UserRepository
-import com.example.smartspend.data.dataBaseRepository
 import com.example.smartspend.getCategory
 import com.example.smartspend.navigation.Routes
 import com.example.smartspend.setCategory
-import kotlin.random.Random
+import com.example.smartspend.setTransection
 
 // Main composable function for the Transaction screen
 @Composable
@@ -61,6 +55,7 @@ fun TransactionScreen(navController: NavHostController) {
     val context = LocalContext.current
     val userEmail = UserRepository.getEmail()
     setCategory(userEmail, context)
+    setTransection(userEmail)
     val category = getCategory(CategoryRepository.getAllCategories())
 
 

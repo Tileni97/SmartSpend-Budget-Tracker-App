@@ -62,7 +62,7 @@ fun HomeScreen(navController: NavController){
             }
 
             composable(Routes.Profile.routes){
-                ProfileScreen()
+                ProfileScreen(navControllerOne)
             }
             composable(Routes.Setting.routes){
                 SettingScreen(navControllerOne)
@@ -80,7 +80,7 @@ fun HomeScreen(navController: NavController){
                 IntransfereScreen(navControllerOne)
             }
             composable(Routes.AddBudget.routes){
-                AddBudgetActivity()
+                AddBudgetActivity(navControllerOne)
             }
             composable(Routes.Analysis.routes){
                 AnalysisActivity(navControllerOne)
