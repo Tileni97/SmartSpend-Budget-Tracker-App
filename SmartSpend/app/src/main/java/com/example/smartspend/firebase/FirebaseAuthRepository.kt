@@ -27,8 +27,17 @@ class FirebaseAuthRepository {
         }
     }
 
+    suspend fun signUp(email: String, password: String): FirebaseUser? {
+        return try {
+            auth.createUserWithEmailAndPassword(email, password).await().user
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     fun resetPassword(email: String): Task<Void> {
         return FirebaseAuth.getInstance().sendPasswordResetEmail(email)
     }
+
 
 }

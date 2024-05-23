@@ -9,4 +9,5 @@
     <string name="title_activity_login_screen">LoginScreenActivity</string>
     <string name="title_activity_account_set">AccountSetActivity</string>
     <string name="title_activity_budget_set">BudgetSetActivity</string>
+    <string name="title_activity_admin_dashbord">AdminDashbordActivity</string>
 </resources>
