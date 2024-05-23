@@ -168,10 +168,10 @@ fun CreateUser(){
                 )
             }
             Column {
-                TextField(value = accountNumber, onValueChange = {accountNumber = it},
+                TextField(value = cardNumber, onValueChange = {cardNumber = it},
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = Color.Transparent),
-                    label = {Text(text = "Account Number",color = Color(0xff009177))},
+                    label = {Text(text = "Card Number",color = Color(0xff009177))},
                     placeholder = {Text(text = "0.00")},
                     leadingIcon = {
                         Icon(imageVector = Icons.Outlined.AccountTree, contentDescription = "")
