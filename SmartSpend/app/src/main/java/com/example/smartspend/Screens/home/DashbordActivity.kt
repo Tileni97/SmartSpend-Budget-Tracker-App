@@ -967,7 +967,7 @@ fun TransectionRow(
                 ){
                     Icon(imageVector = Icons.Outlined.AccessTime, contentDescription ="" )
                     Spacer(modifier = Modifier.size(10.dp))
-                    Text(text = "${trans.entryDate?.let { formatDate(it.time) }}",
+                    Text(text = "${trans.entryDate?.toLong()?.let { formatDate(it) }}",
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.W400,
@@ -1020,7 +1020,7 @@ fun TransectionRow(
                 ){
                     Icon(imageVector = Icons.Outlined.AccessTime, contentDescription ="" )
                     Spacer(modifier = Modifier.size(10.dp))
-                    Text(text = "${trans.entryDate?.let { formatDate(it.time) }}",
+                    Text(text = "${trans.entryDate}",
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.W400,
