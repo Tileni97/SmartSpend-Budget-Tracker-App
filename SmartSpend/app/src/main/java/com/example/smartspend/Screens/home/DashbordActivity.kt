@@ -55,7 +55,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.notesapp.util.formatDate
 import com.example.smartspend.R
 import com.example.smartspend.data.TransectionItem
 import com.example.smartspend.data.TransectionRepository
@@ -967,7 +966,7 @@ fun TransectionRow(
                 ){
                     Icon(imageVector = Icons.Outlined.AccessTime, contentDescription ="" )
                     Spacer(modifier = Modifier.size(10.dp))
-                    Text(text = "${trans.entryDate?.toLong()?.let { formatDate(it) }}",
+                    Text(text = trans.entryDate.toString(),
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.W400,
