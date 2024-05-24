@@ -288,7 +288,7 @@ fun ProfileScreen(navController: NavHostController) {
         }
 
 
-        Spacer(modifier = Modifier.height(480.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Text(
             text = "RESET BUDGETS AND SPENDINGS",
@@ -304,6 +304,7 @@ fun ProfileScreen(navController: NavHostController) {
                 textDecoration = TextDecoration.Underline
             )
         )
+
 
         if (showResetConfirmation) {
             Spacer(modifier = Modifier.height(16.dp))
@@ -395,6 +396,21 @@ fun ProfileScreen(navController: NavHostController) {
                     color = Color.White
                 )
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = { showResetConfirmation = false },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(15.dp))
+                    .width(200.dp)
+                    .background(color = Color(0xff009177)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xff009177),
+                    contentColor = Color.White)
+            ) {
+                Text(
+                    text = "Cancel",
+                    color = Color.White
+                )
+            }
         }
 
     }
@@ -439,7 +455,7 @@ fun ProfileScreenTopBar(navController: NavHostController){
                 modifier = Modifier
                     .clip(RoundedCornerShape(size = 5.dp))
                     .padding(5.dp)
-                    .clickable {navController.navigate(Routes.HelpScreen.routes)}
+                    .clickable { navController.navigate(Routes.HelpScreen.routes) }
 
             ){
                 Icon(imageVector = Icons.Outlined.Info, contentDescription = "",tint = Color.White)

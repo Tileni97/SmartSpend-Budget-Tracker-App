@@ -126,6 +126,7 @@ fun PieChartWithLabels(chartDataList: MutableList<Categories>) {
                 color = MaterialTheme.colorScheme.onBackground,
             )
         }
+        Spacer(modifier = Modifier.height(20.dp))
 
         Box(
             modifier = Modifier

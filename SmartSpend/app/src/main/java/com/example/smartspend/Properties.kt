@@ -325,23 +325,23 @@ fun setAnalysis(transList: MutableSet<TransectionItem>, categories: MutableSet<C
 
         var amount: String = null.toString()
 
-        if (trans.category == "accomodation" || trans.category == "Accomodation") {
+        if (trans.category == "accomodation" || trans.category == "Accomodation" && trans.type == "expense") {
             amount = trans.amount.toString()
             totalAccommodation += amount.toDouble()
         }
-        else if (trans.category.equals("education") || trans.category.equals("Education")){
+        else if (trans.category.equals("education") || trans.category.equals("Education") && trans.type == "expense"){
             amount = trans.amount.toString()
             totalEducation += amount.toDouble()
         }
-        else if (trans.category.equals("transport") || trans.category.equals("Transport")) {
+        else if (trans.category.equals("transport") || trans.category.equals("Transport") && trans.type == "expense") {
             amount = trans.amount.toString()
             totalTransport += amount.toDouble()
         }
-        else if (trans.category.equals("food") || trans.category.equals("Food")) {
+        else if (trans.category.equals("food") || trans.category.equals("Food") && trans.type == "expense") {
             amount = trans.amount.toString()
             totalFood += amount.toDouble()
         }
-        else if (trans.category.equals("health") || trans.category.equals("Health")) {
+        else if (trans.category.equals("health") || trans.category.equals("Health") && trans.type == "expense") {
             amount = trans.amount.toString()
             totalHealth += amount.toDouble()
         }
