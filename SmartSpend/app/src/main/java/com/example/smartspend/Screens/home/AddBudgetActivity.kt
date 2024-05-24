@@ -86,42 +86,7 @@ fun AddBudgetActivity(navController: NavHostController){
 
     val currentUser = UserRepository.getUsers()
     var userFirstName: String? = null
-
-    val categoriesRef = db.collection("Categories").document(userEmail).collection("budget").document("accomodation")
-    val categoriesRef1 = db.collection("Categories").document(userEmail).collection("budget").document("education")
-    val categoriesRef2 = db.collection("Categories").document(userEmail).collection("budget").document("food")
-    val categoriesRef3 = db.collection("Categories").document(userEmail).collection("budget").document("health")
-    val categoriesRef4 = db.collection("Categories").document(userEmail).collection("budget").document("transport")
-    categoriesRef.get().addOnSuccessListener { document ->
-        var amount = document.data?.get("budget") as? String
-
-
-        accommodation = amount.toString()
-    }
-    categoriesRef1.get().addOnSuccessListener { document ->
-        var amount = document.data?.get("budget") as? String
-
-
-        education= amount.toString()
-    }
-    categoriesRef2.get().addOnSuccessListener { document ->
-        var amount = document.data?.get("budget") as? String
-
-
-        food = amount.toString()
-    }
-    categoriesRef3.get().addOnSuccessListener { document ->
-        var amount = document.data?.get("budget") as? String
-
-
-        health= amount.toString()
-    }
-    categoriesRef4.get().addOnSuccessListener { document ->
-        var amount = document.data?.get("budget") as? String
-
-
-        transport = amount.toString()
-    }
+    
 
     Surface (
         modifier = Modifier.fillMaxSize(),
