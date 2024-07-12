@@ -94,17 +94,28 @@ The primary objective of Smart Spend is to develop a user-friendly mobile applic
 
 ## Screenshots
 
-[Image of App Dashboard or Main Screen] 
-[![Image of App Dashboard or Main Screen]](images/image3.png) 
+![App Dashboard](SS app Images/Screenshot_20240519-211015.png)
 
-[Image of App's Budget Creation Screen]
-[![Image of App's Budget Creation or Insight Screen]](images/image4.png)
+![Budget Creation Screen](SS app Images/Screenshot_20240519-211027.png)
 
-[Image of App's Profile Update Screen]
-[![Image of App's Profile Update Screen]](images/img.png)  
+![Profile Update Screen](SS app Images/Screenshot_20240519-211043.png)
 
-[Image of Internal Transfer Screen]
-[![Image of Internal Transfer Screen]](images/img6.png) 
+![Internal Transfer Screen](SS app Images/Screenshot_20240519-211606.png)
+
+![Screenshot 5](SS app Images/Screenshot_20240519-211621.png)
+
+![Screenshot 6](SS app Images/Screenshot_20240519-211639.png)
+
+![Screenshot 7](SS app Images/Screenshot_20240519-211707.png)
+
+![Screenshot 8](SS app Images/Screenshot_20240519-211715.png)
+
+![Screenshot 9](SS app Images/Screenshot_20240519-211727.png)
+
+![Screenshot 10](SS app Images/Screenshot_20240519-211734.png)
+
+![Screenshot 11](SS app Images/Screenshot_20240519-211818.png)
+
 
 ## License
 
@@ -118,4 +129,4 @@ This project is licensed under the MIT License.
 
 ## Contributing
 
-We welcome contributions! Please see our CONTRIBUTING.md file for guidelines. 
+We welcome contributions!  
