@@ -6,7 +6,7 @@ Developed by:
 
 * Gideon S.V ([[https://github.com/Shikongo19](https://github.com/Shikongo19)]([https://github.com/Shikongo19](https://github.com/Shikongo19)))
 * Tangi H.S Petrus ([[https://github.com/Supertangi](https://github.com/Supertangi)]([https://github.com/Supertangi](https://github.com/Supertangi)))
-* C. T Hango (@Tileni)
+* C. T Hango (@Tileni97)
 
 ## Overview
 
@@ -94,27 +94,21 @@ The primary objective of Smart Spend is to develop a user-friendly mobile applic
 
 ## Screenshots
 
-![App Dashboard](SS%20app%20Images/Screenshot_20240519-211015.png)
+<img src="SS%20app%20Images/Screenshot_20240519-211015.png" alt="App Dashboard" width="400">
 
-![Budget Creation Screen](SS%20app%20Images/Screenshot_20240519-211027.png)
+<img src="SS%20app%20Images/Screenshot_20240519-211027.png" alt="Budget Creation Screen" width="400">
 
-![Profile Update Screen](SS%20app%20Images/Screenshot_20240519-211043.png)
+<img src="SS%20app%20Images/Screenshot_20240519-211043.png" alt="Profile Update Screen" width="400">
 
-![Internal Transfer Screen](SS%20app%20Images/Screenshot_20240519-211606.png)
+<img src="SS%20app%20Images/Screenshot_20240519-211606.png" alt="Internal Transfer Screen" width="400">
 
-![Screenshot 5](SS%20app%20Images/Screenshot_20240519-211621.png)
-
-![Screenshot 6](SS%20app%20Images/Screenshot_20240519-211639.png)
-
-![Screenshot 7](SS%20app%20Images/Screenshot_20240519-211707.png)
-
-![Screenshot 8](SS%20app%20Images/Screenshot_20240519-211715.png)
-
-![Screenshot 9](SS%20app%20Images/Screenshot_20240519-211727.png)
-
-![Screenshot 10](SS%20app%20Images/Screenshot_20240519-211734.png)
-
-![Screenshot 11](SS%20app%20Images/Screenshot_20240519-211818.png)
+<img src="SS%20app%20Images/Screenshot_20240519-211621.png" alt="Screenshot 5" width="400">
+<img src="SS%20app%20Images/Screenshot_20240519-211639.png" alt="Screenshot 6" width="400">
+<img src="SS%20app%20Images/Screenshot_20240519-211707.png" alt="Screenshot 7" width="400">
+<img src="SS%20app%20Images/Screenshot_20240519-211715.png" alt="Screenshot 8" width="400">
+<img src="SS%20app%20Images/Screenshot_20240519-211727.png" alt="Screenshot 9" width="400">
+<img src="SS%20app%20Images/Screenshot_20240519-211734.png" alt="Screenshot 10" width="400">
+<img src="SS%20app%20Images/Screenshot_20240519-211818.png" alt="Screenshot 11" width="400">
 
 
 
