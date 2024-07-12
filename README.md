@@ -1,6 +1,6 @@
 # Smart Spend: Your Intelligent Budgeting Companion
 
-![Screenshot_20240519-211015](https://github.com/user-attachments/assets/bca0014d-d535-4aed-8f0a-9e0b9b0ec7f5)
+[![Image of Smart Spend Logo or App Icon]](images/app_icon.png) 
 
 Developed by:
 
@@ -13,8 +13,6 @@ Developed by:
 Smart Spend is a mobile budgeting application that empowers users to take control of their finances. It seamlessly integrates with bank accounts, automatically tracks and categorizes transactions, and offers personalized budgeting features and actionable insights. Smart Spend aims to promote financial literacy, encourage responsible spending, and help users achieve their financial goals while avoiding debt.
 
 ## Key Features
-
-[![Image of App Dashboard or Main Screen]](images/image3.png) 
 
 * **Real-time Transaction Tracking:** Automatically imports and categorizes transactions from linked bank accounts.
 * **Personalized Budgeting:** Create custom budgets for different spending categories.
@@ -31,7 +29,6 @@ The primary objective of Smart Spend is to develop a user-friendly mobile applic
 * Helps users achieve their financial goals and avoid debt.
 * Enhances financial literacy through intuitive tools and insights.
 
-[![Image of App's Budget Creation Screen]](images/image4.png)
 
 ## System-Level Design
 
@@ -49,8 +46,6 @@ The primary objective of Smart Spend is to develop a user-friendly mobile applic
 * **User Management:**
     * Account creation and login
     * Profile management
-    [![Image of Profile Update Screen]](images/img.png)  
-
 * **Account Integration:**
     * Secure connection to financial institutions via APIs
     * Account aggregation and transaction retrieval
@@ -66,8 +61,6 @@ The primary objective of Smart Spend is to develop a user-friendly mobile applic
     * Customizable budget alerts and reminders
 * **Transfers:**
     * Transfer funds between internal accounts.
-
-[![Image of Internal Transfer Screen]](images/img6.png)  
 
 ## Non-Functional Requirements
 
@@ -99,6 +92,20 @@ The primary objective of Smart Spend is to develop a user-friendly mobile applic
 * Financial education resources
 * Integration with additional financial services 
 
+## Screenshots
+
+[Image of App Dashboard or Main Screen] 
+[![Image of App Dashboard or Main Screen]](images/image3.png) 
+
+[Image of App's Budget Creation Screen]
+[![Image of App's Budget Creation or Insight Screen]](images/image4.png)
+
+[Image of App's Profile Update Screen]
+[![Image of App's Profile Update Screen]](images/img.png)  
+
+[Image of Internal Transfer Screen]
+[![Image of Internal Transfer Screen]](images/img6.png) 
+
 ## License
 
 This project is licensed under the MIT License.
@@ -108,3 +115,7 @@ This project is licensed under the MIT License.
 * Clone the repository.
 * Set up your Firebase project and link it to the app.
 * Build and run the app on your Android device or emulator.
+
+## Contributing
+
+We welcome contributions! Please see our CONTRIBUTING.md file for guidelines. 
