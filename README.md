@@ -94,27 +94,28 @@ The primary objective of Smart Spend is to develop a user-friendly mobile applic
 
 ## Screenshots
 
-![App Dashboard](SS app Images/Screenshot_20240519-211015.png)
+![App Dashboard](SS%20app%20Images/Screenshot_20240519-211015.png)
 
-![Budget Creation Screen](SS app Images/Screenshot_20240519-211027.png)
+![Budget Creation Screen](SS%20app%20Images/Screenshot_20240519-211027.png)
 
-![Profile Update Screen](SS app Images/Screenshot_20240519-211043.png)
+![Profile Update Screen](SS%20app%20Images/Screenshot_20240519-211043.png)
 
-![Internal Transfer Screen](SS app Images/Screenshot_20240519-211606.png)
+![Internal Transfer Screen](SS%20app%20Images/Screenshot_20240519-211606.png)
 
-![Screenshot 5](SS app Images/Screenshot_20240519-211621.png)
+![Screenshot 5](SS%20app%20Images/Screenshot_20240519-211621.png)
 
-![Screenshot 6](SS app Images/Screenshot_20240519-211639.png)
+![Screenshot 6](SS%20app%20Images/Screenshot_20240519-211639.png)
 
-![Screenshot 7](SS app Images/Screenshot_20240519-211707.png)
+![Screenshot 7](SS%20app%20Images/Screenshot_20240519-211707.png)
 
-![Screenshot 8](SS app Images/Screenshot_20240519-211715.png)
+![Screenshot 8](SS%20app%20Images/Screenshot_20240519-211715.png)
 
-![Screenshot 9](SS app Images/Screenshot_20240519-211727.png)
+![Screenshot 9](SS%20app%20Images/Screenshot_20240519-211727.png)
 
-![Screenshot 10](SS app Images/Screenshot_20240519-211734.png)
+![Screenshot 10](SS%20app%20Images/Screenshot_20240519-211734.png)
 
-![Screenshot 11](SS app Images/Screenshot_20240519-211818.png)
+![Screenshot 11](SS%20app%20Images/Screenshot_20240519-211818.png)
+
 
 
 ## License
