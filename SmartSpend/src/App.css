@@ -1,0 +1,170 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.p-hearder{
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.s-hearder{
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+ 
+.t-phearder{
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.l-hearder{
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.flex-card{
+  flex: 1;
+  min-width: 200px;
+}
+
+.flex-wrap{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-wrap-between{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-wrap-start{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: start;
+}
+
+.flex-wrap-end{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: end;
+}
+
+.image-container{
+  max-width: 350px;
+  overflow: hidden;
+}
+
+.image{
+  max-width: 100%;
+}
+
+.text-al-start{
+  text-align: start;
+}
+
+.small-image{
+  max-width: 150px;
+}
+
+.scroll-container{
+  width: 100%;
+  height: 400px;
+  overflow-X: auto;
+}
+
+/* Download Section Styles */
+.download-section {
+  border-radius: 10px;
+}
+
+.download-btn:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+.coming-soon-btn {
+  position: relative;
+  cursor: not-allowed;
+}
+
+.coming-soon-label {
+  color: white;
+  background-color: #28a745;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+/* Footer Styles */
+footer a {
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: #28a745 !important;
+}
+
+.social-icons a {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.social-icons a:hover {
+  transform: translateY(-3px);
+  color: #28a745 !important;
+}
+
+@media only screen and (max-width: 600px) {
+  .small-image{
+    max-width: 400px;
+  }
+  .scroll-container{
+    width: 100%;
+    height: 95vh;
+    overflow-X: auto;
+  }
+}
